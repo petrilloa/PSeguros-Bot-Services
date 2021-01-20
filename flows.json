@@ -56,8 +56,8 @@
         "bot": "c0a2e33c.1511f",
         "haserroroutput": false,
         "outputs": 1,
-        "x": 1470,
-        "y": 60,
+        "x": 850,
+        "y": 840,
         "wires": [
             []
         ]
@@ -587,5 +587,134 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "a813910b.42014",
+        "type": "http in",
+        "z": "7ee81df4.bfea84",
+        "name": "Post messages from Rocket.chat",
+        "url": "/messages",
+        "method": "post",
+        "upload": true,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 840,
+        "wires": [
+            [
+                "82e65057.262e2",
+                "3a9529df.ce3346"
+            ]
+        ]
+    },
+    {
+        "id": "82e65057.262e2",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat receiver",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "3a9529df.ce3346",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Set message",
+        "func": "//Respuesta a Telegram\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\n\nmsg.payload.chatId = msg.payload.visitor.token;\nmsg.payload.type = \"message\";\nmsg.payload.content = msg.payload.messages[0].msg;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 550,
+        "y": 840,
+        "wires": [
+            [
+                "e78ac438.3320e8",
+                "15478edd.b70101"
+            ]
+        ]
+    },
+    {
+        "id": "15478edd.b70101",
+        "type": "http response",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 820,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "9c16ee37.12ea7",
+        "type": "http in",
+        "z": "7ee81df4.bfea84",
+        "name": "Foward to another department",
+        "url": "/foward",
+        "method": "post",
+        "upload": true,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 580,
+        "wires": [
+            [
+                "50c1b46e.2df07c",
+                "c1891a1a.fac358"
+            ]
+        ]
+    },
+    {
+        "id": "50c1b46e.2df07c",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat forward",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "c1891a1a.fac358",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Set message",
+        "func": "//Respuesta a Telegram\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\n\n//msg.payload.chatId = msg.payload.visitor.token;\n//msg.payload.type = \"message\";\n//msg.payload.content = msg.payload.messages[0].msg;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 550,
+        "y": 580,
+        "wires": [
+            [
+                "a37cb148.55392"
+            ]
+        ]
+    },
+    {
+        "id": "a37cb148.55392",
+        "type": "http response",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 820,
+        "y": 620,
+        "wires": []
     }
 ]
