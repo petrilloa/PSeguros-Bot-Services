@@ -1,0 +1,591 @@
+[
+    {
+        "id": "7ee81df4.bfea84",
+        "type": "tab",
+        "label": "Integrations",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c0a2e33c.1511f",
+        "type": "telegram bot",
+        "botname": "PSegurosBot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "3f4b9f1f.e14f1",
+        "type": "telegram receiver",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "bot": "c0a2e33c.1511f",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 190,
+        "y": 220,
+        "wires": [
+            [
+                "93d23625.10d5f8",
+                "c0f41767.f57208"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "e78ac438.3320e8",
+        "type": "telegram sender",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "bot": "c0a2e33c.1511f",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1470,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "93d23625.10d5f8",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Telegram receiver",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "63a91f15.a4e6a",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "New visitor",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://rocket.it.mindbot.com.ar/api/v1/livechat/visitor",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1490,
+        "y": 360,
+        "wires": [
+            [
+                "51a1093e.9a7ff8",
+                "dfed7cc7.c7027"
+            ]
+        ]
+    },
+    {
+        "id": "79f5db67.0cb104",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "New visitor Payload",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/visitor#payload\n\n//Obtener datos de Telegram\nlet fullName = msg.originalMessage.from.first_name + \" \" + msg.originalMessage.from.last_name;\n//Usar id de Usuario de Telegram como TOKEN - lo espera en String\nlet token = msg.originalMessage.from.id.toString()\n\nlet visitor = {};\n\nvisitor.name = fullName;\nvisitor.token = token;\nvisitor.customFields = [];\n\n//Custom Field para informar el CANAL\n\nvisitor.customFields.push({key:\"chanel\", value:\"telegram\", overwrite:true});\n\nmsg.payload = {};\nmsg.payload.visitor = visitor;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1230,
+        "y": 360,
+        "wires": [
+            [
+                "74e7208b.04a33",
+                "63a91f15.a4e6a"
+            ]
+        ]
+    },
+    {
+        "id": "74e7208b.04a33",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "New visitor Payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1450,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "c0f41767.f57208",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Get visitor data Payload",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/visitor#payload\n\n//Usar id de Usuario de Telegram como TOKEN\nlet token = msg.originalMessage.from.id\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/visitor/\" + token;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "22826c11.f10fb4"
+            ]
+        ]
+    },
+    {
+        "id": "22826c11.f10fb4",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Get visitor data",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "7ab5d913.53ffa8",
+                "1a8a5ad7.5639c5"
+            ]
+        ]
+    },
+    {
+        "id": "7ab5d913.53ffa8",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Get visitor data",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "51a1093e.9a7ff8",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "New visitor Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1720,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d8a93589.9ba8f8",
+        "type": "comment",
+        "z": "7ee81df4.bfea84",
+        "name": "Example response",
+        "info": "{\"visitor\":{\"_id\":\"5NeTKRb5YzZ4wE3Mi\",\"username\":\"guest-6\",\"ts\":\"2021-01-19T12:26:32.789Z\",\"ip\":\"192.168.1.1\",\"host\":\"rocket.it.mindbot.com.ar\",\"_updatedAt\":\"2021-01-19T12:26:32.791Z\",\"name\":\"Andres Petrillo\",\"token\":\"869282068\"},\"success\":true}\n\n{\"visitor\":{\"_id\":\"5NeTKRb5YzZ4wE3Mi\",\"username\":\"guest-6\",\"ts\":\"2021-01-19T12:26:32.789Z\",\"ip\":\"192.168.1.1\",\"host\":\"rocket.it.mindbot.com.ar\",\"_updatedAt\":\"2021-01-19T12:26:32.791Z\",\"name\":\"Andres Petrillo\",\"token\":\"869282068\"},\"success\":true}",
+        "x": 950,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "db404bb5.08c118",
+        "type": "switch",
+        "z": "7ee81df4.bfea84",
+        "name": "Check visitor exists",
+        "property": "payload.visitor",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            },
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1150,
+        "y": 200,
+        "wires": [
+            [
+                "4c4953ed.decb2c",
+                "dfed7cc7.c7027"
+            ],
+            [
+                "79f5db67.0cb104",
+                "9de6f676.6b1328"
+            ]
+        ]
+    },
+    {
+        "id": "dfed7cc7.c7027",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Get config (Obtengo room)",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\nlet token = msg.originalMessage.from.id\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/config?token=\" + token;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1700,
+        "y": 200,
+        "wires": [
+            [
+                "506b3875.adacc8"
+            ]
+        ]
+    },
+    {
+        "id": "506b3875.adacc8",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Get config",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1950,
+        "y": 200,
+        "wires": [
+            [
+                "4551ea09.6b2dc4"
+            ]
+        ]
+    },
+    {
+        "id": "1a8a5ad7.5639c5",
+        "type": "json",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 950,
+        "y": 200,
+        "wires": [
+            [
+                "ea9d6124.d69fd",
+                "db404bb5.08c118"
+            ]
+        ]
+    },
+    {
+        "id": "ea9d6124.d69fd",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Visitor data to json",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "4551ea09.6b2dc4",
+        "type": "json",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 2130,
+        "y": 200,
+        "wires": [
+            [
+                "bfe45ba3.557ce8",
+                "3e8ca4e8.4b9dfc"
+            ]
+        ]
+    },
+    {
+        "id": "bfe45ba3.557ce8",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "to json",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2430,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2af94aa3.5b5f46",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Send Message",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/message\"\n\nlet originalPayload = msg.payload;\n\nmsg.payload = {};\nmsg.payload.token = originalPayload.config.guest.token;\nmsg.payload.rid = originalPayload.config.room._id;\nmsg.payload.msg = msg.originalMessage.text;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2660,
+        "y": 200,
+        "wires": [
+            [
+                "fd8c9753.82cf18"
+            ]
+        ]
+    },
+    {
+        "id": "f60f6e8b.26885",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Send Message",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3080,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "4c4953ed.decb2c",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "visitor EXISTS",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1340,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9de6f676.6b1328",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "visitor NOT EXISTS",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "3e8ca4e8.4b9dfc",
+        "type": "switch",
+        "z": "7ee81df4.bfea84",
+        "name": "Check room exists",
+        "property": "payload.config.room",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nnull"
+            },
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 2350,
+        "y": 200,
+        "wires": [
+            [
+                "2af94aa3.5b5f46"
+            ],
+            [
+                "98c2632b.e833a"
+            ]
+        ]
+    },
+    {
+        "id": "98c2632b.e833a",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Get room (crear room)",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\nlet token = msg.originalMessage.from.id\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/room?token=\" + token;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2380,
+        "y": 320,
+        "wires": [
+            [
+                "414289d5.96b3b8"
+            ]
+        ]
+    },
+    {
+        "id": "414289d5.96b3b8",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Get room",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2620,
+        "y": 320,
+        "wires": [
+            [
+                "1fab54c.98015ab"
+            ]
+        ]
+    },
+    {
+        "id": "1fab54c.98015ab",
+        "type": "json",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 2810,
+        "y": 320,
+        "wires": [
+            [
+                "beeafc04.2066e"
+            ]
+        ]
+    },
+    {
+        "id": "beeafc04.2066e",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Send Message",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/message\"\n\nlet originalPayload = msg.payload;\n\nmsg.payload = {};\nmsg.payload.token = originalPayload.room.v.token;\nmsg.payload.rid = originalPayload.room._id;\nmsg.payload.msg = msg.originalMessage.text;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2980,
+        "y": 320,
+        "wires": [
+            [
+                "760fa4dc.f12d5c",
+                "9fd9269a.33bfc8"
+            ]
+        ]
+    },
+    {
+        "id": "760fa4dc.f12d5c",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Send Message (new Room)",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3280,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "fd8c9753.82cf18",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Send message",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2940,
+        "y": 200,
+        "wires": [
+            [
+                "f60f6e8b.26885"
+            ]
+        ]
+    },
+    {
+        "id": "9fd9269a.33bfc8",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Send message",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3240,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    }
+]
