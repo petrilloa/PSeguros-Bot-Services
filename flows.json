@@ -56,7 +56,7 @@
         "bot": "c0a2e33c.1511f",
         "haserroroutput": false,
         "outputs": 1,
-        "x": 850,
+        "x": 1230,
         "y": 840,
         "wires": [
             []
@@ -602,7 +602,7 @@
         "wires": [
             [
                 "82e65057.262e2",
-                "3a9529df.ce3346"
+                "e6c9b776.ae6b68"
             ]
         ]
     },
@@ -619,8 +619,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 600,
-        "y": 740,
+        "x": 520,
+        "y": 720,
         "wires": []
     },
     {
@@ -633,7 +633,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 550,
+        "x": 930,
         "y": 840,
         "wires": [
             [
@@ -649,7 +649,7 @@
         "name": "",
         "statusCode": "200",
         "headers": {},
-        "x": 820,
+        "x": 1200,
         "y": 900,
         "wires": []
     },
@@ -667,7 +667,7 @@
         "wires": [
             [
                 "50c1b46e.2df07c",
-                "c1891a1a.fac358"
+                "b183f34e.01f55"
             ]
         ]
     },
@@ -676,7 +676,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Rocket.chat forward",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -689,32 +689,497 @@
         "wires": []
     },
     {
-        "id": "c1891a1a.fac358",
-        "type": "function",
-        "z": "7ee81df4.bfea84",
-        "name": "Set message",
-        "func": "//Respuesta a Telegram\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\n\n//msg.payload.chatId = msg.payload.visitor.token;\n//msg.payload.type = \"message\";\n//msg.payload.content = msg.payload.messages[0].msg;\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 550,
-        "y": 580,
-        "wires": [
-            [
-                "a37cb148.55392"
-            ]
-        ]
-    },
-    {
         "id": "a37cb148.55392",
         "type": "http response",
         "z": "7ee81df4.bfea84",
         "name": "",
         "statusCode": "200",
         "headers": {},
-        "x": 820,
-        "y": 620,
+        "x": 3760,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "23cef9dc.463986",
+        "type": "comment",
+        "z": "7ee81df4.bfea84",
+        "name": "WebHook - Omnichannel",
+        "info": "Todos los mensajes salientes de los operadores, seran reenviados aca.\nHay que identificar el CANAL (si es que tiene) y derivarlo correctamente.\n\n**TODO**: Adicionalmente, se generan otros mensajes, como cambio de departamento, o cierre de caso, que debemos procesar correctamente.",
+        "x": 210,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "e6c9b776.ae6b68",
+        "type": "switch",
+        "z": "7ee81df4.bfea84",
+        "name": "Switch canal",
+        "property": "payload.visitor.customFields.chanel",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "telegram",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 530,
+        "y": 840,
+        "wires": [
+            [
+                "3a9529df.ce3346"
+            ],
+            [
+                "6b5f84ff.2ec08c",
+                "76b872b1.5c0dec"
+            ]
+        ]
+    },
+    {
+        "id": "6b5f84ff.2ec08c",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "WebHook SIN procesar",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "c40adad0.7fef58",
+        "type": "comment",
+        "z": "7ee81df4.bfea84",
+        "name": "TODO: Check ROOM or DEPARTMENT???",
+        "info": "",
+        "x": 2510,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "76b872b1.5c0dec",
+        "type": "http response",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 700,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "b183f34e.01f55",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Login rocket.chat",
+        "func": "//Usar id de Admin (Ver si hacemos uno o usamos el Bot)\n\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/login\"\n\nlet originalPayload = msg.payload;\nmsg.originalPayload = originalPayload;\n\nmsg.payload = {};\nmsg.payload.user = \"andrespetrillo@mindbot.com.ar\";\nmsg.payload.password = \"123456\";\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 570,
+        "y": 580,
+        "wires": [
+            [
+                "540a2e70.f2a08"
+            ]
+        ]
+    },
+    {
+        "id": "540a2e70.f2a08",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Send message",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 800,
+        "y": 580,
+        "wires": [
+            [
+                "3549b9d3.c50026",
+                "e15f43a6.a84a6"
+            ]
+        ]
+    },
+    {
+        "id": "3549b9d3.c50026",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat login",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1130,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "e15f43a6.a84a6",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Get visitor info (Obtengo token)",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n//TODO: Donde guardo el userId original\n\ntry {\n    let visitorId = msg.originalPayload.userId\n    \n    msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/visitors.info?visitorId=\" + visitorId;\n    msg.headers = {};\n    \n    msg.headers['X-User-Id'] = msg.payload.data.userId;\n    msg.headers['X-Auth-Token'] = msg.payload.data.authToken;\n    //msg.headers['X-User-Id'] = \"FE33GnkPP3aQrqvSE\";\n    //msg.headers['X-Auth-Token'] = \"FKWSX-PZCggns0srIJYMJDsRI4iac5Yytasel76UD1-\";\n    \n    //Save data to Auth\n    msg.auth = {};\n    msg.auth['X-User-Id'] = msg.payload.data.userId;\n    msg.auth['X-Auth-Token'] = msg.payload.data.authToken;\n    \n    \n    \n} catch (error) {\n    node.error([\"on visitor info:\",error]);\n}\n\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1130,
+        "y": 580,
+        "wires": [
+            [
+                "daa91c80.2c8ff",
+                "7f26beef.bf05c"
+            ]
+        ]
+    },
+    {
+        "id": "daa91c80.2c8ff",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Send message",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1420,
+        "y": 580,
+        "wires": [
+            [
+                "cca520c3.654ae",
+                "bec8f559.ee2518"
+            ]
+        ]
+    },
+    {
+        "id": "cca520c3.654ae",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat visitor info",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1800,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "45b8e400.ff61fc",
+        "type": "catch",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 1590,
+        "y": 760,
+        "wires": [
+            [
+                "de1a14f9.c3e948"
+            ]
+        ]
+    },
+    {
+        "id": "de1a14f9.c3e948",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1800,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "7f26beef.bf05c",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat visitor info payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1450,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "bec8f559.ee2518",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Get config (Obtengo room)",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\nlet token = msg.payload.visitor.token\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/config?token=\" + token;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1740,
+        "y": 580,
+        "wires": [
+            [
+                "5003d2ab.542e6c"
+            ]
+        ]
+    },
+    {
+        "id": "5003d2ab.542e6c",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Get config",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1990,
+        "y": 580,
+        "wires": [
+            [
+                "1635d4b8.00c35b",
+                "eb9be5ce.7b7658"
+            ]
+        ]
+    },
+    {
+        "id": "1635d4b8.00c35b",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat room",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2210,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "eb9be5ce.7b7658",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Foward department rocket.chat",
+        "func": "//Usar id de Admin (Ver si hacemos uno o usamos el Bot)\n\ntry {\n    \n    msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/room.forward\";\n    msg.headers = {};\n    \n    msg.headers['X-User-Id'] = msg.auth['X-User-Id'];\n    msg.headers['X-Auth-Token'] = msg.auth['X-Auth-Token'];\n    //msg.headers['X-User-Id'] = \"FE33GnkPP3aQrqvSE\";\n    //msg.headers['X-Auth-Token'] = \"FKWSX-PZCggns0srIJYMJDsRI4iac5Yytasel76UD1-\";\n    \n    let originalPayload = msg.payload;\n    msg.originalPayload = originalPayload;\n    \n    msg.payload = {};\n    msg.payload.roomId = msg.originalPayload.config.room._id;\n    msg.payload.departmentId = \"C5Mcf9FX3QhLP2FE8\";\n    \n} catch (error) {\n    node.error([\"on department foward:\",error]);\n}\n\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2290,
+        "y": 580,
+        "wires": [
+            [
+                "bf472028.fdeaa"
+            ]
+        ]
+    },
+    {
+        "id": "bf472028.fdeaa",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Send message",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2560,
+        "y": 580,
+        "wires": [
+            [
+                "8b19b3bf.ff9e8",
+                "394308ea.683198"
+            ]
+        ]
+    },
+    {
+        "id": "8b19b3bf.ff9e8",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat department foward",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2850,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "394308ea.683198",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Get config (Obtengo room)",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\nlet token = msg.originalPayload.config.guest.token\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/config?token=\" + token;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2840,
+        "y": 660,
+        "wires": [
+            [
+                "6c5ed4cc.60dbfc"
+            ]
+        ]
+    },
+    {
+        "id": "6c5ed4cc.60dbfc",
+        "type": "http request",
+        "z": "7ee81df4.bfea84",
+        "name": "Get config",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3090,
+        "y": 660,
+        "wires": [
+            [
+                "254abdbb.faa042",
+                "7d44f06f.6573a"
+            ]
+        ]
+    },
+    {
+        "id": "254abdbb.faa042",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat get room (confirmation)",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3400,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "7d44f06f.6573a",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "Foward department rocket.chat",
+        "func": "//Revisar si se cambio de ROOM.\n//Si no se realizo el cambio, significa que no hay agente disponible...\nif(msg.payload.config.room._id == msg.originalPayload.config.room._id)\n{\n    return [null, msg]\n} else {\n    return [msg, null]\n}\n\n\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 3450,
+        "y": 680,
+        "wires": [
+            [
+                "bbdd5a26.a5d638",
+                "a37cb148.55392"
+            ],
+            [
+                "619743a0.1f270c",
+                "72632d21.96c8c4"
+            ]
+        ]
+    },
+    {
+        "id": "bbdd5a26.a5d638",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat room forward OK",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3790,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "72632d21.96c8c4",
+        "type": "debug",
+        "z": "7ee81df4.bfea84",
+        "name": "Rocket.chat room forward  NOT OK",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3800,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "619743a0.1f270c",
+        "type": "http response",
+        "z": "7ee81df4.bfea84",
+        "name": "",
+        "statusCode": "202",
+        "headers": {},
+        "x": 3760,
+        "y": 740,
         "wires": []
     }
 ]
