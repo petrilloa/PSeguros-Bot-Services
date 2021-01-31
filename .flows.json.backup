@@ -168,19 +168,20 @@
         "z": "7ee81df4.bfea84",
         "name": "Get visitor data",
         "method": "GET",
-        "ret": "txt",
+        "ret": "obj",
         "paytoqs": "ignore",
         "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 740,
+        "x": 820,
         "y": 200,
         "wires": [
             [
                 "7ab5d913.53ffa8",
-                "1a8a5ad7.5639c5"
+                "ea9d6124.d69fd",
+                "db404bb5.08c118"
             ]
         ]
     },
@@ -295,23 +296,6 @@
         "wires": [
             [
                 "4551ea09.6b2dc4"
-            ]
-        ]
-    },
-    {
-        "id": "1a8a5ad7.5639c5",
-        "type": "json",
-        "z": "7ee81df4.bfea84",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 950,
-        "y": 200,
-        "wires": [
-            [
-                "ea9d6124.d69fd",
-                "db404bb5.08c118"
             ]
         ]
     },
@@ -1326,19 +1310,19 @@
         "z": "7ee81df4.bfea84",
         "name": "Get visitor data",
         "method": "GET",
-        "ret": "txt",
+        "ret": "obj",
         "paytoqs": "ignore",
         "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 660,
+        "x": 740,
         "y": 780,
         "wires": [
             [
                 "1dbe982f.7899f8",
-                "e278cfeb.3cedf"
+                "dabd246d.c50d88"
             ]
         ]
     },
@@ -1347,7 +1331,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Get visitor data",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1355,8 +1339,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 860,
-        "y": 640,
+        "x": 940,
+        "y": 700,
         "wires": []
     },
     {
@@ -1455,40 +1439,6 @@
                 "229e7882.3652a8"
             ]
         ]
-    },
-    {
-        "id": "e278cfeb.3cedf",
-        "type": "json",
-        "z": "7ee81df4.bfea84",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 870,
-        "y": 780,
-        "wires": [
-            [
-                "804afec5.d858f",
-                "dabd246d.c50d88"
-            ]
-        ]
-    },
-    {
-        "id": "804afec5.d858f",
-        "type": "debug",
-        "z": "7ee81df4.bfea84",
-        "name": "Visitor data to json",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1110,
-        "y": 640,
-        "wires": []
     },
     {
         "id": "229e7882.3652a8",
@@ -1769,7 +1719,7 @@
         "type": "function",
         "z": "7ee81df4.bfea84",
         "name": "Set message",
-        "func": "//Respuesta a Whatsapp\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\nmsg.headers = {};\nmsg.headers['Authorization'] = \"App 9e66295544f076806ab9751a06f65722-dc79f206-56d4-4e42-b14a-61d60c4b36e0\";\n\n\nmsg.payload.scenarioKey = \"E1DC1DBC2BEED01B894E15AD3AEA64DA\";\nmsg.payload.destinations = [];\nmsg.payload.whatsApp = {};\n\nlet destination = {};\nlet to= {};\n\n//Nro de telefono del cliente\nto.phoneNumber = msg.payload.visitor.token;\ndestination.to = to;\n\nmsg.payload.destinations.push(destination);\n\nmsg.payload.whatsApp.text = msg.payload.messages[0].msg;\n\n\nreturn msg;",
+        "func": "//Respuesta a Whatsapp\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\nmsg.headers = {};\nmsg.headers['Authorization'] = \"App 9e66295544f076806ab9751a06f65722-dc79f206-56d4-4e42-b14a-61d60c4b36e0\";\nmsg.headers['Content-Type'] = \"application/json\";\nmsg.headers['Accept'] = \"application/json\";\n \nmsg.payload.scenarioKey = \"E1DC1DBC2BEED01B894E15AD3AEA64DA\";\nmsg.payload.destinations = [];\nmsg.payload.whatsApp = {};\n\nlet destination = {};\nlet to= {};\n\n//Nro de telefono del cliente\nto.phoneNumber = msg.payload.visitor.token;\ndestination.to = to;\n\nmsg.payload.destinations.push(destination);\n\nmsg.payload.whatsApp.text = msg.payload.messages[0].msg;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1863,8 +1813,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1630,
-        "y": 1440,
+        "x": 1470,
+        "y": 1480,
         "wires": []
     }
 ]

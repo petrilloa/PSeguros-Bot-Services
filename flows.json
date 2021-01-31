@@ -168,19 +168,20 @@
         "z": "7ee81df4.bfea84",
         "name": "Get visitor data",
         "method": "GET",
-        "ret": "txt",
+        "ret": "obj",
         "paytoqs": "ignore",
         "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 740,
+        "x": 820,
         "y": 200,
         "wires": [
             [
                 "7ab5d913.53ffa8",
-                "1a8a5ad7.5639c5"
+                "ea9d6124.d69fd",
+                "db404bb5.08c118"
             ]
         ]
     },
@@ -295,23 +296,6 @@
         "wires": [
             [
                 "4551ea09.6b2dc4"
-            ]
-        ]
-    },
-    {
-        "id": "1a8a5ad7.5639c5",
-        "type": "json",
-        "z": "7ee81df4.bfea84",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 950,
-        "y": 200,
-        "wires": [
-            [
-                "ea9d6124.d69fd",
-                "db404bb5.08c118"
             ]
         ]
     },
@@ -1271,7 +1255,7 @@
         "type": "function",
         "z": "7ee81df4.bfea84",
         "name": "New visitor Payload",
-        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/visitor#payload\n\n//Obtener datos de Telegram\nlet fullName = msg.originalMessage.results[0].contact.name;\n\n//Usar nro de telefono de WhatsApp - lo espera en String\nlet token = msg.originalMessage.results[0].from;\n\nlet visitor = {};\n\nvisitor.name = fullName;\nvisitor.token = token;\nvisitor.customFields = [];\n\n//Custom Field para informar el CANAL\nlet phone = token;\n\nvisitor.customFields.push({key:\"chanel\", value:\"whatsapp\", overwrite:true});\nvisitor.customFields.push({key:\"phone\", value:token, overwrite:true});\n\nmsg.payload = {};\nmsg.payload.visitor = visitor;\n\nreturn msg;",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/visitor#payload\n\n//Obtener datos de Telegram\nlet fullName = msg.originalMessage.results[0].contact.name;\n\n//Usar nro de telefono de WhatsApp - lo espera en String\nlet token = msg.originalMessage.results[0].from;\n\nlet visitor = {};\n\nvisitor.name = fullName;\nvisitor.token = token;\nvisitor.customFields = [];\n\n//Custom Field para informar el CANAL\nlet phone = token;\n\nvisitor.customFields.push({key:\"chanel\", value:\"whatsapp\", overwrite:true});\n//TODO: Agregar dato de BOT vs de Agente (customFields)\nvisitor.customFields.push({key:\"phone\", value:token, overwrite:true});\n\nmsg.payload = {};\nmsg.payload.visitor = visitor;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1326,19 +1310,19 @@
         "z": "7ee81df4.bfea84",
         "name": "Get visitor data",
         "method": "GET",
-        "ret": "txt",
+        "ret": "obj",
         "paytoqs": "ignore",
         "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 660,
+        "x": 740,
         "y": 780,
         "wires": [
             [
                 "1dbe982f.7899f8",
-                "e278cfeb.3cedf"
+                "dabd246d.c50d88"
             ]
         ]
     },
@@ -1347,7 +1331,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Get visitor data",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1355,8 +1339,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 860,
-        "y": 640,
+        "x": 940,
+        "y": 700,
         "wires": []
     },
     {
@@ -1455,40 +1439,6 @@
                 "229e7882.3652a8"
             ]
         ]
-    },
-    {
-        "id": "e278cfeb.3cedf",
-        "type": "json",
-        "z": "7ee81df4.bfea84",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 870,
-        "y": 780,
-        "wires": [
-            [
-                "804afec5.d858f",
-                "dabd246d.c50d88"
-            ]
-        ]
-    },
-    {
-        "id": "804afec5.d858f",
-        "type": "debug",
-        "z": "7ee81df4.bfea84",
-        "name": "Visitor data to json",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1110,
-        "y": 640,
-        "wires": []
     },
     {
         "id": "229e7882.3652a8",
