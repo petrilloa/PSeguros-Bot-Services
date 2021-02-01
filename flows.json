@@ -812,159 +812,6 @@
         "wires": []
     },
     {
-        "id": "78d11897.f01e48",
-        "type": "http response",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "statusCode": "200",
-        "headers": {},
-        "x": 3800,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "d31c7e3d.17a9e",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Rocket.chat department foward",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 2890,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "eaf54a3d.2f5cb8",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "Get config (Obtengo room)",
-        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\nlet token = msg.originalPayload.config.guest.token\n\nmsg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/config?token=\" + token;\n\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 2880,
-        "y": 340,
-        "wires": [
-            [
-                "1db5b849.9b6b48"
-            ]
-        ]
-    },
-    {
-        "id": "1db5b849.9b6b48",
-        "type": "http request",
-        "z": "7ee549ef.0fbb28",
-        "name": "Get config",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 3130,
-        "y": 340,
-        "wires": [
-            [
-                "918b3fd.a75b9c",
-                "e3d6e793.e60918"
-            ]
-        ]
-    },
-    {
-        "id": "918b3fd.a75b9c",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Rocket.chat get room (confirmation)",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 3440,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "e3d6e793.e60918",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "Foward department rocket.chat",
-        "func": "//Revisar si se cambio de ROOM.\n//Si no se realizo el cambio, significa que no hay agente disponible...\nif(msg.payload.config.room._id == msg.originalPayload.config.room._id)\n{\n    return [null, msg]\n} else {\n    return [msg, null]\n}\n\n\n\n",
-        "outputs": 2,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 3490,
-        "y": 360,
-        "wires": [
-            [
-                "e2606d6e.a64c7",
-                "78d11897.f01e48"
-            ],
-            [
-                "6ac2c572.b10c5c",
-                "31af2661.01a9ca"
-            ]
-        ]
-    },
-    {
-        "id": "e2606d6e.a64c7",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Rocket.chat room forward OK",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 3830,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "31af2661.01a9ca",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Rocket.chat room forward  NOT OK",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 3840,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "6ac2c572.b10c5c",
-        "type": "http response",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "statusCode": "202",
-        "headers": {},
-        "x": 3800,
-        "y": 420,
-        "wires": []
-    },
-    {
         "id": "426449b7.49f8b8",
         "type": "http request",
         "z": "7ee81df4.bfea84",
@@ -1597,6 +1444,52 @@
         "headers": {},
         "x": 850,
         "y": 120,
+        "wires": []
+    },
+    {
+        "id": "37ec261b.6418da",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "/getInsurances/:clientId",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 320,
+        "y": 240,
+        "wires": [
+            [
+                "861916ad.baaae8"
+            ]
+        ]
+    },
+    {
+        "id": "861916ad.baaae8",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "func": "var clientId = msg.req.params[\"clientId\"];\n\n//TODO: Servicio de provincia\n\nmsg.payload.clientId = 12345678;\nmsg.payload.insurances = [];\n\nvar today = new Date();\nvar nextweek = new Date();\nnextweek.setDate(today.getDate()+7);\n\nvar insurance = {};\ninsurance.code = 5123123;\ninsurance.ramo = 4;\ninsurance.address = \"Sarachaga 4956, CABA, Argentina\";\ninsurance.payMethod = \"Credit Card\";\ninsurance.nextPayment = nextweek;\n\nmsg.payload.insurances.push(insurance);\n\nvar insurance2 = {};\ninsurance2.code = 98734123;\ninsurance2.ramo = 8;\ninsurance2.address = \"Sarachaga 4956, CABA, Argentina\";\ninsurance2.payMethod = \"Credit Card\";\ninsurance2.nextPayment = nextweek;\n\nmsg.payload.insurances.push(insurance2);\n\nmsg.statusCode = 200;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 600,
+        "y": 240,
+        "wires": [
+            [
+                "c312c868.16aae8"
+            ]
+        ]
+    },
+    {
+        "id": "c312c868.16aae8",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 850,
+        "y": 240,
         "wires": []
     }
 ]
