@@ -1405,15 +1405,16 @@
         "type": "http in",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "url": "/getClient/:document",
+        "url": "/client:document",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 320,
+        "x": 310,
         "y": 120,
         "wires": [
             [
-                "d1b3fb17.f40ba8"
+                "d1b3fb17.f40ba8",
+                "31a42265.9745ce"
             ]
         ]
     },
@@ -1422,12 +1423,12 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "var document = msg.req.params[\"document\"];\n\n//TODO: Servicio de provincia\nif (document == \"29129613\")\n{\n    msg.payload.clientId = 12345678;\n    msg.payload.insurances = [];\n    \n    var insurance = {};\n    insurance.code = 5123123;\n    insurance.ramo = 4;\n    insurance.address = \"Sarachaga 4956, CABA, Argentina\";\n    insurance.payMethod = \"Credit Card\";\n    \n    msg.payload.insurances.push(insurance);\n    \n    msg.statusCode = 200;\n} else {\n    msg.statusCode = 404;\n}\n\n\nreturn msg;",
+        "func": "var document = msg.req.params.document;\n\n//TODO: Servicio de provincia\nif (document == \"29129613\")\n{\n    msg.payload.clientId = 12345678;\n    msg.payload.insurances = [];\n    \n    var insurance = {};\n    insurance.code = 5123123;\n    insurance.ramo = 4;\n    insurance.address = \"Sarachaga 4956, CABA, Argentina\";\n    insurance.payMethod = \"Credit Card\";\n    \n    msg.payload.insurances.push(insurance);\n    \n    msg.statusCode = 200;\n} else {\n    msg.statusCode = 404;\n}\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 610,
+        "x": 600,
         "y": 120,
         "wires": [
             [
@@ -1442,7 +1443,7 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 850,
+        "x": 830,
         "y": 120,
         "wires": []
     },
@@ -1451,7 +1452,7 @@
         "type": "http in",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "url": "/getPolicies/:clientId",
+        "url": "/insurances/:clientId",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
@@ -1488,8 +1489,484 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 850,
+        "x": 830,
         "y": 240,
         "wires": []
+    },
+    {
+        "id": "31a42265.9745ce",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "getClient",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "66fe2f7b.a21dd",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "/car/brand/:brandName",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 320,
+        "y": 340,
+        "wires": [
+            [
+                "836bf80b.747198",
+                "cd412cd6.d883"
+            ]
+        ]
+    },
+    {
+        "id": "47bf6c1.9169a94",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Marcas",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/valores/marcas/4/04100?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 610,
+        "y": 480,
+        "wires": [
+            [
+                "c1ff2f41.ce92f"
+            ]
+        ]
+    },
+    {
+        "id": "b32cf65f.ced7b8",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - brands",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "836bf80b.747198",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Marcas",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.brandName; \n\nmsg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/valores/marcas/4/04100?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n\nmsg.headers = {};\n\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiI4N2QxMGYwMy0xYWNjLTQyZDgtOGNhOC0zMTAzMzAzNmUxZjciLCJleHAiOjE2MTIyMzQ3NjAsIm5iZiI6MCwiaWF0IjoxNjEyMTk4NzYwLCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiZjRmYTFiMDktMmY0Mi00ZTRmLTg3ODgtMjViYTkwZmMzOThmIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiI4NTA0IiwidXN1YXJpb19yZWN0b3IiOiJwZXRyaWxsb2EiLCJuYW1lIjoiQW5kcmVzIFBldHJpbGxvIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicGV0cmlsbG9hQHBzZWd1cm9zLmNvbS5hciIsImxvY2FsZSI6ImVzIiwiZ2l2ZW5fbmFtZSI6IkFuZHJlcyIsImZhbWlseV9uYW1lIjoiUGV0cmlsbG8iLCJpZF9yb2xfcmVjdG9yIjoiMTAwMDEiLCJlbWFpbCI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIifQ.F6fYn5kyX_tikfMIGmNptsHzRXeb9DR36ZzYOuJSc8amKRQGDeM8HEaiR77seOToaEnb1cqBBzPO4vWmFFcy5S95veByu_u4QRGClXZPMjrWBKiXuVpwX5A0Y5ShzeGHF0zB2ZWwigJrspnbKx4MrDFrKGatDMWkhKRkJI7FrFw\";\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 380,
+        "y": 480,
+        "wires": [
+            [
+                "47bf6c1.9169a94"
+            ]
+        ]
+    },
+    {
+        "id": "c1ff2f41.ce92f",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "function Search",
+        "func": "var marcas = msg.payload;\nvar searchCriteria = msg.searchCriteria;\nvar results = [];\n\n//TODO: Funcion loca, recorrer array, o buscar alternativa\n//Aplanar json para ahcer busqueda en un nivel\n//ver fuzzyMatch\n\nmarcas.forEach(marca => {\n  if (marca.descripcion.toLowerCase().includes(searchCriteria))\n        results.push(marca);\n}) \n\nmsg.results = results;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 480,
+        "wires": [
+            [
+                "b32cf65f.ced7b8",
+                "af4b0342.00155"
+            ]
+        ]
+    },
+    {
+        "id": "cd412cd6.d883",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Car/Brand",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "af4b0342.00155",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "function Response",
+        "func": "let response = msg.results[0];\n\nmsg.payload = response;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1060,
+        "y": 480,
+        "wires": [
+            [
+                "8e7b71c6.29843"
+            ]
+        ]
+    },
+    {
+        "id": "8e7b71c6.29843",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1290,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "603fcb43.3f0794",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "/car/model/",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 600,
+        "wires": [
+            [
+                "c7925d5e.b2c4e",
+                "d5f623bc.09378"
+            ]
+        ]
+    },
+    {
+        "id": "c7925d5e.b2c4e",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Car/Model",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "d5f623bc.09378",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Modelo",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.payload.model; \n\n\nmsg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/valores/modelo/4/04100/${msg.payload.brand}/${msg.payload.year}/${msg.payload.new}?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\nmsg.headers = {};\n\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiJkYzkxMzEzZS05NTcxLTQzZWItOWQ2NC02ODJmODYwZWJjYTIiLCJleHAiOjE2MTIyMzk2MjgsIm5iZiI6MCwiaWF0IjoxNjEyMjAzNjI4LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMDY4NmI3ODktYWI4OS00ZGZiLWFmNWMtYmIzNzc2YzlhYWRmIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiI4NTA0IiwidXN1YXJpb19yZWN0b3IiOiJwZXRyaWxsb2EiLCJuYW1lIjoiQW5kcmVzIFBldHJpbGxvIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicGV0cmlsbG9hQHBzZWd1cm9zLmNvbS5hciIsImxvY2FsZSI6ImVzIiwiZ2l2ZW5fbmFtZSI6IkFuZHJlcyIsImZhbWlseV9uYW1lIjoiUGV0cmlsbG8iLCJpZF9yb2xfcmVjdG9yIjoiMTAwMDEiLCJlbWFpbCI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIifQ.kpjLc-eI2lW0oYk2KEuHuANAPbRdZfbmtRVBpc0C06LyjQF6tL3UQBHaTl3Hdb5vcxKc1Zo8g-tqfiSt3kcQEWD8b5YeWo3IXJRbXaaPnHHVvPDkMxqeMrJO65sggGOM57Li2878IjjaRZ8rtuORVIP-NX4F2eQjRnWQRU68qEQ\";\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 430,
+        "y": 700,
+        "wires": [
+            [
+                "75b05f2f.efc48"
+            ]
+        ]
+    },
+    {
+        "id": "8b524e35.de3c7",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "model",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "75b05f2f.efc48",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Modelos",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 680,
+        "y": 700,
+        "wires": [
+            [
+                "8b524e35.de3c7",
+                "764e2a97.a29284"
+            ]
+        ]
+    },
+    {
+        "id": "5b662a2a.265cc4",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "ab3a6e0d.08228",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1310,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "f90bbab4.8648b8",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "function Response",
+        "func": "let response = msg.results;\n\nmsg.payload = response;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1110,
+        "y": 700,
+        "wires": [
+            [
+                "ab3a6e0d.08228",
+                "a21a06e4.5f1a18"
+            ]
+        ]
+    },
+    {
+        "id": "84bcab1e.218388",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "/quotation",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 840,
+        "wires": [
+            [
+                "8d1f8743.53ca18"
+            ]
+        ]
+    },
+    {
+        "id": "8d1f8743.53ca18",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Modelo",
+        "func": "//Necesito un body de busqueda\n\n\n\nmsg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/cotizar?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\nmsg.headers = {};\n\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiJkYzkxMzEzZS05NTcxLTQzZWItOWQ2NC02ODJmODYwZWJjYTIiLCJleHAiOjE2MTIyMzk2MjgsIm5iZiI6MCwiaWF0IjoxNjEyMjAzNjI4LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMDY4NmI3ODktYWI4OS00ZGZiLWFmNWMtYmIzNzc2YzlhYWRmIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiI4NTA0IiwidXN1YXJpb19yZWN0b3IiOiJwZXRyaWxsb2EiLCJuYW1lIjoiQW5kcmVzIFBldHJpbGxvIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicGV0cmlsbG9hQHBzZWd1cm9zLmNvbS5hciIsImxvY2FsZSI6ImVzIiwiZ2l2ZW5fbmFtZSI6IkFuZHJlcyIsImZhbWlseV9uYW1lIjoiUGV0cmlsbG8iLCJpZF9yb2xfcmVjdG9yIjoiMTAwMDEiLCJlbWFpbCI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIifQ.kpjLc-eI2lW0oYk2KEuHuANAPbRdZfbmtRVBpc0C06LyjQF6tL3UQBHaTl3Hdb5vcxKc1Zo8g-tqfiSt3kcQEWD8b5YeWo3IXJRbXaaPnHHVvPDkMxqeMrJO65sggGOM57Li2878IjjaRZ8rtuORVIP-NX4F2eQjRnWQRU68qEQ\";\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 960,
+        "wires": [
+            [
+                "74ffacf5.281704",
+                "64a30bba.f6b394"
+            ]
+        ]
+    },
+    {
+        "id": "74ffacf5.281704",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "c13be3c5.cfa1e",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1210,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "64a30bba.f6b394",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Modelos",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 760,
+        "y": 880,
+        "wires": [
+            [
+                "c13be3c5.cfa1e"
+            ]
+        ]
+    },
+    {
+        "id": "a21a06e4.5f1a18",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "f5665931.d4a3b8",
+        "type": "inject",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "TEST!",
+        "payloadType": "str",
+        "x": 1560,
+        "y": 220,
+        "wires": [
+            [
+                "c2e9e61e.d28558"
+            ]
+        ]
+    },
+    {
+        "id": "c2e9e61e.d28558",
+        "type": "function-npm",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\nmsg.payload = {};\n\ntry {\n    // Print levenshtein-distance between 'fast' and 'faster' \nmsg.payload.distance = distance('fast', 'faster');\n//=> 2\n\n// Print string from array with lowest edit-distance to 'fast'\nmsg.payload.closest = closest('FIESTA TITANIUM', ['FIESTA  1.6 4P S              (KD) (018594)', 'FIESTA  1.6 4P TITANIUM       (KD) (018598)']);\n\n}catch (exception) {\n    node.error(\"Error\", exception)\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1770,
+        "y": 220,
+        "wires": [
+            [
+                "18b222a1.7b5e2d"
+            ]
+        ]
+    },
+    {
+        "id": "18b222a1.7b5e2d",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1950,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "764e2a97.a29284",
+        "type": "function-npm",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\ntry {\n    // Print levenshtein-distance between 'fast' and 'faster' \n    msg.payload.distance = distance('fast', 'faster');\n    //=> 2\n\n    // Print string from array with lowest edit-distance to 'fast'\n    //msg.payload.closest = closest('FIESTA TITANIUM', ['FIESTA  1.6 4P S              (KD) (018594)', 'FIESTA  1.6 4P TITANIUM       (KD) (018598)']);\n    \n    var modelos = msg.payload;\n     \n    var searchCriteriaPrincipal = msg.searchCriteria.split(\" \")[0];\n    var searchCriteria = msg.searchCriteria;\n    var preResults = [];\n    var results = [];\n    var flatened = [];\n    \n    \n    //TODO: Funcion loca, recorrer array, o buscar alternativa\n    //Aplanar json para ahcer busqueda en un nivel\n    //ver fuzzyMatch\n    //matchear similitud searchCriteria contra modelo.descripcion y\n    // pushear codigo\n    modelos.forEach(modelo => {\n      if (modelo.descripcion.toLowerCase().includes(searchCriteriaPrincipal.toLowerCase()))\n            preResults.push(modelo);\n    }) \n    \n    preResults.forEach(modeloFiltered => {\n        let dist = distance(searchCriteria, modeloFiltered.descripcion.replace(/ /g, ''));\n        results.push({dist, modeloFiltered});\n        //flatened.push(modelo.descripcion.replace(/ /g, ''));\n    })\n    \n    //var result = closest(searchCriteria, flatened);\n    //results.push(result);\n    msg.searchCriteriaPrincipal = searchCriteriaPrincipal;\n    msg.preresults = preResults;\n    msg.results = results;\n\nreturn msg;\n    \n\n}catch (exception) {\n    node.error(\"Error\", exception)\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 890,
+        "y": 700,
+        "wires": [
+            [
+                "f90bbab4.8648b8",
+                "5b662a2a.265cc4"
+            ]
+        ]
     }
 ]
