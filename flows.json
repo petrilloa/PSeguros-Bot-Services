@@ -1872,10 +1872,10 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 170,
-        "y": 2220,
+        "y": 2320,
         "wires": [
             [
-                "6572d34e.a7228c"
+                "c5d1cec7.bc8ca"
             ]
         ]
     },
@@ -1884,16 +1884,17 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros IVR",
-        "func": "let documento =  msg.payload.document\nlet policy =  msg.payload.policyNumber || \"\"\n\n\nmsg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiIxY2VjOTAzZi0yNmQ5LTRjNGEtODAyNS01ZWVmOGU1YTMzYWIiLCJleHAiOjE2MTMxNzMzMzYsIm5iZiI6MCwiaWF0IjoxNjEzMTM3MzM2LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMjUyODIzNDAtNjZkNi00N2MyLWI1YmItM2Y1ZDhhZTRkODkwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiI4NTA0IiwidXN1YXJpb19yZWN0b3IiOiJwZXRyaWxsb2EiLCJuYW1lIjoiQW5kcmVzIFBldHJpbGxvIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicGV0cmlsbG9hQHBzZWd1cm9zLmNvbS5hciIsImxvY2FsZSI6ImVzIiwiZ2l2ZW5fbmFtZSI6IkFuZHJlcyIsImZhbWlseV9uYW1lIjoiUGV0cmlsbG8iLCJpZF9yb2xfcmVjdG9yIjoiMTAwMDEiLCJlbWFpbCI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIifQ.meNYl1FuB36iYlkhRahLHbNCrfucyUD9bgrTvxiGCfWqitX-OjdRmJ51SErNsuFPqfJoEQvsgB0L7G_V46bX3tIMe38x-775mp8YEjMfZUWCPdMugKhw6aRoVUP2gANYg_-j7Lbnm_60AUZBGNJxnuaytJm0eBtRP9nr0SQGfG4\";\nreturn msg;",
+        "func": "\nlet documentNumber =  msg.payload.document;\nlet policyNumber =  msg.payload.policyNumber || \"\";\n\nmsg.url = global.get(\"psegurosNovedades_Url\") + `executeDataIVR/${documentNumber}/IVR/${policyNumber}?apiKey=` + global.get(\"psegurosApiKey\");\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 420,
-        "y": 2260,
+        "x": 480,
+        "y": 2460,
         "wires": [
             [
-                "b8569a93.019928"
+                "b8569a93.019928",
+                "933b4555.345a68"
             ]
         ]
     },
@@ -1904,15 +1905,15 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1190,
-        "y": 2260,
+        "x": 1210,
+        "y": 2460,
         "wires": []
     },
     {
         "id": "256ebbeb.6c7f14",
         "type": "debug",
         "z": "7ee549ef.0fbb28",
-        "name": "",
+        "name": "Policies IVR Response",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1921,8 +1922,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 870,
-        "y": 2180,
+        "x": 960,
+        "y": 2360,
         "wires": []
     },
     {
@@ -1938,8 +1939,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 680,
-        "y": 2260,
+        "x": 700,
+        "y": 2460,
         "wires": [
             [
                 "256ebbeb.6c7f14",
@@ -1991,8 +1992,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 940,
-        "y": 2260,
+        "x": 960,
+        "y": 2460,
         "wires": [
             [
                 "53534f2b.1672c",
@@ -2010,11 +2011,11 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 180,
-        "y": 2440,
+        "y": 2000,
         "wires": [
             [
-                "8fe61422.c12f48",
-                "3bea474a.346988"
+                "3bea474a.346988",
+                "36cc2d19.eb9782"
             ]
         ]
     },
@@ -2023,13 +2024,13 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros Inspeccion",
-        "func": "msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-INSPECCION/2.0/solicitarIpConCotizacion?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiIxY2VjOTAzZi0yNmQ5LTRjNGEtODAyNS01ZWVmOGU1YTMzYWIiLCJleHAiOjE2MTMxNzMzMzYsIm5iZiI6MCwiaWF0IjoxNjEzMTM3MzM2LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMjUyODIzNDAtNjZkNi00N2MyLWI1YmItM2Y1ZDhhZTRkODkwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiI4NTA0IiwidXN1YXJpb19yZWN0b3IiOiJwZXRyaWxsb2EiLCJuYW1lIjoiQW5kcmVzIFBldHJpbGxvIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicGV0cmlsbG9hQHBzZWd1cm9zLmNvbS5hciIsImxvY2FsZSI6ImVzIiwiZ2l2ZW5fbmFtZSI6IkFuZHJlcyIsImZhbWlseV9uYW1lIjoiUGV0cmlsbG8iLCJpZF9yb2xfcmVjdG9yIjoiMTAwMDEiLCJlbWFpbCI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIifQ.meNYl1FuB36iYlkhRahLHbNCrfucyUD9bgrTvxiGCfWqitX-OjdRmJ51SErNsuFPqfJoEQvsgB0L7G_V46bX3tIMe38x-775mp8YEjMfZUWCPdMugKhw6aRoVUP2gANYg_-j7Lbnm_60AUZBGNJxnuaytJm0eBtRP9nr0SQGfG4\";\n\nlet bodyQuery = {};\n\n\nbodyQuery.nroCotizacion = msg.payload.nroCotizacion;\nbodyQuery.patente = msg.payload.patente;\nbodyQuery.productorEmail = msg.payload.productorEmail;\nbodyQuery.apellidoCliente = msg.payload.apellidoCliente;\nbodyQuery.nombreCliente = msg.payload.nombreCliente;\nbodyQuery.telefonoCliente = \"\";\nbodyQuery.celularCliente = \"\";\nbodyQuery.emailCliente = msg.payload.emailCliente;\n\nmsg.payload = bodyQuery;\n\nreturn msg;",
+        "func": "//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-INSPECCION/2.0/solicitarIpConCotizacion?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\nmsg.url = global.get(\"psegurosInspeccion_Url\") + `solicitarIpConCotizacion?apikey=` + global.get(\"psegurosApiKey\");\n\nlet bodyQuery = {};\n\nbodyQuery.nroCotizacion = msg.payload.quotation;\nbodyQuery.patente = msg.payload.licencePlate;\nbodyQuery.productorEmail = msg.payload.brokerEmail;\nbodyQuery.apellidoCliente = msg.payload.clientLastName;\nbodyQuery.nombreCliente = msg.payload.clientName;\nbodyQuery.telefonoCliente =  \"\";\nbodyQuery.celularCliente =  msg.payload.clientPhone;\nbodyQuery.emailCliente = msg.payload.clientEmail;\n\nmsg.payload = bodyQuery;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 460,
-        "y": 2500,
+        "x": 480,
+        "y": 2100,
         "wires": [
             [
                 "a6e8b3bb.9ef56",
@@ -2045,7 +2046,7 @@
         "statusCode": "",
         "headers": {},
         "x": 1270,
-        "y": 2500,
+        "y": 2060,
         "wires": []
     },
     {
@@ -2062,7 +2063,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 950,
-        "y": 2420,
+        "y": 1980,
         "wires": []
     },
     {
@@ -2079,7 +2080,7 @@
         "proxy": "",
         "authType": "",
         "x": 780,
-        "y": 2500,
+        "y": 2060,
         "wires": [
             [
                 "d90165e9.7fc688",
@@ -2098,7 +2099,7 @@
         "initialize": "",
         "finalize": "",
         "x": 1020,
-        "y": 2500,
+        "y": 2060,
         "wires": [
             [
                 "a24b04cf.76cef8"
@@ -2109,7 +2110,7 @@
         "id": "38162b28.1e2a74",
         "type": "debug",
         "z": "7ee549ef.0fbb28",
-        "name": "",
+        "name": "Policies IVR Client Response",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -2118,8 +2119,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1160,
-        "y": 2180,
+        "x": 1250,
+        "y": 2380,
         "wires": []
     },
     {
@@ -2136,7 +2137,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 690,
-        "y": 2380,
+        "y": 1940,
         "wires": []
     },
     {
@@ -2153,7 +2154,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 420,
-        "y": 2380,
+        "y": 1940,
         "wires": []
     },
     {
@@ -2178,15 +2179,15 @@
         "type": "http in",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "url": "/emission",
+        "url": "/emision",
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 180,
-        "y": 2020,
+        "x": 170,
+        "y": 1700,
         "wires": [
             [
-                "813504a.1ee2af8"
+                "e1ca547c.50aa78"
             ]
         ]
     },
@@ -2195,13 +2196,13 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Emision",
-        "func": "\nmsg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/1.1/emitir?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiIxY2VjOTAzZi0yNmQ5LTRjNGEtODAyNS01ZWVmOGU1YTMzYWIiLCJleHAiOjE2MTMxNzMzMzYsIm5iZiI6MCwiaWF0IjoxNjEzMTM3MzM2LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMjUyODIzNDAtNjZkNi00N2MyLWI1YmItM2Y1ZDhhZTRkODkwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiI4NTA0IiwidXN1YXJpb19yZWN0b3IiOiJwZXRyaWxsb2EiLCJuYW1lIjoiQW5kcmVzIFBldHJpbGxvIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicGV0cmlsbG9hQHBzZWd1cm9zLmNvbS5hciIsImxvY2FsZSI6ImVzIiwiZ2l2ZW5fbmFtZSI6IkFuZHJlcyIsImZhbWlseV9uYW1lIjoiUGV0cmlsbG8iLCJpZF9yb2xfcmVjdG9yIjoiMTAwMDEiLCJlbWFpbCI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIifQ.meNYl1FuB36iYlkhRahLHbNCrfucyUD9bgrTvxiGCfWqitX-OjdRmJ51SErNsuFPqfJoEQvsgB0L7G_V46bX3tIMe38x-775mp8YEjMfZUWCPdMugKhw6aRoVUP2gANYg_-j7Lbnm_60AUZBGNJxnuaytJm0eBtRP9nr0SQGfG4\";\nmsg.headers['Content-type'] = \"application/json\";\n\nlet quotation = msg.payload.quotation;\nlet plan = msg.payload.plan;\n\nlet documento = msg.payload.documento;\nlet name = msg.payload.name;\nlet lastName = msg.payload.lastName;\nlet gender = msg.payload.gender;\nlet birthDate = msg.payload.birthDate;\nlet birthPlace = msg.payload.birthPlace;\nlet civilStatus = msg.payload.civilStatus;\nlet zipCode = msg.payload.zipCode;\nlet province = msg.payload.province;\nlet location = msg.payload.locacion;\nlet street = msg.payload.street;\nlet nmoStreet = msg.payload.nmoStreet;\nlet floor = msg.payload.floor;\nlet departament = msg.payload.departament;\nlet phone = msg.payload.phone;\nlet email = msg.payload.email;\n\nlet patent = msg.payload.patent;\nlet nmoChasis = msg.payload.nmoChasis;\nlet nmoMotor = msg.payload.nmoMotor;\n\nlet bodyEmision = {};\n\nbodyEmision.cotizacion = quotation;\nbodyEmision.plan = plan;\nbodyEmision.promocion = \"NOAP\";\nbodyEmision.medioDePago  = \"2\";\nbodyEmision.origenDePago  = \"VISO\";\n\nbodyEmision.datosTomador = {};\nbodyEmision.datosTomador.tipoDocumento = \"DNI\";\nbodyEmision.datosTomador.documento = documento;\nbodyEmision.datosTomador.cuitCuil = \"\";\nbodyEmision.datosTomador.apellido = lastName;\nbodyEmision.datosTomador.nombre = name\nbodyEmision.datosTomador.genero = gender;\nbodyEmision.datosTomador.fechaNacimiento = birthDate;\nbodyEmision.datosTomador.pais = \"2\";\nbodyEmision.datosTomador.lugarNacimiento = birthPlace;\nbodyEmision.datosTomador.estadoCivil = civilStatus;\nbodyEmision.datosTomador.profesion = \"100\";\nbodyEmision.datosTomador.expuestoPoliticamente = \"N\";\nbodyEmision.datosTomador.sujetoObligadoArt230 = \"N\";\nbodyEmision.datosTomador.observaciones = \"\";\nbodyEmision.datosTomador.codigoPostal = zipCode;\nbodyEmision.datosTomador.provincia = province;\nbodyEmision.datosTomador.localidad = location;\nbodyEmision.datosTomador.calle = street;\nbodyEmision.datosTomador.numero = nmoStreet;\nbodyEmision.datosTomador.piso = floor;\nbodyEmision.datosTomador.departamento = departament;\nbodyEmision.datosTomador.telefono = \"\";\nbodyEmision.datosTomador.email = \"\";\nbodyEmision.datosTomador.datosBancarios = \"4509953566233704\";\n\nbodyEmision.bien = {};\nbodyEmision.bien['40023_patente'] = patent;\nbodyEmision.bien['40004_numeroChasis'] = nmoChasis;\nbodyEmision.bien['40005_numeroMotor'] = nmoMotor;\nbodyEmision.bien['40080_acreditaDominio'] = \"N\";\nbodyEmision.bien['40210_poseeEquipoGas'] = \"N\";\nbodyEmision.bien['40006_numeroReguladorGNC'] = \"\";\nbodyEmision.bien['40010_alcance'] = \"I\";\nbodyEmision.bien['40009_jurisdiccion'] = \"JN\";\nbodyEmision.bien['40011_tipoServicio'] = \"EJ\";\nbodyEmision.bien['40115_nroInscripcionAseguradoRuta'] = \"\";\nbodyEmision.bien['40084_grupoAfinidad'] = \"20\";\nbodyEmision.bien['16015_fechaNacDDmmaaaa'] = \"01051980\";\n\n\nbodyEmision.accesorios = [];\nbodyEmision.textos = [];\n\n\n\n\n\nmsg.payload = bodyEmision;\n\nreturn msg;\n",
+        "func": "//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/1.1/emitir?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosEmision_Url\") + `emitir?apikey=` + global.get(\"psegurosApiKey\");\n\nlet quotation = msg.payload.quotation;\nlet plan = msg.payload.plan;\n\nlet document = msg.payload.document;\nlet name = msg.payload.name.toUpperCase();\nlet lastName = msg.payload.lastName.toUpperCase();\nlet gender = msg.payload.gender.toUpperCase();\nlet birthDate = msg.payload.birthDate;\nlet birthPlace = msg.payload.birthPlace;\nlet civilStatus = msg.payload.civilStatus.toUpperCase();\nlet zipCode = msg.payload.zipCode;\nlet state = msg.payload.state;\nlet location = msg.payload.locacion;\nlet street = msg.payload.street.toUpperCase();\nlet streetNumber = msg.payload.streetNumber;\nlet floor = msg.payload.floor;\nlet departament = msg.payload.departament;\nlet phone = msg.payload.phone;\nlet email = msg.payload.email;\nlet creditCard = msg.payload.creditCard;\n\nlet licencePlate = msg.payload.licencePlate;\nlet chasis = msg.payload.chasis;\nlet motor = msg.payload.motor;\n\nlet bodyEmision = {};\n\nbodyEmision.cotizacion = quotation;\nbodyEmision.plan = plan;\nbodyEmision.promocion = \"CLIFIN\";\nbodyEmision.medioDePago  = \"2\";\nbodyEmision.origenDePago  = \"VISO\";\n\nbodyEmision.datosTomador = {};\nbodyEmision.datosTomador.tipoDocumento = \"DNI\";\nbodyEmision.datosTomador.documento = document;\nbodyEmision.datosTomador.cuitCuil = \"\";\nbodyEmision.datosTomador.apellido = lastName;\nbodyEmision.datosTomador.nombre = name\nbodyEmision.datosTomador.genero = gender;\nbodyEmision.datosTomador.fechaNacimiento = birthDate;\nbodyEmision.datosTomador.pais = \"2\";\nbodyEmision.datosTomador.lugarNacimiento = birthPlace;\nbodyEmision.datosTomador.estadoCivil = civilStatus;\nbodyEmision.datosTomador.profesion = \"100\";\nbodyEmision.datosTomador.expuestoPoliticamente = \"N\";\nbodyEmision.datosTomador.sujetoObligadoArt230 = \"N\";\nbodyEmision.datosTomador.observaciones = \"\";\nbodyEmision.datosTomador.codigoPostal = zipCode;\nbodyEmision.datosTomador.provincia = state;\nbodyEmision.datosTomador.localidad = location;\nbodyEmision.datosTomador.calle = street;\nbodyEmision.datosTomador.numero = streetNumber;\nbodyEmision.datosTomador.piso = floor;\nbodyEmision.datosTomador.departamento = departament;\nbodyEmision.datosTomador.telefono = phone;\nbodyEmision.datosTomador.email = email;\nbodyEmision.datosTomador.datosBancarios = creditCard;\n\n//\"4509953566233704\"\n\nbodyEmision.bien = {};\nbodyEmision.bien['40023_patente'] = licencePlate;\nbodyEmision.bien['40004_numeroChasis'] = chasis;\nbodyEmision.bien['40005_numeroMotor'] = motor;\nbodyEmision.bien['40080_acreditaDominio'] = \"N\";\nbodyEmision.bien['40210_poseeEquipoGas'] = \"N\";\nbodyEmision.bien['40006_numeroReguladorGNC'] = \"\";\nbodyEmision.bien['40010_alcance'] = \"I\";\nbodyEmision.bien['40009_jurisdiccion'] = \"JN\";\nbodyEmision.bien['40011_tipoServicio'] = \"EJ\";\nbodyEmision.bien['40115_nroInscripcionAseguradoRuta'] = \"\";\nbodyEmision.bien['40084_grupoAfinidad'] = \"20\";\nbodyEmision.bien['16015_fechaNacDDmmaaaa'] = \"01051980\";\n\n\nbodyEmision.accesorios = [];\nbodyEmision.textos = [];\n\n\nmsg.payload = bodyEmision;\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 450,
-        "y": 2060,
+        "x": 470,
+        "y": 1820,
         "wires": [
             [
                 "acd09e8a.37169",
@@ -2215,15 +2216,15 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "method": "POST",
-        "ret": "txt",
+        "ret": "obj",
         "paytoqs": "ignore",
         "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 670,
-        "y": 2060,
+        "x": 710,
+        "y": 1820,
         "wires": [
             [
                 "1e56fd9d.d8ff22",
@@ -2238,8 +2239,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1170,
-        "y": 2060,
+        "x": 1190,
+        "y": 1820,
         "wires": []
     },
     {
@@ -2247,13 +2248,13 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "let result = JSON.parse(msg.payload)\n\nmsg.payload = result\n\nreturn msg;",
+        "func": "//Nothing to do\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 940,
-        "y": 2060,
+        "x": 960,
+        "y": 1820,
         "wires": [
             [
                 "d38f3260.929eb"
@@ -2273,8 +2274,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 880,
-        "y": 1960,
+        "x": 900,
+        "y": 1720,
         "wires": []
     },
     {
@@ -2289,8 +2290,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 650,
-        "y": 1940,
+        "x": 670,
+        "y": 1700,
         "wires": []
     },
     {
@@ -2419,15 +2420,15 @@
         "type": "http in",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "url": "/queryQuotation",
-        "method": "post",
+        "url": "/quotationInfo",
+        "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 200,
+        "x": 190,
         "y": 2580,
         "wires": [
             [
-                "5342c60e.c1b318"
+                "8aacdae.daa4628"
             ]
         ]
     },
@@ -2445,7 +2446,7 @@
         "proxy": "",
         "authType": "",
         "x": 730,
-        "y": 2620,
+        "y": 2680,
         "wires": [
             [
                 "6ace3d17.8c65e4"
@@ -2459,8 +2460,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1230,
-        "y": 2620,
+        "x": 1210,
+        "y": 2680,
         "wires": []
     },
     {
@@ -2468,13 +2469,13 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PS Info Cotizacion",
-        "func": "\nlet nmoQuotation = msg.payload.nmoQuotation\n\nmsg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/infoCotizacion/${nmoQuotation}?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiI2MDY3YmY5Zi1kNGZmLTQ3MDItYjE2ZC00ZDM2MDYzYTc3MWEiLCJleHAiOjE2MTMyNTg2OTQsIm5iZiI6MCwiaWF0IjoxNjEzMjIyNjk0LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNTljYjMzNzMtOThjYi00Mzc5LThmMmItNjUwYzNmYzI1OTA2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiIxNTkyNSIsInVzdWFyaW9fcmVjdG9yIjoicGV0cmlsbG9hIiwibmFtZSI6IkFuZHJlcyBQZXRyaWxsbyIsInByZWZlcnJlZF91c2VybmFtZSI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIiLCJsb2NhbGUiOiJlcyIsImdpdmVuX25hbWUiOiJBbmRyZXMiLCJmYW1pbHlfbmFtZSI6IlBldHJpbGxvIiwiaWRfcm9sX3JlY3RvciI6IjEwMDAxIiwiZW1haWwiOiJwZXRyaWxsb2FAcHNlZ3Vyb3MuY29tLmFyIn0.jW0jTcTcTxurjbXfGQNy5ZCkBzWZTAdzMuHGAKNzZ95O-McxxHf8nfYggiQaOvGb7p0VtJC6o5AQp5j48lArgOUI9iQEDf78C9hvd_gnFjdRl34XiWIfswAzF1sTKKSyzUWFs2IaEN0b3tSS5SG3G0llpqCHhjJjgQv30JNXzRQ\";\n\nreturn msg;",
+        "func": "\nlet quotation = msg.payload.quotation\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/infoCotizacion/${nmoQuotation}?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\nmsg.url = global.get(\"psegurosNovedades_Url\") + `infoCotizacion/${quotation}?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 470,
-        "y": 2620,
+        "x": 510,
+        "y": 2680,
         "wires": [
             [
                 "2097540b.c944ec"
@@ -2491,8 +2492,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1000,
-        "y": 2620,
+        "x": 980,
+        "y": 2680,
         "wires": [
             [
                 "b5a56a51.4a6478"
@@ -2504,15 +2505,15 @@
         "type": "http in",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "url": "/pdf",
+        "url": "/policyPdf",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 140,
+        "x": 160,
         "y": 2800,
         "wires": [
             [
-                "86dfb8be.57c858"
+                "79ff224d.84637c"
             ]
         ]
     },
@@ -2522,7 +2523,7 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "method": "GET",
-        "ret": "txt",
+        "ret": "bin",
         "paytoqs": "query",
         "url": "",
         "tls": "",
@@ -2533,7 +2534,8 @@
         "y": 2880,
         "wires": [
             [
-                "3528872b.93cb08"
+                "3528872b.93cb08",
+                "bac50ef5.1d45e"
             ]
         ]
     },
@@ -2553,12 +2555,12 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PS Poliza en PDF",
-        "func": "let nmoEmission =  msg.payload.nmoEmission\n\n\nmsg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${nmoEmission}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.headers = {};\nmsg.headers['Authorization'] = \"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGSjg2R2NGM2pUYk5MT2NvNE52WmtVQ0lVbWZZQ3FvcXRPUWVNZmJoTmxFIn0.eyJqdGkiOiI2MDY3YmY5Zi1kNGZmLTQ3MDItYjE2ZC00ZDM2MDYzYTc3MWEiLCJleHAiOjE2MTMyNTg2OTQsIm5iZiI6MCwiaWF0IjoxNjEzMjIyNjk0LCJpc3MiOiJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgvcmVhbG1zL3BzIiwiYXVkIjoicHMyIiwic3ViIjoiZmI3ZDIzMjMtMThkZi00NWY1LTkyZGItYTU3YWRkNWI5M2VmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHMyIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNTljYjMzNzMtOThjYi00Mzc5LThmMmItNjUwYzNmYzI1OTA2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJodHRwczovL2F1dGh0LnByb3ZpbmNpYXNlZ3Vyb3MuY29tLmFyL2F1dGgiLCJodHRwOi8vbG9jYWxob3N0OjgwODEiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcGl1c2VyIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicHMyLXRlc3QiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBvcnRhbC1wYXMiOnsicm9sZXMiOlsiMDA3OlJvbCBGdWxsIFVzZXIiXX0sInBzLWNvdGl6YWNpb24iOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sInBzLXBsIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwcy1lbWlzaW9uIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJwczIiOnsicm9sZXMiOlsicHMyRW1pc2lvbiIsInBzMkNvdGl6YWNpb24iLCJ1bWFfcHJvdGVjdGlvbiIsInBzMmluc3BlY2Npb24iLCJwc1phbWJhVXRpbCJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjb2RpZ29Qcm9kdWN0b3IiOiIxNTkyNSIsInVzdWFyaW9fcmVjdG9yIjoicGV0cmlsbG9hIiwibmFtZSI6IkFuZHJlcyBQZXRyaWxsbyIsInByZWZlcnJlZF91c2VybmFtZSI6InBldHJpbGxvYUBwc2VndXJvcy5jb20uYXIiLCJsb2NhbGUiOiJlcyIsImdpdmVuX25hbWUiOiJBbmRyZXMiLCJmYW1pbHlfbmFtZSI6IlBldHJpbGxvIiwiaWRfcm9sX3JlY3RvciI6IjEwMDAxIiwiZW1haWwiOiJwZXRyaWxsb2FAcHNlZ3Vyb3MuY29tLmFyIn0.jW0jTcTcTxurjbXfGQNy5ZCkBzWZTAdzMuHGAKNzZ95O-McxxHf8nfYggiQaOvGb7p0VtJC6o5AQp5j48lArgOUI9iQEDf78C9hvd_gnFjdRl34XiWIfswAzF1sTKKSyzUWFs2IaEN0b3tSS5SG3G0llpqCHhjJjgQv30JNXzRQ\";\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n */\nNumber(msg.payload.nmoEmission)\n\nreturn msg;",
+        "func": "let policy =  msg.payload.policy\n\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n \nNumber(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdf/1/4/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 470,
+        "x": 490,
         "y": 2880,
         "wires": [
             [
@@ -2589,13 +2591,13 @@
         "id": "6c884f54.5fd49",
         "type": "debug",
         "z": "7ee549ef.0fbb28",
-        "name": "",
+        "name": "Policy PDF",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
         "x": 700,
@@ -4276,5 +4278,407 @@
                 "aac3000e.0ca9c"
             ]
         ]
+    },
+    {
+        "id": "e1ca547c.50aa78",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 220,
+        "y": 1780,
+        "wires": [
+            [
+                "813504a.1ee2af8"
+            ]
+        ]
+    },
+    {
+        "id": "36cc2d19.eb9782",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 260,
+        "y": 2060,
+        "wires": [
+            [
+                "8fe61422.c12f48"
+            ]
+        ]
+    },
+    {
+        "id": "c5d1cec7.bc8ca",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 260,
+        "y": 2400,
+        "wires": [
+            [
+                "6572d34e.a7228c"
+            ]
+        ]
+    },
+    {
+        "id": "933b4555.345a68",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Policies IVR",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 2360,
+        "wires": []
+    },
+    {
+        "id": "8aacdae.daa4628",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 260,
+        "y": 2660,
+        "wires": [
+            [
+                "5342c60e.c1b318"
+            ]
+        ]
+    },
+    {
+        "id": "79ff224d.84637c",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 260,
+        "y": 2880,
+        "wires": [
+            [
+                "86dfb8be.57c858"
+            ]
+        ]
+    },
+    {
+        "id": "bac50ef5.1d45e",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Policy PDF Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 2800,
+        "wires": []
+    },
+    {
+        "id": "8be7f667.b7e4c8",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "nationality/:nationalityName",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 3120,
+        "wires": [
+            [
+                "7461e69d.1aab78",
+                "15527054.0c6a9"
+            ]
+        ]
+    },
+    {
+        "id": "6caed24d.01950c",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Nacionalidades",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 580,
+        "y": 3280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5688af64.2d693",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1010,
+        "y": 3240,
+        "wires": []
+    },
+    {
+        "id": "7461e69d.1aab78",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 3100,
+        "wires": []
+    },
+    {
+        "id": "f60b7fa9.ce42f",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 3100,
+        "wires": []
+    },
+    {
+        "id": "17d2192c.59b007",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Nationalities",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.nationalityName; \n\n//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/datosGenerales/provincias/4/04100?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n//msg.url = global.get(\"psegurosCotizacion_Url\") + `datosGenerales/provincias/4/04100?apikey=` + global.get(\"psegurosApiKey\");\n\n//TODO:!\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 250,
+        "y": 3240,
+        "wires": [
+            [
+                "2b10a996.686f46"
+            ]
+        ]
+    },
+    {
+        "id": "2b10a996.686f46",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "response",
+        "func": "//TODO: TEMPORAL hasta tener servicio\nvar resultTemp = [];\nresultTemp.push({codigo:\"1\", descripcion:\"ARGENTINA\"});\n\nmsg.payload = resultTemp\n\nreturn msg;\n\n//TODO: Reemplazar\n\nlet nationalities = msg.payload\nvar searchCriteria = msg.searchCriteria;\nvar result = [];\n\nnationalities.forEach(nationality => {\n  if (nationality.descripcion.toLowerCase().includes(searchCriteria.toLowerCase()))\n        result.push(nationality);\n}) \n\n\nmsg.payload = result\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 840,
+        "y": 3240,
+        "wires": [
+            [
+                "5688af64.2d693",
+                "a6931131.fd1c9"
+            ]
+        ]
+    },
+    {
+        "id": "15527054.0c6a9",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 200,
+        "y": 3180,
+        "wires": [
+            [
+                "17d2192c.59b007"
+            ]
+        ]
+    },
+    {
+        "id": "a6931131.fd1c9",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Nationalities OUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1230,
+        "y": 3140,
+        "wires": []
+    },
+    {
+        "id": "c65794d2.f63f18",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "location/:locationName",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 3380,
+        "wires": [
+            [
+                "a0db1b30.fbef68",
+                "f0b50084.443aa"
+            ]
+        ]
+    },
+    {
+        "id": "ec9235f3.484eb8",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Localidades",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 550,
+        "y": 3540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d40757fd.b1bfa8",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1010,
+        "y": 3500,
+        "wires": []
+    },
+    {
+        "id": "a0db1b30.fbef68",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 3360,
+        "wires": []
+    },
+    {
+        "id": "82fe31ec.c1909",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 3360,
+        "wires": []
+    },
+    {
+        "id": "7ba244c.36851bc",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PSeguros - Nationalities",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.locationName; \n\n//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/datosGenerales/provincias/4/04100?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n//msg.url = global.get(\"psegurosCotizacion_Url\") + `datosGenerales/provincias/4/04100?apikey=` + global.get(\"psegurosApiKey\");\n\n//TODO:!\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 250,
+        "y": 3500,
+        "wires": [
+            [
+                "b5150a60.eda5b8"
+            ]
+        ]
+    },
+    {
+        "id": "b5150a60.eda5b8",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "response",
+        "func": "//TODO: TEMPORAL hasta tener servicio\nvar resultTemp = [];\nresultTemp.push({codigo:\"1\", descripcion:\"CABA\"});\n\nmsg.payload = resultTemp\n\nreturn msg;\n\n//TODO: Reemplazar\n\nlet locations = msg.payload\nvar searchCriteria = msg.searchCriteria;\nvar result = [];\n\nlocations.forEach(location => {\n  if (location.descripcion.toLowerCase().includes(searchCriteria.toLowerCase()))\n        result.push(location);\n}) \n\n\nmsg.payload = result\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 840,
+        "y": 3500,
+        "wires": [
+            [
+                "d40757fd.b1bfa8",
+                "4f32083.a11def8"
+            ]
+        ]
+    },
+    {
+        "id": "f0b50084.443aa",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 200,
+        "y": 3440,
+        "wires": [
+            [
+                "7ba244c.36851bc"
+            ]
+        ]
+    },
+    {
+        "id": "4f32083.a11def8",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Nationalities OUT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1230,
+        "y": 3400,
+        "wires": []
     }
 ]
