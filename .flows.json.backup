@@ -1739,8 +1739,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 3350,
-        "y": 1260,
+        "x": 3610,
+        "y": 1280,
         "wires": []
     },
     {
@@ -1848,7 +1848,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "response",
-        "func": "var year = msg.year;\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n};\n    // pusheo los planes que corresponden segun la antiguedad\n    if (year >= 2011 && year <= 2021){\n        info.planes.push(msg.payload.planes[2])\n        info.planes.push(msg.payload.planes[10])\n        info.planes.push(msg.payload.planes[12])\n        \n    } else if (year >= 2007 && year <= 2010 ) {\n         info.planes.push(msg.payload.planes[0])\n         info.planes.push(msg.payload.planes[1])\n         info.planes.push(msg.payload.planes[2])\n    } else if (year >= 2001 && year <=2006){\n        msg.payload.planes.forEach(plan =>{\n            info.planes.push(plan)\n        })\n    } else if (year <=2000 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    msg.payload = info \n}\n\n\n\nreturn msg;",
+        "func": "var year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n        \n        info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n        \n    } else if (yearDiff >= 11 && year <= 14 ) {\n        info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n    } else if (yearDiff >= 15 && yearDiff <=20){\n         info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"Responsabilidad Civil\");\n        plan_1.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_1.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"Responsabilidad Civil\");\n        plan_2.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_2.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    \n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    \n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_22.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_22.coberturas.push(\"Daños por granizo\");\n        plan_22.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_22.coberturas.push(\"Daño parcial por robo total\");\n        plan_22.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_22.coberturas.push(\"Robo Hurto/Incendio total.\");\n        plan_22.coberturas.push(\"Responsabilidad Civil\");\n        plan_22.coberturas.push(\"Daño total por accidente\");\n        plan_22.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_22.coberturas.push(\"Asistencia al vehiculo\");\n        plan_22.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_22.coberturas.push(\"Cambio de llaves por RT\");\n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    \n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"Todo riesgo fci variable\");\n        plan_50.coberturas.push(\"Talleres autorizados\");\n        plan_50.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_50.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_50.coberturas.push(\"Cambio de llaves por RT\");\n        plan_50.coberturas.push(\"Choque entre asegurados\");\n        plan_50.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_50.coberturas.push(\"Daño parcial por robo total\");\n        plan_50.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_50.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_50.coberturas.push(\"Daños por granizo\");\n        plan_50.coberturas.push(\"Asistencia al vehiculo\");\n        plan_50.coberturas.push(\"Responsabilidad Civil\");\n        plan_50.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_50.coberturas.push(\"Daño total por accidente\");\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    \n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_41.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_41.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_41.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_41.coberturas.push(\"Daños por granizo\");\n        plan_41.coberturas.push(\"Cambio de llaves por RT\");\n        plan_41.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_41.coberturas.push(\"Choque entre asegurados\");\n        plan_41.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_41.coberturas.push(\"Daño parcial por robo total\");\n        plan_41.coberturas.push(\"Robo hurto/incendio total\");\n        plan_41.coberturas.push(\"Asistencia al vehiculo\");\n        plan_41.coberturas.push(\"Daño total por accidente\");\n        plan_41.coberturas.push(\"Responsabilidad Civil\");\n        plan_41.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    \n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    \n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    \n    msg.payload = info \n}\n\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1859,92 +1859,6 @@
             [
                 "5a1325f8.9dc51c",
                 "d7a989ad.2106c8"
-            ]
-        ]
-    },
-    {
-        "id": "e22c6966.0c6c78",
-        "type": "http in",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "url": "policies",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 150,
-        "y": 2580,
-        "wires": [
-            [
-                "c5d1cec7.bc8ca"
-            ]
-        ]
-    },
-    {
-        "id": "6572d34e.a7228c",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "PSeguros IVR",
-        "func": "\nlet documentNumber =  msg.payload.document;\nlet policyNumber =  msg.payload.policyNumber || \"\";\n\nmsg.url = global.get(\"psegurosNovedades_Url\") + `executeDataIVR/${documentNumber}/IVR/${policyNumber}?apiKey=` + global.get(\"psegurosApiKey\");\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 460,
-        "y": 2720,
-        "wires": [
-            [
-                "b8569a93.019928",
-                "933b4555.345a68"
-            ]
-        ]
-    },
-    {
-        "id": "53534f2b.1672c",
-        "type": "http response",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "statusCode": "",
-        "headers": {},
-        "x": 1190,
-        "y": 2720,
-        "wires": []
-    },
-    {
-        "id": "256ebbeb.6c7f14",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Policies IVR Response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 940,
-        "y": 2620,
-        "wires": []
-    },
-    {
-        "id": "b8569a93.019928",
-        "type": "http request",
-        "z": "7ee549ef.0fbb28",
-        "name": "PSeguros IVR",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 680,
-        "y": 2720,
-        "wires": [
-            [
-                "256ebbeb.6c7f14",
-                "4539cac6.a0aa64"
             ]
         ]
     },
@@ -1981,25 +1895,6 @@
         "x": 1360,
         "y": 1080,
         "wires": []
-    },
-    {
-        "id": "4539cac6.a0aa64",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "response",
-        "func": "let policiesAndMenssage = {}\n\n\nif ( msg.payload.data.Polizas === undefined ){\n    policiesAndMenssage = msg.payload.data.Mensaje\n}else if ( msg.payload.data.Polizas.length >= 1 ){\n    policiesAndMenssage = msg.payload.data\n}else {\n    policiesAndMenssage = msg.payload.data\n}\n\n\n\n \n\n\nmsg.payload = policiesAndMenssage;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 940,
-        "y": 2720,
-        "wires": [
-            [
-                "53534f2b.1672c",
-                "38162b28.1e2a74"
-            ]
-        ]
     },
     {
         "id": "4a21ff30.78cab",
@@ -2105,23 +2000,6 @@
                 "a24b04cf.76cef8"
             ]
         ]
-    },
-    {
-        "id": "38162b28.1e2a74",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Policies IVR Client Response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1230,
-        "y": 2640,
-        "wires": []
     },
     {
         "id": "dd96a3bc.5c619",
@@ -2446,8 +2324,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 710,
-        "y": 2940,
+        "x": 690,
+        "y": 2920,
         "wires": [
             [
                 "6ace3d17.8c65e4"
@@ -2461,8 +2339,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1190,
-        "y": 2940,
+        "x": 1070,
+        "y": 2920,
         "wires": []
     },
     {
@@ -2475,8 +2353,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 490,
-        "y": 2940,
+        "x": 470,
+        "y": 2920,
         "wires": [
             [
                 "2097540b.c944ec"
@@ -2493,8 +2371,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 960,
-        "y": 2940,
+        "x": 900,
+        "y": 2920,
         "wires": [
             [
                 "b5a56a51.4a6478"
@@ -2502,124 +2380,20 @@
         ]
     },
     {
-        "id": "f7566786.12b7a8",
-        "type": "http in",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "url": "/policyPdf",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 140,
-        "y": 3060,
-        "wires": [
-            [
-                "79ff224d.84637c"
-            ]
-        ]
-    },
-    {
-        "id": "fea396f8.f7ce18",
-        "type": "http request",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "method": "GET",
-        "ret": "bin",
-        "paytoqs": "query",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 710,
-        "y": 3140,
-        "wires": [
-            [
-                "3528872b.93cb08",
-                "bac50ef5.1d45e"
-            ]
-        ]
-    },
-    {
-        "id": "2693165f.a734aa",
-        "type": "http response",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "statusCode": "",
-        "headers": {},
-        "x": 1210,
-        "y": 3100,
-        "wires": []
-    },
-    {
-        "id": "86dfb8be.57c858",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "PS Poliza en PDF",
-        "func": "let policy =  msg.payload.policy\n\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n \nNumber(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdf/1/4/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 470,
-        "y": 3140,
-        "wires": [
-            [
-                "fea396f8.f7ce18",
-                "6c884f54.5fd49"
-            ]
-        ]
-    },
-    {
-        "id": "3528872b.93cb08",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "func": "//  en caso de no haber error devuelve la poliza \n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 980,
-        "y": 3140,
-        "wires": [
-            [
-                "2693165f.a734aa"
-            ]
-        ]
-    },
-    {
-        "id": "6c884f54.5fd49",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Policy PDF",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 680,
-        "y": 3060,
-        "wires": []
-    },
-    {
         "id": "4e99bb05.57faf4",
         "type": "http in",
         "z": "c289f04a.5490c",
         "name": "",
-        "url": "/client/:document",
+        "url": "/client",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 140,
-        "y": 120,
+        "x": 120,
+        "y": 400,
         "wires": [
             [
-                "29293e6c.f68602",
-                "25e8a4c0.f8c01c"
+                "25e8a4c0.f8c01c",
+                "ea9b595a.894628"
             ]
         ]
     },
@@ -2628,13 +2402,13 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "",
-        "func": "var document = msg.req.params.document;\n\n//TODO: Servicio de provincia\nif (document == \"29129613\")\n{\n    msg.payload.clientId = 12345678;\n    msg.payload.insurances = [];\n    \n    var insurance = {};\n    insurance.code = 5123123;\n    insurance.ramo = 4;\n    insurance.address = \"Sarachaga 4956, CABA, Argentina\";\n    insurance.payMethod = \"Credit Card\";\n    \n    msg.payload.insurances.push(insurance);\n    \n    msg.statusCode = 200;\n} else {\n    msg.statusCode = 404;\n}\n\n\nreturn msg;",
+        "func": "var document = msg.req.params.document;\n\n\n//Chequear si existe el cliente y tiene Polizas\nif (msg.payload.data.Polizas != undefined) {\n\n    let policies = msg.payload.data.Polizas\n    \n    node.warn([\"Client_1\", policies])\n    \n    //Chequear poliza automotor\n    let policiesCar = msg.payload.data.Polizas.filter(poliza => poliza.Ramo == \"4\")\n    \n    node.warn([\"Client_2\", policiesCar])\n    \n    let securityQuestion = {};\n    \n    //Preguntas de seguridad\n    msg.payload.securityQuestions = [];\n    \n    //Si tiene patentes de Auto, agrego estas preguntas\n    if (policiesCar) {\n        \n        securityQuestion.question = \"¿Puede indicarnos la patente de uno de sus vehiculos asegurado en la compañia?\";\n        //Puedo tener mas de una respuesta valida - Agrego las patentes validas\n        securityQuestion.answer = [];\n        policiesCar.forEach(policy => { securityQuestion.answer.push(policy.Patente)});\n        \n        msg.payload.securityQuestions.push(securityQuestion);\n        \n    }\n    \n    //TODO: Hacer para otros tipos de polizas\n\n    \n \n} else {\n    msg.statusCode = 500;\n    msg.payload = \"Cliente inexistente\";\n}\n\nreturn msg;\n\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 430,
-        "y": 120,
+        "x": 1020,
+        "y": 480,
         "wires": [
             [
                 "74b3a226.91758c"
@@ -2648,8 +2422,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 660,
-        "y": 120,
+        "x": 1190,
+        "y": 480,
         "wires": []
     },
     {
@@ -2661,8 +2435,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 140,
-        "y": 240,
+        "x": 1310,
+        "y": 160,
         "wires": [
             [
                 "10bb210e.c19b5f"
@@ -2679,8 +2453,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 430,
-        "y": 240,
+        "x": 1600,
+        "y": 160,
         "wires": [
             [
                 "555cf34e.b7332c"
@@ -2694,8 +2468,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 660,
-        "y": 240,
+        "x": 1830,
+        "y": 160,
         "wires": []
     },
     {
@@ -2711,8 +2485,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 340,
-        "y": 60,
+        "x": 360,
+        "y": 320,
         "wires": []
     },
     {
@@ -3078,7 +2852,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 510,
+        "x": 310,
         "y": 1460,
         "wires": [
             [
@@ -3157,8 +2931,8 @@
                 }
             ]
         },
-        "x": 910,
-        "y": 1340,
+        "x": 690,
+        "y": 1320,
         "wires": [
             [
                 "9e035bb2.6d5678",
@@ -3172,16 +2946,17 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Define header",
-        "func": "msg.image = {};\n\nmsg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 58;\nmsg.image.y = 5;\nmsg.image.text = \"Cotizacion: 456132 - Ford Fiesta Kinect Design 2017 - Suma asegurada: $1.030.000 - 14/2/2021\";\n\nreturn msg;",
+        "func": "msg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\nmsg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 58;\nmsg.image.y = 5;\nmsg.image.text = `Cotizacion: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: ${msg.payload.response.sumaAsegurada} - ${new Date().toString(\"dd/MM/yyyy\")}`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 700,
-        "y": 1340,
+        "x": 480,
+        "y": 1320,
         "wires": [
             [
-                "918fc464.6531a8"
+                "918fc464.6531a8",
+                "920fad56.07898"
             ]
         ]
     },
@@ -3195,8 +2970,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1130,
-        "y": 1340,
+        "x": 910,
+        "y": 1320,
         "wires": [
             [
                 "35195284.f71cee"
@@ -3274,8 +3049,8 @@
                 }
             ]
         },
-        "x": 1330,
-        "y": 1340,
+        "x": 1110,
+        "y": 1320,
         "wires": [
             [
                 "fcce0faf.bb7ca"
@@ -3287,13 +3062,13 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 1 - valor NOAP",
-        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 40;\nmsg.image.text = \"$ 3247 / MES\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 40;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\nmsg.image.text = `$ ${valorNoAP} / MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1640,
-        "y": 1340,
+        "x": 1340,
+        "y": 1240,
         "wires": [
             [
                 "21f3b6e3.a7021a"
@@ -3371,8 +3146,8 @@
                 }
             ]
         },
-        "x": 1910,
-        "y": 1340,
+        "x": 1570,
+        "y": 1240,
         "wires": [
             [
                 "53adabcc.aa0604"
@@ -3384,13 +3159,13 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 1 - valor PROMO",
-        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 115;\nmsg.image.text = \"$ 2292 / MES\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 115;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorPromo = plan.promocionesPorPlan[0].premio;\n\nmsg.image.text = `$ ${valorPromo} / MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 2190,
-        "y": 1340,
+        "x": 1790,
+        "y": 1240,
         "wires": [
             [
                 "c59bf735.627708"
@@ -3468,8 +3243,8 @@
                 }
             ]
         },
-        "x": 2430,
-        "y": 1340,
+        "x": 2010,
+        "y": 1240,
         "wires": [
             [
                 "ead7db84.993d08"
@@ -3481,112 +3256,16 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 1 - Producto",
-        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 180;\nmsg.image.text = \"TODO RIESGO GARANTIZADO ECONOMICO\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 180;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet producto = plan.descripcion;\n\nmsg.image.text = `${producto}`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 2770,
-        "y": 1340,
+        "x": 2210,
+        "y": 1240,
         "wires": [
             [
-                "fe72ba3b.109968"
-            ]
-        ]
-    },
-    {
-        "id": "fe72ba3b.109968",
-        "type": "jimp-image",
-        "z": "7ee549ef.0fbb28",
-        "name": "Get template",
-        "data": "image.payload",
-        "dataType": "msg",
-        "ret": "buf",
-        "parameter1": "image.font",
-        "parameter1Type": "msg",
-        "parameter2": "image.x",
-        "parameter2Type": "msg",
-        "parameter3": "image.y",
-        "parameter3Type": "msg",
-        "parameter4": "image.text",
-        "parameter4Type": "msg",
-        "parameter5": "HORIZONTAL_ALIGN_CENTER",
-        "parameter5Type": "AlignX",
-        "parameter6": "",
-        "parameter6Type": "msg",
-        "parameter7": "250",
-        "parameter7Type": "num",
-        "parameter8": "",
-        "parameter8Type": "msg",
-        "sendProperty": "payload",
-        "sendPropertyType": "msg",
-        "parameterCount": 8,
-        "jimpFunction": "print2",
-        "selectedJimpFunction": {
-            "name": "print aligned",
-            "fn": "print",
-            "description": "Print text to the image",
-            "parameters": [
-                {
-                    "name": "font|str",
-                    "type": "jimpFont",
-                    "required": true,
-                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
-                },
-                {
-                    "name": "x",
-                    "type": "num",
-                    "required": true,
-                    "hint": "x coordinate to print text"
-                },
-                {
-                    "name": "y",
-                    "type": "num",
-                    "required": true,
-                    "hint": "y coordinate to print text"
-                },
-                {
-                    "name": "text",
-                    "group": "options",
-                    "type": "str",
-                    "required": true,
-                    "hint": "text to print"
-                },
-                {
-                    "name": "alignmentX",
-                    "group": "options",
-                    "type": "AlignX",
-                    "required": false,
-                    "hint": "X Alignment"
-                },
-                {
-                    "name": "alignmentY",
-                    "group": "options",
-                    "type": "AlignY",
-                    "required": false,
-                    "hint": "Y Alignment"
-                },
-                {
-                    "name": "maxWidth",
-                    "type": "auto|num",
-                    "required": false,
-                    "hint": "wrap text at maxWidth"
-                },
-                {
-                    "name": "maxHeight",
-                    "type": "auto|num",
-                    "required": false,
-                    "hint": "max height"
-                }
-            ]
-        },
-        "x": 3030,
-        "y": 1340,
-        "wires": [
-            [
-                "3a08c45e.21564c",
-                "c13be3c5.cfa1e",
-                "26eb048a.5f1e3c"
+                "2c7eed74.fd4162"
             ]
         ]
     },
@@ -3598,10 +3277,13 @@
         "width": "200",
         "data": "payload",
         "dataType": "msg",
-        "x": 3150,
-        "y": 1400,
+        "x": 3050,
+        "y": 1520,
         "wires": [
-            []
+            [
+                "26eb048a.5f1e3c",
+                "53d90cdb.ac7a64"
+            ]
         ]
     },
     {
@@ -3612,8 +3294,8 @@
         "width": "200",
         "data": "image.payload",
         "dataType": "msg",
-        "x": 1030,
-        "y": 1440,
+        "x": 910,
+        "y": 1380,
         "wires": [
             []
         ]
@@ -3631,7 +3313,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1110,
+        "x": 860,
         "y": 1280,
         "wires": []
     },
@@ -3648,8 +3330,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 3370,
-        "y": 1160,
+        "x": 3620,
+        "y": 1180,
         "wires": []
     },
     {
@@ -4310,37 +3992,6 @@
         ]
     },
     {
-        "id": "c5d1cec7.bc8ca",
-        "type": "subflow:248b9587.09adfa",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "env": [],
-        "x": 240,
-        "y": 2660,
-        "wires": [
-            [
-                "6572d34e.a7228c"
-            ]
-        ]
-    },
-    {
-        "id": "933b4555.345a68",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Policies IVR",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 670,
-        "y": 2620,
-        "wires": []
-    },
-    {
         "id": "8aacdae.daa4628",
         "type": "subflow:248b9587.09adfa",
         "z": "7ee549ef.0fbb28",
@@ -4355,37 +4006,6 @@
         ]
     },
     {
-        "id": "79ff224d.84637c",
-        "type": "subflow:248b9587.09adfa",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "env": [],
-        "x": 240,
-        "y": 3140,
-        "wires": [
-            [
-                "86dfb8be.57c858"
-            ]
-        ]
-    },
-    {
-        "id": "bac50ef5.1d45e",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "Policy PDF Response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 940,
-        "y": 3060,
-        "wires": []
-    },
-    {
         "id": "8be7f667.b7e4c8",
         "type": "http in",
         "z": "7ee549ef.0fbb28",
@@ -4395,7 +4015,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 190,
-        "y": 3120,
+        "y": 3400,
         "wires": [
             [
                 "7461e69d.1aab78",
@@ -4416,8 +4036,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 580,
-        "y": 3280,
+        "x": 560,
+        "y": 3560,
         "wires": [
             []
         ]
@@ -4429,8 +4049,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1010,
-        "y": 3240,
+        "x": 910,
+        "y": 3540,
         "wires": []
     },
     {
@@ -4445,25 +4065,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 610,
-        "y": 3100,
-        "wires": []
-    },
-    {
-        "id": "f60b7fa9.ce42f",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 990,
-        "y": 3100,
+        "x": 490,
+        "y": 3400,
         "wires": []
     },
     {
@@ -4476,8 +4079,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 250,
-        "y": 3240,
+        "x": 490,
+        "y": 3500,
         "wires": [
             [
                 "2b10a996.686f46"
@@ -4494,8 +4097,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 840,
-        "y": 3240,
+        "x": 740,
+        "y": 3500,
         "wires": [
             [
                 "5688af64.2d693",
@@ -4509,8 +4112,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "env": [],
-        "x": 200,
-        "y": 3180,
+        "x": 240,
+        "y": 3500,
         "wires": [
             [
                 "17d2192c.59b007"
@@ -4530,8 +4133,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1230,
-        "y": 3140,
+        "x": 950,
+        "y": 3460,
         "wires": []
     },
     {
@@ -4543,8 +4146,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 180,
-        "y": 3380,
+        "x": 200,
+        "y": 3680,
         "wires": [
             [
                 "a0db1b30.fbef68",
@@ -4565,8 +4168,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 550,
-        "y": 3540,
+        "x": 570,
+        "y": 3840,
         "wires": [
             []
         ]
@@ -4578,8 +4181,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1010,
-        "y": 3500,
+        "x": 910,
+        "y": 3780,
         "wires": []
     },
     {
@@ -4594,25 +4197,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 610,
-        "y": 3360,
-        "wires": []
-    },
-    {
-        "id": "82fe31ec.c1909",
-        "type": "debug",
-        "z": "7ee549ef.0fbb28",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 990,
-        "y": 3360,
+        "x": 470,
+        "y": 3680,
         "wires": []
     },
     {
@@ -4625,8 +4211,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 250,
-        "y": 3500,
+        "x": 510,
+        "y": 3740,
         "wires": [
             [
                 "b5150a60.eda5b8"
@@ -4643,8 +4229,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 840,
-        "y": 3500,
+        "x": 740,
+        "y": 3740,
         "wires": [
             [
                 "d40757fd.b1bfa8",
@@ -4658,8 +4244,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "env": [],
-        "x": 200,
-        "y": 3440,
+        "x": 220,
+        "y": 3740,
         "wires": [
             [
                 "7ba244c.36851bc"
@@ -4679,8 +4265,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1230,
-        "y": 3400,
+        "x": 950,
+        "y": 3720,
         "wires": []
     },
     {
@@ -5713,6 +5299,1490 @@
         "statusType": "auto",
         "x": 330,
         "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "5089eae0.2d98c4",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 1 - Coberturas",
+        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 235;\n\n\nlet plan = msg.payload.response.planes[0];\nlet coberturas = plan.coberturas.slice(0,7);\n\n\nmsg.image.text = \"\";\ncoberturas.forEach(cobertura => {msg.image.text += cobertura + \"\\n\"} )\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2660,
+        "y": 1240,
+        "wires": [
+            [
+                "9fe6d87c.17dd58"
+            ]
+        ]
+    },
+    {
+        "id": "2c7eed74.fd4162",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2430,
+        "y": 1240,
+        "wires": [
+            [
+                "5089eae0.2d98c4"
+            ]
+        ]
+    },
+    {
+        "id": "9fe6d87c.17dd58",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2870,
+        "y": 1240,
+        "wires": [
+            [
+                "a7347a83.df5f38"
+            ]
+        ]
+    },
+    {
+        "id": "6025d919.3bd308",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 2 - valor NOAP",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 420;\nmsg.image.text = \"$ 3247 / MES\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1340,
+        "y": 1340,
+        "wires": [
+            [
+                "b948a4d5.100e98"
+            ]
+        ]
+    },
+    {
+        "id": "b948a4d5.100e98",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 1570,
+        "y": 1340,
+        "wires": [
+            [
+                "47a8473e.430488"
+            ]
+        ]
+    },
+    {
+        "id": "47a8473e.430488",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 2 - valor PROMO",
+        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 488;\nmsg.image.text = \"$ 2292 / MES\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1790,
+        "y": 1340,
+        "wires": [
+            [
+                "30064b9e.9da7d4"
+            ]
+        ]
+    },
+    {
+        "id": "30064b9e.9da7d4",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2010,
+        "y": 1340,
+        "wires": [
+            [
+                "a66da1a3.e0c01"
+            ]
+        ]
+    },
+    {
+        "id": "a66da1a3.e0c01",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 2 - Producto",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 549;\nmsg.image.text = \"TERCEROS COMPLETOS FULL\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2210,
+        "y": 1340,
+        "wires": [
+            [
+                "bb841c5c.23f6d"
+            ]
+        ]
+    },
+    {
+        "id": "bb841c5c.23f6d",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2430,
+        "y": 1340,
+        "wires": [
+            [
+                "d5fe1390.59435"
+            ]
+        ]
+    },
+    {
+        "id": "d5fe1390.59435",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 2 - Coberturas",
+        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 612;\n\nmsg.image.text = \"Todo riesgo fcia varaible\" + \"\\n\";\nmsg.image.text += \"Talleres Autorizados\" + \"\\n\";\nmsg.image.text += \"Auto sustituto\" + \"\\n\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2660,
+        "y": 1340,
+        "wires": [
+            [
+                "a102179f.4f5c98"
+            ]
+        ]
+    },
+    {
+        "id": "a102179f.4f5c98",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2870,
+        "y": 1340,
+        "wires": [
+            [
+                "76d28ee6.db566"
+            ]
+        ]
+    },
+    {
+        "id": "76d28ee6.db566",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - valor NOAP",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 792;\nmsg.image.text = \"$ 3247 / MES\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1340,
+        "y": 1460,
+        "wires": [
+            [
+                "ada918dc.db4618"
+            ]
+        ]
+    },
+    {
+        "id": "ada918dc.db4618",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 1570,
+        "y": 1460,
+        "wires": [
+            [
+                "f9f8d045.0c5f"
+            ]
+        ]
+    },
+    {
+        "id": "f9f8d045.0c5f",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - valor PROMO",
+        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 860;\nmsg.image.text = \"$ 2292 / MES\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1790,
+        "y": 1460,
+        "wires": [
+            [
+                "cca68732.2224e8"
+            ]
+        ]
+    },
+    {
+        "id": "cca68732.2224e8",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2010,
+        "y": 1460,
+        "wires": [
+            [
+                "85186961.0730a8"
+            ]
+        ]
+    },
+    {
+        "id": "85186961.0730a8",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - Producto",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 920;\nmsg.image.text = \"TODO RIESGO FRANQUICIA FIJA\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2210,
+        "y": 1460,
+        "wires": [
+            [
+                "fb6d6d65.abe22"
+            ]
+        ]
+    },
+    {
+        "id": "fb6d6d65.abe22",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2430,
+        "y": 1460,
+        "wires": [
+            [
+                "a46495b4.7ef8c8"
+            ]
+        ]
+    },
+    {
+        "id": "a46495b4.7ef8c8",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - Coberturas",
+        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 988;\n\nmsg.image.text = \"Todo riesgo fcia varaible\" + \"\\n\";\nmsg.image.text += \"Talleres Autorizados\" + \"\\n\";\nmsg.image.text += \"Auto sustituto\" + \"\\n\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2660,
+        "y": 1460,
+        "wires": [
+            [
+                "8b7593a9.6d141"
+            ]
+        ]
+    },
+    {
+        "id": "8b7593a9.6d141",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "buf",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 2870,
+        "y": 1460,
+        "wires": [
+            [
+                "3a08c45e.21564c"
+            ]
+        ]
+    },
+    {
+        "id": "6762e117.bb8b2",
+        "type": "image viewer",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "width": "400",
+        "data": "image.payload",
+        "dataType": "msg",
+        "x": 3170,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "53d90cdb.ac7a64",
+        "type": "change",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers.content-type",
+                "pt": "msg",
+                "to": "image/png",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3430,
+        "y": 1460,
+        "wires": [
+            [
+                "c13be3c5.cfa1e"
+            ]
+        ]
+    },
+    {
+        "id": "920fad56.07898",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Quotation / promos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "a7347a83.df5f38",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 1 - Coberturas",
+        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 200;\nmsg.image.y = 235;\n\n\nlet plan = msg.payload.response.planes[0];\nlet coberturas = plan.coberturas.slice(0,7);\nmsg.image.text = \"\";\n\nif (coberturas.lenght > 0) {\n   coberturas.forEach(cobertura => {msg.image.text += cobertura + \"\\n\"} ) \n}\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 3100,
+        "y": 1240,
+        "wires": [
+            [
+                "7bf778c6.916268"
+            ]
+        ]
+    },
+    {
+        "id": "7bf778c6.916268",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "image.payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 6,
+        "jimpFunction": "print",
+        "selectedJimpFunction": {
+            "name": "print",
+            "fn": "print",
+            "description": "Print text to the image",
+            "parameters": [
+                {
+                    "name": "font|str",
+                    "type": "jimpFont",
+                    "required": true,
+                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
+                },
+                {
+                    "name": "x",
+                    "type": "num",
+                    "required": true,
+                    "hint": "x coordinate to print text"
+                },
+                {
+                    "name": "y",
+                    "type": "num",
+                    "required": true,
+                    "hint": "y coordinate to print text"
+                },
+                {
+                    "name": "text",
+                    "type": "str",
+                    "required": true,
+                    "hint": "text to print"
+                },
+                {
+                    "name": "maxWidth",
+                    "type": "num",
+                    "required": false,
+                    "hint": "wrap text at maxWidth"
+                },
+                {
+                    "name": "maxHeight",
+                    "type": "num",
+                    "required": false,
+                    "hint": "max height"
+                }
+            ]
+        },
+        "x": 3310,
+        "y": 1240,
+        "wires": [
+            [
+                "6762e117.bb8b2",
+                "6025d919.3bd308"
+            ]
+        ]
+    },
+    {
+        "id": "b54d7bdb.4fd988",
+        "type": "http in",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "url": "policies",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 620,
+        "wires": [
+            [
+                "eb16a25e.76f52"
+            ]
+        ]
+    },
+    {
+        "id": "14dad352.640fdd",
+        "type": "function",
+        "z": "c289f04a.5490c",
+        "name": "PSeguros IVR",
+        "func": "\nlet documentNumber =  msg.payload.document;\nlet policyNumber =  msg.payload.policyNumber || \"\";\n\nmsg.url = global.get(\"psegurosNovedades_Url\") + `executeDataIVR/${documentNumber}/IVR/${policyNumber}?apiKey=` + global.get(\"psegurosApiKey\");\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 440,
+        "y": 760,
+        "wires": [
+            [
+                "9ff908d5.fe5878",
+                "942ade3e.0b285"
+            ]
+        ]
+    },
+    {
+        "id": "4e8d55de.e6cddc",
+        "type": "http response",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1170,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "b9e5c7b2.524058",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Policies IVR Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "9ff908d5.fe5878",
+        "type": "http request",
+        "z": "c289f04a.5490c",
+        "name": "PSeguros IVR",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 660,
+        "y": 760,
+        "wires": [
+            [
+                "b9e5c7b2.524058",
+                "a5d45507.eb3e38"
+            ]
+        ]
+    },
+    {
+        "id": "a5d45507.eb3e38",
+        "type": "function",
+        "z": "c289f04a.5490c",
+        "name": "response",
+        "func": "if (msg.payload.code === 200) {\n\n    let policiesAndMenssage = {};\n    \n    if ( msg.payload.data.Polizas === undefined ) {\n        policiesAndMenssage = msg.payload.data.Mensaje;\n    } else if ( msg.payload.data.Polizas.length >= 1 ) {\n        policiesAndMenssage = msg.payload.data;\n    } else {\n        policiesAndMenssage = msg.payload.data;\n    }\n\n    msg.payload = policiesAndMenssage;\n \n} else if ( msg.payload.code === 500 ) {\n    msg.payload = \"Polizas no encontradas\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 920,
+        "y": 760,
+        "wires": [
+            [
+                "4e8d55de.e6cddc",
+                "61f390b8.5bad2"
+            ]
+        ]
+    },
+    {
+        "id": "61f390b8.5bad2",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Policies IVR Client Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "eb16a25e.76f52",
+        "type": "subflow:248b9587.09adfa",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "env": [],
+        "x": 220,
+        "y": 700,
+        "wires": [
+            [
+                "14dad352.640fdd"
+            ]
+        ]
+    },
+    {
+        "id": "942ade3e.0b285",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Policies IVR",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "ad5b32df.f4449",
+        "type": "http in",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "url": "/policy/pdf",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 900,
+        "wires": [
+            [
+                "c246f0ac.963e"
+            ]
+        ]
+    },
+    {
+        "id": "174573da.67b78c",
+        "type": "http request",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "method": "GET",
+        "ret": "bin",
+        "paytoqs": "query",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 750,
+        "y": 1020,
+        "wires": [
+            [
+                "4d4e633e.5b907c",
+                "1ce8000f.f7e59"
+            ]
+        ]
+    },
+    {
+        "id": "b0fd4016.15baf",
+        "type": "http response",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1170,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "6367258a.5b243c",
+        "type": "function",
+        "z": "c289f04a.5490c",
+        "name": "PS Poliza en PDF",
+        "func": "let policy =  msg.payload.policy\n\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n \nNumber(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdf/1/4/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 490,
+        "y": 1000,
+        "wires": [
+            [
+                "174573da.67b78c",
+                "d9249bee.427018"
+            ]
+        ]
+    },
+    {
+        "id": "4d4e633e.5b907c",
+        "type": "function",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "func": "//  en caso de no haber error devuelve la poliza \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 980,
+        "y": 1020,
+        "wires": [
+            [
+                "b0fd4016.15baf"
+            ]
+        ]
+    },
+    {
+        "id": "d9249bee.427018",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Policy PDF",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "c246f0ac.963e",
+        "type": "subflow:248b9587.09adfa",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "env": [],
+        "x": 240,
+        "y": 1000,
+        "wires": [
+            [
+                "6367258a.5b243c"
+            ]
+        ]
+    },
+    {
+        "id": "1ce8000f.f7e59",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Policy PDF Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "18f2478d.a0bea8",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "ea9b595a.894628",
+        "type": "subflow:248b9587.09adfa",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "env": [],
+        "x": 360,
+        "y": 480,
+        "wires": [
+            [
+                "c8b8e4d.48c7818"
+            ]
+        ]
+    },
+    {
+        "id": "c8b8e4d.48c7818",
+        "type": "function",
+        "z": "c289f04a.5490c",
+        "name": "PSeguros IVR",
+        "func": "\nlet documentNumber =  msg.payload.document;\nlet policyNumber =  msg.payload.policyNumber || \"\";\n\nmsg.url = global.get(\"psegurosNovedades_Url\") + `executeDataIVR/${documentNumber}/IVR/${policyNumber}?apiKey=` + global.get(\"psegurosApiKey\");\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 580,
+        "y": 540,
+        "wires": [
+            [
+                "17f0bcf.dde0943"
+            ]
+        ]
+    },
+    {
+        "id": "17f0bcf.dde0943",
+        "type": "http request",
+        "z": "c289f04a.5490c",
+        "name": "PSeguros IVR",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 800,
+        "y": 540,
+        "wires": [
+            [
+                "29293e6c.f68602",
+                "92f9acbc.4b99d"
+            ]
+        ]
+    },
+    {
+        "id": "92f9acbc.4b99d",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Cliente polizas",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 420,
         "wires": []
     }
 ]
