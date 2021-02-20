@@ -932,7 +932,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 410,
+        "x": 470,
         "y": 780,
         "wires": [
             [
@@ -1832,7 +1832,7 @@
         "type": "function-npm",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "const {distance, closest} = require('fastest-levenshtein');\n\ntry {\n    // Print levenshtein-distance between 'fast' and 'faster' \n    //msg.payload.distance = distance('fast', 'faster');\n    //=> 2\n\n    // Print string from array with lowest edit-distance to 'fast'\n    //msg.payload.closest = closest('FIESTA TITANIUM', ['FIESTA  1.6 4P S              (KD) (018594)', 'FIESTA  1.6 4P TITANIUM       (KD) (018598)']);\n    \n    var modelos = msg.payload;\n     \n    var searchCriteriaPrincipal = msg.searchCriteria.split(\" \")[0];\n    var searchCriteria = msg.searchCriteria;\n    var preResults = [];\n    var results = [];\n\n    node.warn([\"modelo 1\"]);\n    \n    modelos.forEach(modelo => {\n      if (modelo.descripcion.toLowerCase().includes(searchCriteriaPrincipal.toLowerCase()))\n            preResults.push(modelo);\n    }) \n    \n    node.warn([\"modelo 2\"]);\n    \n    preResults.forEach(modeloFiltered => {\n        let dist = distance(searchCriteria, modeloFiltered.descripcion.replace(/ /g, ''));\n        results.push({dist, modeloFiltered});\n        \n    })\n    \n    node.warn([\"modelo 3\"]);\n    \n    msg.searchCriteriaPrincipal = searchCriteriaPrincipal;\n    msg.preresults = preResults;\n    \n    //Algoritmo para ordenar\n    msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n\nreturn msg;\n    \n\n}catch (exception) {\n    node.error(\"Error\", exception)\n}\n\n\nreturn msg;",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\ntry {\n    // Print levenshtein-distance between 'fast' and 'faster' \n    //msg.payload.distance = distance('fast', 'faster');\n    //=> 2\n\n    // Print string from array with lowest edit-distance to 'fast'\n    //msg.payload.closest = closest('FIESTA TITANIUM', ['FIESTA  1.6 4P S              (KD) (018594)', 'FIESTA  1.6 4P TITANIUM       (KD) (018598)']);\n    \n    var modelos = msg.payload;\n     \n    var searchCriteriaPrincipal = msg.searchCriteria.split(\" \")[0];\n    var searchCriteria = msg.searchCriteria.toLowerCase();\n    var preResults = [];\n    var results = [];\n\n    node.warn([\"modelo 1\"]);\n    \n    modelos.forEach(modelo => {\n      if (modelo.descripcion.toLowerCase().includes(searchCriteriaPrincipal.toLowerCase()))\n            preResults.push(modelo);\n    }) \n    \n    node.warn([\"modelo 2\"]);\n    \n    preResults.forEach(modeloFiltered => {\n        let dist = distance(searchCriteria, modeloFiltered.descripcion.replace(/ /g, ''));\n        results.push({dist, modeloFiltered});\n        \n    })\n    \n    node.warn([\"modelo 3\"]);\n    \n    msg.searchCriteriaPrincipal = searchCriteriaPrincipal;\n    msg.preresults = preResults;\n    \n    //Algoritmo para ordenar\n    msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n\nreturn msg;\n    \n\n}catch (exception) {\n    node.error(\"Error\", exception)\n}\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 870,
@@ -1848,7 +1848,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "response",
-        "func": "var year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n        \n        info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n        \n    } else if (yearDiff >= 11 && year <= 14 ) {\n        info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n    } else if (yearDiff >= 15 && yearDiff <=20){\n         info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"Responsabilidad Civil\");\n        plan_1.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_1.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"Responsabilidad Civil\");\n        plan_2.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_2.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    \n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    \n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_22.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_22.coberturas.push(\"Daños por granizo\");\n        plan_22.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_22.coberturas.push(\"Daño parcial por robo total\");\n        plan_22.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_22.coberturas.push(\"Robo Hurto/Incendio total.\");\n        plan_22.coberturas.push(\"Responsabilidad Civil\");\n        plan_22.coberturas.push(\"Daño total por accidente\");\n        plan_22.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_22.coberturas.push(\"Asistencia al vehiculo\");\n        plan_22.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_22.coberturas.push(\"Cambio de llaves por RT\");\n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    \n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"Todo riesgo fci variable\");\n        plan_50.coberturas.push(\"Talleres autorizados\");\n        plan_50.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_50.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_50.coberturas.push(\"Cambio de llaves por RT\");\n        plan_50.coberturas.push(\"Choque entre asegurados\");\n        plan_50.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_50.coberturas.push(\"Daño parcial por robo total\");\n        plan_50.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_50.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_50.coberturas.push(\"Daños por granizo\");\n        plan_50.coberturas.push(\"Asistencia al vehiculo\");\n        plan_50.coberturas.push(\"Responsabilidad Civil\");\n        plan_50.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_50.coberturas.push(\"Daño total por accidente\");\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    \n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_41.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_41.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_41.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_41.coberturas.push(\"Daños por granizo\");\n        plan_41.coberturas.push(\"Cambio de llaves por RT\");\n        plan_41.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_41.coberturas.push(\"Choque entre asegurados\");\n        plan_41.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_41.coberturas.push(\"Daño parcial por robo total\");\n        plan_41.coberturas.push(\"Robo hurto/incendio total\");\n        plan_41.coberturas.push(\"Asistencia al vehiculo\");\n        plan_41.coberturas.push(\"Daño total por accidente\");\n        plan_41.coberturas.push(\"Responsabilidad Civil\");\n        plan_41.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    \n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    \n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    \n    msg.payload = info \n}\n\n\n\nreturn msg;",
+        "func": "var year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n        \n        info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n        \n    } else if (yearDiff >= 11 && yearDiff <= 14 ) {\n        info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n    } else if (yearDiff >= 15 && yearDiff <=20){\n         info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"Responsabilidad Civil\");\n        plan_1.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_1.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"Responsabilidad Civil\");\n        plan_2.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_2.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    \n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    \n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_22.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_22.coberturas.push(\"Daños por granizo\");\n        plan_22.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_22.coberturas.push(\"Daño parcial por robo total\");\n        plan_22.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_22.coberturas.push(\"Robo Hurto/Incendio total.\");\n        plan_22.coberturas.push(\"Responsabilidad Civil\");\n        plan_22.coberturas.push(\"Daño total por accidente\");\n        plan_22.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_22.coberturas.push(\"Asistencia al vehiculo\");\n        plan_22.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_22.coberturas.push(\"Cambio de llaves por RT\");\n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    \n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"Todo riesgo fci variable\");\n        plan_50.coberturas.push(\"Talleres autorizados\");\n        plan_50.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_50.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_50.coberturas.push(\"Cambio de llaves por RT\");\n        plan_50.coberturas.push(\"Choque entre asegurados\");\n        plan_50.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_50.coberturas.push(\"Daño parcial por robo total\");\n        plan_50.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_50.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_50.coberturas.push(\"Daños por granizo\");\n        plan_50.coberturas.push(\"Asistencia al vehiculo\");\n        plan_50.coberturas.push(\"Responsabilidad Civil\");\n        plan_50.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_50.coberturas.push(\"Daño total por accidente\");\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    \n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_41.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_41.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_41.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_41.coberturas.push(\"Daños por granizo\");\n        plan_41.coberturas.push(\"Cambio de llaves por RT\");\n        plan_41.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_41.coberturas.push(\"Choque entre asegurados\");\n        plan_41.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_41.coberturas.push(\"Daño parcial por robo total\");\n        plan_41.coberturas.push(\"Robo hurto/incendio total\");\n        plan_41.coberturas.push(\"Asistencia al vehiculo\");\n        plan_41.coberturas.push(\"Daño total por accidente\");\n        plan_41.coberturas.push(\"Responsabilidad Civil\");\n        plan_41.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    \n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    \n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    \n    msg.payload = info \n}\n\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2303,8 +2303,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 170,
-        "y": 2840,
+        "x": 190,
+        "y": 2540,
         "wires": [
             [
                 "8aacdae.daa4628"
@@ -2324,8 +2324,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 690,
-        "y": 2920,
+        "x": 710,
+        "y": 2620,
         "wires": [
             [
                 "6ace3d17.8c65e4"
@@ -2339,8 +2339,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1070,
-        "y": 2920,
+        "x": 1090,
+        "y": 2620,
         "wires": []
     },
     {
@@ -2353,8 +2353,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 470,
-        "y": 2920,
+        "x": 490,
+        "y": 2620,
         "wires": [
             [
                 "2097540b.c944ec"
@@ -2371,8 +2371,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 900,
-        "y": 2920,
+        "x": 920,
+        "y": 2620,
         "wires": [
             [
                 "b5a56a51.4a6478"
@@ -2411,7 +2411,8 @@
         "y": 480,
         "wires": [
             [
-                "74b3a226.91758c"
+                "74b3a226.91758c",
+                "d9ccb293.6a787"
             ]
         ]
     },
@@ -2600,6 +2601,13 @@
                 "pt": "global",
                 "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/",
                 "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "psegurosEmision_2_Url",
+                "pt": "global",
+                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/2.0/",
+                "tot": "str"
             }
         ],
         "action": "",
@@ -2765,7 +2773,7 @@
         "type": "function-npm",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "const {distance, closest} = require('fastest-levenshtein');\n\ntry {\n    \n    var marcas = msg.payload;\n    var searchCriteria = msg.searchCriteria;\n    var preResults = [];\n    var results = [];\n    \n    marcas.forEach(marca => {\n      if (marca.descripcion.toLowerCase().includes(searchCriteria))\n            preResults.push(marca);\n    }) \n    \n    preResults.forEach(brandFiltered => {\n        let dist = distance(searchCriteria, brandFiltered.descripcion.replace(/ /g, ''));\n        results.push({dist, brandFiltered});\n        //flatened.push(modelo.descripcion.replace(/ /g, ''));\n    })\n    \n    msg.preresults = preResults;\n    \n    //Algoritmo para ordenar\n    msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n    \n\n}catch (exception) {\n    node.error(\"Error\", exception)\n}\n\n\nreturn msg;",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\ntry {\n    \n    var marcas = msg.payload;\n    var searchCriteria = msg.searchCriteria.toLowerCase();\n    var preResults = [];\n    var results = [];\n    \n    marcas.forEach(marca => {\n      if (marca.descripcion.toLowerCase().includes(searchCriteria))\n            preResults.push(marca);\n    }) \n    \n    preResults.forEach(brandFiltered => {\n        let dist = distance(searchCriteria, brandFiltered.descripcion.replace(/ /g, ''));\n        results.push({dist, brandFiltered});\n        //flatened.push(modelo.descripcion.replace(/ /g, ''));\n    })\n    \n    msg.preresults = preResults;\n    \n    //Algoritmo para ordenar\n    msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n    \n\n}catch (exception) {\n    node.error(\"Error\", exception)\n}\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 730,
@@ -3062,7 +3070,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 1 - valor NOAP",
-        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 40;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\nmsg.image.text = `$ ${valorNoAP} / MES`;\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 40;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\n\nmsg.image.text = `$ ${valorNoAP} / MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3997,8 +4005,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "env": [],
-        "x": 240,
-        "y": 2920,
+        "x": 260,
+        "y": 2620,
         "wires": [
             [
                 "5342c60e.c1b318"
@@ -4014,8 +4022,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 190,
-        "y": 3400,
+        "x": 230,
+        "y": 3300,
         "wires": [
             [
                 "7461e69d.1aab78",
@@ -4036,10 +4044,13 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 560,
-        "y": 3560,
+        "x": 780,
+        "y": 3400,
         "wires": [
-            []
+            [
+                "89741a05.1fd498",
+                "4a29f00a.fca52"
+            ]
         ]
     },
     {
@@ -4049,8 +4060,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 910,
-        "y": 3540,
+        "x": 1330,
+        "y": 3380,
         "wires": []
     },
     {
@@ -4065,8 +4076,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 490,
-        "y": 3400,
+        "x": 530,
+        "y": 3300,
         "wires": []
     },
     {
@@ -4074,35 +4085,16 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Nationalities",
-        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.nationalityName; \n\n//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/datosGenerales/provincias/4/04100?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n//msg.url = global.get(\"psegurosCotizacion_Url\") + `datosGenerales/provincias/4/04100?apikey=` + global.get(\"psegurosApiKey\");\n\n//TODO:!\n\nreturn msg;",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.nationalityName; \n\nmsg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/1.1/info/paises?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n//msg.url = global.get(\"psegurosCotizacion_Url\") + `datosGenerales/provincias/4/04100?apikey=` + global.get(\"psegurosApiKey\");\n\n//TODO:!\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 490,
-        "y": 3500,
+        "x": 530,
+        "y": 3400,
         "wires": [
             [
-                "2b10a996.686f46"
-            ]
-        ]
-    },
-    {
-        "id": "2b10a996.686f46",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "response",
-        "func": "//TODO: TEMPORAL hasta tener servicio\nvar resultTemp = [];\nresultTemp.push({codigo:\"1\", descripcion:\"ARGENTINA\"});\n\nmsg.payload = resultTemp\n\nreturn msg;\n\n//TODO: Reemplazar\n\nlet nationalities = msg.payload\nvar searchCriteria = msg.searchCriteria;\nvar result = [];\n\nnationalities.forEach(nationality => {\n  if (nationality.descripcion.toLowerCase().includes(searchCriteria.toLowerCase()))\n        result.push(nationality);\n}) \n\n\nmsg.payload = result\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 740,
-        "y": 3500,
-        "wires": [
-            [
-                "5688af64.2d693",
-                "a6931131.fd1c9"
+                "6caed24d.01950c"
             ]
         ]
     },
@@ -4112,8 +4104,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "env": [],
-        "x": 240,
-        "y": 3500,
+        "x": 280,
+        "y": 3400,
         "wires": [
             [
                 "17d2192c.59b007"
@@ -4125,7 +4117,7 @@
         "type": "debug",
         "z": "7ee549ef.0fbb28",
         "name": "Nationalities OUT",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -4133,8 +4125,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 950,
-        "y": 3460,
+        "x": 1250,
+        "y": 3500,
         "wires": []
     },
     {
@@ -4142,15 +4134,14 @@
         "type": "http in",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "url": "location/:locationName",
+        "url": "location/:zipCode/:state/:locationName",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 200,
-        "y": 3680,
+        "x": 270,
+        "y": 3020,
         "wires": [
             [
-                "a0db1b30.fbef68",
                 "f0b50084.443aa"
             ]
         ]
@@ -4168,10 +4159,13 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 570,
-        "y": 3840,
+        "x": 790,
+        "y": 3080,
         "wires": [
-            []
+            [
+                "cebe7115.6733",
+                "274f5664.3e5a5a"
+            ]
         ]
     },
     {
@@ -4181,60 +4175,43 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 910,
-        "y": 3780,
+        "x": 1230,
+        "y": 3120,
         "wires": []
     },
     {
         "id": "a0db1b30.fbef68",
         "type": "debug",
         "z": "7ee549ef.0fbb28",
-        "name": "",
+        "name": "Localidades payload",
         "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 470,
-        "y": 3680,
+        "x": 780,
+        "y": 2900,
         "wires": []
     },
     {
         "id": "7ba244c.36851bc",
         "type": "function",
         "z": "7ee549ef.0fbb28",
-        "name": "PSeguros - Nationalities",
-        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.locationName; \n\n//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/datosGenerales/provincias/4/04100?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\n//msg.url = global.get(\"psegurosCotizacion_Url\") + `datosGenerales/provincias/4/04100?apikey=` + global.get(\"psegurosApiKey\");\n\n//TODO:!\n\nreturn msg;",
+        "name": "PSeguros - Localidades",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.locationName; \n\nlet zipCode = msg.req.params.zipCode;\nlet state = msg.req.params.state;\n\n// node.warn(\"Codigo postal \" +  msg.req.params.zipCode)\n//node.warn(\"Provincia \" + province)\n\n//msg.url = `\n//https://apimp.provinciaseguros.com.ar/gateway/PS/PS-EMISION/2.0/info/localidades/{codigoPostal}/{provincia}?apikey=84630d93-d8c2-40b3-ad3d-b82773c092b5`;\nmsg.url = global.get(\"psegurosEmision_Url\") + `info/localidades/${zipCode}/${state}?apikey=` + global.get(\"psegurosApiKey\");\n\n\n//TODO:!\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 510,
-        "y": 3740,
+        "x": 530,
+        "y": 3080,
         "wires": [
             [
-                "b5150a60.eda5b8"
-            ]
-        ]
-    },
-    {
-        "id": "b5150a60.eda5b8",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "response",
-        "func": "//TODO: TEMPORAL hasta tener servicio\nvar resultTemp = [];\nresultTemp.push({codigo:\"1\", descripcion:\"CABA\"});\n\nmsg.payload = resultTemp\n\nreturn msg;\n\n//TODO: Reemplazar\n\nlet locations = msg.payload\nvar searchCriteria = msg.searchCriteria;\nvar result = [];\n\nlocations.forEach(location => {\n  if (location.descripcion.toLowerCase().includes(searchCriteria.toLowerCase()))\n        result.push(location);\n}) \n\n\nmsg.payload = result\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 740,
-        "y": 3740,
-        "wires": [
-            [
-                "d40757fd.b1bfa8",
-                "4f32083.a11def8"
+                "ec9235f3.484eb8",
+                "a0db1b30.fbef68"
             ]
         ]
     },
@@ -4244,8 +4221,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "env": [],
-        "x": 220,
-        "y": 3740,
+        "x": 240,
+        "y": 3080,
         "wires": [
             [
                 "7ba244c.36851bc"
@@ -4256,7 +4233,7 @@
         "id": "4f32083.a11def8",
         "type": "debug",
         "z": "7ee549ef.0fbb28",
-        "name": "Nationalities OUT",
+        "name": "Localidades OUT",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -4265,8 +4242,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 950,
-        "y": 3720,
+        "x": 1250,
+        "y": 3060,
         "wires": []
     },
     {
@@ -6784,5 +6761,207 @@
         "x": 980,
         "y": 420,
         "wires": []
+    },
+    {
+        "id": "d9ccb293.6a787",
+        "type": "debug",
+        "z": "c289f04a.5490c",
+        "name": "Cliente polizas response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "bdeace24.7387a",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "/civilState/:Status",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 200,
+        "y": 3580,
+        "wires": [
+            [
+                "24a9949.452336c"
+            ]
+        ]
+    },
+    {
+        "id": "8661ce55.79a41",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 750,
+        "y": 3680,
+        "wires": [
+            [
+                "c9faf2a7.c32bd",
+                "3f8b7eec.a50e72"
+            ]
+        ]
+    },
+    {
+        "id": "5480fade.c34d94",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1130,
+        "y": 3680,
+        "wires": []
+    },
+    {
+        "id": "87465cab.c6bc2",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Estado Civil",
+        "func": "msg.searchCriteria = msg.req.params.Status; \n\n\nmsg.url =  'https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/1.1/info/estadoCivil?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed';\n\n// msg.url = global.get(\"psegurosNovedades_Url\") + `infoCotizacion/${quotation}?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 520,
+        "y": 3680,
+        "wires": [
+            [
+                "8661ce55.79a41"
+            ]
+        ]
+    },
+    {
+        "id": "c9faf2a7.c32bd",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "response",
+        "func": "let civilStates = JSON.parse(msg.payload);\nlet searchCriteria = msg.searchCriteria;\nvar result = []\n\ncivilStates.forEach(state => {\n    if (state.descripcion.toLowerCase().includes(searchCriteria.toLowerCase()))\n        result.push(state);\n})\n\n\n\n\n\n\nmsg.payload = result;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 960,
+        "y": 3680,
+        "wires": [
+            [
+                "5480fade.c34d94"
+            ]
+        ]
+    },
+    {
+        "id": "24a9949.452336c",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 300,
+        "y": 3680,
+        "wires": [
+            [
+                "87465cab.c6bc2"
+            ]
+        ]
+    },
+    {
+        "id": "cebe7115.6733",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Localidades RESPONSE",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 3020,
+        "wires": []
+    },
+    {
+        "id": "89741a05.1fd498",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Nacionalidad",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 3520,
+        "wires": []
+    },
+    {
+        "id": "3f8b7eec.a50e72",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Civil state response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 3620,
+        "wires": []
+    },
+    {
+        "id": "4a29f00a.fca52",
+        "type": "function-npm",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\ntry {\n    let nationalities = msg.payload\n    var searchCriteria = msg.searchCriteria;\n    var results = [];\n\n    nationalities.forEach(nationality => {\n        \n        let dist = distance(searchCriteria.toLowerCase(), nationality.descripcion.toLowerCase().replace(/ /g, ''));\n        results.push({dist, nationality});\n    }) \n\n   \n    //Algoritmo para ordenar\n    msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n    \n    //Devuelvo mejor resultado\n    msg.payload = results[0];\n    \n   \n    return msg;\n\n}catch (exception) {\n    node.error([\"Error\", exception])\n}\n\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1030,
+        "y": 3460,
+        "wires": [
+            [
+                "5688af64.2d693",
+                "a6931131.fd1c9"
+            ]
+        ]
+    },
+    {
+        "id": "274f5664.3e5a5a",
+        "type": "function-npm",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\nlet state = msg.req.params.state\n\n//Si encontre localidades o es CABA\nif(msg.statusCode == 200 || state == 1) {\n    \n    try {\n        let locations = msg.payload\n        var searchCriteria = msg.searchCriteria;\n        var results = [];\n    \n        //NO acepta LOCALIDADES de CABA\n        if (state != 1) {\n        \n            locations.forEach(location => {\n                let dist = distance(searchCriteria.toLowerCase(), location.localidad.toLowerCase().replace(/ /g, ''));\n                results.push({dist, location});\n            }) \n            \n        } else {\n                \n            let locationTemp = {};\n            locationTemp.dist = 0;\n            \n            locationTemp.location = {};\n            locationTemp.location.localidad = \"CABA\"\n            \n            msg.statusCode = 200;\n        \n            results.push(locationTemp)\n        }\n    \n       \n        //Algoritmo para ordenar\n        msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n        \n        //Devuelvo mejor resultado\n    msg.payload = results;\n    \n    }catch (exception) {\n        node.error([\"Error\", exception])\n    }\n    \n} else {\n    \n    //No se encontraron localidades\n    \n}\n\n\nreturn msg;\n\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1010,
+        "y": 3180,
+        "wires": [
+            [
+                "d40757fd.b1bfa8",
+                "4f32083.a11def8"
+            ]
+        ]
     }
 ]
