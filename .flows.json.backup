@@ -1919,7 +1919,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros Inspeccion",
-        "func": "//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-INSPECCION/2.0/solicitarIpConCotizacion?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\nmsg.url = global.get(\"psegurosInspeccion_Url\") + `solicitarIpConCotizacion?apikey=` + global.get(\"psegurosApiKey\");\n\nlet bodyQuery = {};\n\nbodyQuery.nroCotizacion = msg.payload.quotation;\nbodyQuery.patente = msg.payload.licencePlate;\nbodyQuery.productorEmail = msg.payload.brokerEmail;\nbodyQuery.apellidoCliente = msg.payload.clientLastName;\nbodyQuery.nombreCliente = msg.payload.clientName;\nbodyQuery.telefonoCliente =  \"\";\nbodyQuery.celularCliente =  msg.payload.clientPhone;\nbodyQuery.emailCliente = msg.payload.clientEmail;\n\nmsg.payload = bodyQuery;\n\nreturn msg;",
+        "func": "//msg.url = \"https://apimt.provinciaseguros.com.ar/gateway/PS/PS-INSPECCION/2.0/solicitarIpConCotizacion?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed\";\nmsg.url = global.get(\"psegurosInspeccion_Url\") + `solicitarIpConCotizacion?apikey=` + global.get(\"psegurosApiKey\");\n\nlet bodyQuery = {};\n\nbodyQuery.nroCotizacion = msg.payload.quotation;\nbodyQuery.patente = msg.payload.licencePlate;\nbodyQuery.productorEmail = msg.payload.brokerEmail != \"\" || global.get(\"psegurosAuth_UserName\");\nbodyQuery.apellidoCliente = msg.payload.clientLastName;\nbodyQuery.nombreCliente = msg.payload.clientName;\nbodyQuery.telefonoCliente =  \"\";\nbodyQuery.celularCliente =  msg.payload.clientPhone;\nbodyQuery.emailCliente = msg.payload.clientEmail;\n\nmsg.payload = bodyQuery;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6585,8 +6585,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1170,
-        "y": 1020,
+        "x": 1470,
+        "y": 960,
         "wires": []
     },
     {
@@ -6594,7 +6594,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "PS Poliza en PDF",
-        "func": "let policy =  msg.payload.policy\n\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n \nNumber(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdf/1/4/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
+        "func": "let policy =  msg.payload.policy\nmsg.policy = policy;\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n\n//TODO: Harcode, hasta tener polizas\n//policy = \"10000149\";\n \n//Number(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdf/1/4/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6613,7 +6613,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "",
-        "func": "//  en caso de no haber error devuelve la poliza \n\n\nreturn msg;",
+        "func": "//  en caso de no haber error devuelve la poliza \nmsg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Poliza digital - ${msg.policy}.pdf\"`\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6622,7 +6622,7 @@
         "y": 1020,
         "wires": [
             [
-                "b0fd4016.15baf"
+                "4b937199.8a2eb"
             ]
         ]
     },
@@ -6961,6 +6961,33 @@
             [
                 "d40757fd.b1bfa8",
                 "4f32083.a11def8"
+            ]
+        ]
+    },
+    {
+        "id": "4b937199.8a2eb",
+        "type": "change",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers.content-type",
+                "pt": "msg",
+                "to": "application/pdf",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1230,
+        "y": 1020,
+        "wires": [
+            [
+                "b0fd4016.15baf"
             ]
         ]
     }
