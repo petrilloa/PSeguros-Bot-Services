@@ -1848,7 +1848,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "response",
-        "func": "var year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n        \n        info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n        \n    } else if (yearDiff >= 11 && yearDiff <= 14 ) {\n        info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n    } else if (yearDiff >= 15 && yearDiff <=20){\n         info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"Responsabilidad Civil\");\n        plan_1.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_1.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"Responsabilidad Civil\");\n        plan_2.coberturas.push(\"Robo/Hurto/Inc Parcial\");\n        plan_2.coberturas.push(\"Auto sustituto 15 dias\");\n    }\n    \n    \n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    \n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_22.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_22.coberturas.push(\"Daños por granizo\");\n        plan_22.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_22.coberturas.push(\"Daño parcial por robo total\");\n        plan_22.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_22.coberturas.push(\"Robo Hurto/Incendio total.\");\n        plan_22.coberturas.push(\"Responsabilidad Civil\");\n        plan_22.coberturas.push(\"Daño total por accidente\");\n        plan_22.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_22.coberturas.push(\"Asistencia al vehiculo\");\n        plan_22.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_22.coberturas.push(\"Cambio de llaves por RT\");\n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    \n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"Todo riesgo fci variable\");\n        plan_50.coberturas.push(\"Talleres autorizados\");\n        plan_50.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_50.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_50.coberturas.push(\"Cambio de llaves por RT\");\n        plan_50.coberturas.push(\"Choque entre asegurados\");\n        plan_50.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_50.coberturas.push(\"Daño parcial por robo total\");\n        plan_50.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_50.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_50.coberturas.push(\"Daños por granizo\");\n        plan_50.coberturas.push(\"Asistencia al vehiculo\");\n        plan_50.coberturas.push(\"Responsabilidad Civil\");\n        plan_50.coberturas.push(\"Cobertura paises Mercosur\");\n        plan_50.coberturas.push(\"Daño total por accidente\");\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    \n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_41.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_41.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_41.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_41.coberturas.push(\"Daños por granizo\");\n        plan_41.coberturas.push(\"Cambio de llaves por RT\");\n        plan_41.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_41.coberturas.push(\"Choque entre asegurados\");\n        plan_41.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_41.coberturas.push(\"Daño parcial por robo total\");\n        plan_41.coberturas.push(\"Robo hurto/incendio total\");\n        plan_41.coberturas.push(\"Asistencia al vehiculo\");\n        plan_41.coberturas.push(\"Daño total por accidente\");\n        plan_41.coberturas.push(\"Responsabilidad Civil\");\n        plan_41.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    \n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    \n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    \n    msg.payload = info \n}\n\n\n\nreturn msg;",
+        "func": "var year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else if (msg.payload.code == 500) { \n    msg.payload = \"Error servicio NO disponible\";\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n        \n        info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n        \n    } else if (yearDiff >= 11 && yearDiff <= 14 ) {\n        info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n    } else if (yearDiff >= 15 && yearDiff <=20){\n         info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_1.coberturas.push(\"ADICIONALES Y SERVICIOS\");\n        plan_1.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_1.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_1.coberturas.push(\"LESIONES O MUERTE POR TERCERO - MERCOSUR\");\n        plan_1.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_1.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_1.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_1.coberturas.push(\"ROBO TOTAL\");\n        plan_1.coberturas.push(\"ROBO CONTENIDO\");\n        plan_1.coberturas.push(\"INCENDIO TOTAL\");\n        plan_1.coberturas.push(\"DESTRUCCION TOTAL POR ACCIDENTE\");\n        plan_1.coberturas.push(\"ACCESORIOS PLAN 1\");\n        plan_1.coberturas.push(\"ACCESORIOS ROBO TOTAL\");\n        plan_1.coberturas.push(\"ACCESORIOS DAÑO TOTAL\");\n        plan_1.coberturas.push(\"ACCESORIOS INCENDIO TOTAL\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_2.coberturas.push(\"ADICIONALES Y SERVICIOS\");\n        plan_2.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_2.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_2.coberturas.push(\"LESIONES O MUERTE POR TERCERO - MERCOSUR\");\n        plan_2.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_2.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_2.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_2.coberturas.push(\"ROBO TOTAL\");\n        plan_2.coberturas.push(\"ROBO PARCIAL\");\n        plan_2.coberturas.push(\"INCENDIO TOTAL\");\n        plan_2.coberturas.push(\"INCENDIO PARCIAL\");\n        plan_2.coberturas.push(\"DESTRUCCION TOTAL POR ACCIDENTE\");\n        plan_2.coberturas.push(\"ACCESORIOS PLAN 2 / 20\");\n        plan_2.coberturas.push(\"CASCO MERCOSUR(2)\");\n        plan_2.coberturas.push(\"ACCESORIOS ROBO TOTAL\");\n        plan_2.coberturas.push(\"ACCESORIOS ROBO PARCIA\");\n        plan_2.coberturas.push(\"ACCESORIOS DAÑO TOTAL\");\n        plan_2.coberturas.push(\"ACCESORIOS DAÑO TOTAL\");\n        plan_2.coberturas.push(\"ACCESORIOS INCENDIO PARCIAL\");\n        plan_2.coberturas.push(\"ACCESORIOS INCENDIO TOTAL\");\n    }\n    \n    //Plan 4\n    let plan_4 = info.planes.filter(plan => plan.plan == \"4\")[0];\n    if (plan_4 != null) {\n        plan_4.coberturas = [];\n        plan_4.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_4.coberturas.push(\"ASITENCIA VEHICULO PLAN RC UNICAMENTE\");\n        plan_4.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_4.coberturas.push(\"RESP.CIVIL-AGRAVANTE POR NO CUBRIR CASCO\");\n        plan_4.coberturas.push(\"RESP.CIVIL-DESAFECTA BNS\");\n        plan_4.coberturas.push(\"RESP.CIVIL-AGRABANTE DESAFECTA BNS\");\n        plan_4.coberturas.push(\"RESP.CIVIL-DESAFECTA BNS\");\n        plan_4.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_4.coberturas.push(\"LESIONES O MUERTE POR TERCERO - MERCOSUR\");\n        plan_4.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_4.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_4.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        \n    }\n    \n    //Plan 7\n    let plan_7 = info.planes.filter(plan => plan.plan == \"7\")[0];\n    if (plan_7 != null) {\n        plan_7.coberturas = [];\n        plan_7.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_7.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_7.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_7.coberturas.push(\"LESIONES O MUERTE POR TERCERO - MERCOSUR\");\n        plan_7.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_7.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_7.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_7.coberturas.push(\"ROBO TOTAL\");\n        plan_7.coberturas.push(\"ROBO CONTENIDO\");\n        plan_7.coberturas.push(\"INCENDIO TOTAL\");\n        plan_7.coberturas.push(\"ACCESORIOS PLAN 7\");\n        plan_7.coberturas.push(\"AJUSTE COMERCIAL PLAN 7\");\n        plan_7.coberturas.push(\"CASCO MERCOSUR(7)\");\n        plan_7.coberturas.push(\"ACCESORIOS ROBO TOTAL\");\n        plan_7.coberturas.push(\"ACCESORIOS INCENDIO TOTAL\");\n        \n    }\n    \n    //Plan 8\n    let plan_8 = info.planes.filter(plan => plan.plan == \"8\")[0];\n    if (plan_8 != null) {\n        plan_8.coberturas = [];\n        plan_8.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_8.coberturas.push(\"ADICIONALES Y SERVICIOS\");\n        plan_8.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_8.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_8.coberturas.push(\"LESIONES O MUERTE POR TERCERO - MERCOSUR\");\n        plan_8.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_8.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_8.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_8.coberturas.push(\"ROBO TOTAL\");\n        plan_8.coberturas.push(\"ROBO PARCIAL\");\n        plan_8.coberturas.push(\"INCENDIO TOTAL\");\n        plan_8.coberturas.push(\"INCENDIO PARCIAL\");\n        plan_8.coberturas.push(\"ACCESORIOS PLAN 8\");\n        plan_8.coberturas.push(\"CASCO MERCOSUR(8)\");\n        plan_8.coberturas.push(\"ACCESORIOS ROBO TOTAL\");\n        plan_8.coberturas.push(\"ACCESORIOS ROBO PARCIAL\");\n        plan_8.coberturas.push(\"ACCESORIOS INCENDIO TOTAL\");\n        plan_8.coberturas.push(\"ACCESORIOS INCENDIO PARCIAL\");\n        plan_8.coberturas.push(\"CHOQUE ENTRE ASEGURADOS\");\n        \n    }\n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    \n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_22.coberturas.push(\"ADICIONALES Y SERVICIOS\");\n        plan_22.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_22.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_22.coberturas.push(\"LESIONES O MUERTE POR TERCERO - MERCOSUR\");\n        plan_22.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_22.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_22.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_22.coberturas.push(\"ROBO PARCIAL/TOTAL\");\n        plan_22.coberturas.push(\"ROBO CONTENIDO\");\n        plan_22.coberturas.push(\"ROBO CONTENIDO SIN COSTO CA-RH 9.1\");\n        plan_22.coberturas.push(\"INCENDIO PARCIAL/TOTAL\");\n        plan_22.coberturas.push(\"DESTRUCCION TOTAL POR ACCIDENTE\");\n        plan_22.coberturas.push(\"ACCESORIOS ROBO PARCIAL/TOTAL\");\n        plan_22.coberturas.push(\"ACCESORIOS INCENDIO PARCIAL/TOTAL\");\n        plan_22.coberturas.push(\"ACCESORIOS DAÑO TOTAL\");\n        plan_22.coberturas.push(\"ROTURA DE LUNETA Y PARABRISAS\");\n        plan_22.coberturas.push(\"CRISTALES LATERALES Y CERRADURAS\");\n        plan_22.coberturas.push(\"DAÑOS POR GRANIZO\");\n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    \n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_50.coberturas.push(\"ADICIONALES Y SERVICIOS\");\n        plan_50.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_50.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_50.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_50.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_50.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_50.coberturas.push(\"ROBO PARCIAL/TOTAL\");\n        plan_50.coberturas.push(\"ROBO CONTENIDO SIN COSTO CA-RH 9.1\");\n        plan_50.coberturas.push(\"INCENDIO PARCIAL/TOTAL\");\n        plan_50.coberturas.push(\"DESTRUCCION TOTAL POR ACCIDENT\");\n        plan_50.coberturas.push(\"ACCESORIOS PLAN  40\");\n        plan_50.coberturas.push(\"DESCUENTO POR ALTA GAMA-PLAN 40\");\n        plan_50.coberturas.push(\"DAÑO PARCIAL PLAN 50\");\n        plan_50.coberturas.push(\"CASCO MERCOSUR(40)\");\n        plan_50.coberturas.push(\"ACCESORIOS ROBO PARCIAL/TOTAL\");\n        plan_50.coberturas.push(\"ACCESORIOS INCENDIO PARCIAL/TOTAL\");\n        plan_50.coberturas.push(\"ACCESORIOS DAÑO TOTAL\");\n        plan_50.coberturas.push(\"DAÑOS POR GRANIZO\");\n        plan_50.coberturas.push(\"CHOQUE ENTRE ASEGURADOS\");\n\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    \n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"RESPONSABILIDAD CIVIL CON LIMITE\");\n        plan_41.coberturas.push(\"ADICIONALES Y SERVICIOS\");\n        plan_41.coberturas.push(\"ACCIDENTES PERSONALES\");\n        plan_41.coberturas.push(\"RESP. CIVIL CON LIMITE MERCOSUR\");\n        plan_41.coberturas.push(\"DAÑOS MATERIALES POR TERCERO - MERCOSUR\");\n        plan_41.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_41.coberturas.push(\"DAÑOS MATERIALES POR EVENTO - MERCOSUR\");\n        plan_41.coberturas.push(\"LESIONES O MUERTE POR EVENTO - MERCOSUR\");\n        plan_41.coberturas.push(\"ROBO PARCIAL/TOTAL\");\n        plan_41.coberturas.push(\"ROBO CONTENIDO\");\n        plan_41.coberturas.push(\"ROBO CONTENIDO SIN COSTO CA-RH 9.1\");\n        plan_41.coberturas.push(\"INCENDIO PARCIAL/TOTAL\");\n        plan_41.coberturas.push(\"DESTRUCCION TOTAL POR ACCIDENTE\");\n        plan_41.coberturas.push(\"DAÑO PARCIAL\");\n        plan_41.coberturas.push(\"ACCESORIOS PLAN 41\");\n        plan_41.coberturas.push(\"DESCUENTO POR ALTA GAMA-PLAN 41\");\n        plan_41.coberturas.push(\"CASCO MERCOSUR(3)\");\n        plan_41.coberturas.push(\"OPTICAS\");\n        plan_41.coberturas.push(\"ANTENA\");\n        plan_41.coberturas.push(\"ESPEJOS\");\n        plan_41.coberturas.push(\"DAÑOS POR GRANIZO\");\n        plan_41.coberturas.push(\"CHOQUE ENTRE ASEGURADOS\");\n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    \n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    \n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    \n    msg.payload = info \n}\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2402,7 +2402,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "",
-        "func": "if (msg.statusCode === 200 && msg.payload.data.Polizas != undefined) {\n    \n    var document = msg.req.params.document;\n    //Chequear si existe el cliente y tiene Polizas\n\n    let policies = msg.payload.data.Polizas\n    \n    node.warn([\"Client_1\", policies])\n    \n    //Chequear poliza automotor\n    let policiesCar = msg.payload.data.Polizas.filter(poliza => poliza.Ramo == \"4\")\n    \n    node.warn([\"Client_2\", policiesCar])\n    \n    let securityQuestion = {};\n    \n    //Preguntas de seguridad\n    msg.payload.securityQuestions = [];\n    \n    //Si tiene patentes de Auto, agrego estas preguntas\n    if (policiesCar) {\n        \n        securityQuestion.question = \"¿Puede indicarnos la patente de uno de sus vehiculos asegurado en la compañia?\";\n        //Puedo tener mas de una respuesta valida - Agrego las patentes validas\n        securityQuestion.answer = [];\n        policiesCar.forEach(policy => { securityQuestion.answer.push(policy.Patente)});\n        \n        msg.payload.securityQuestions.push(securityQuestion);\n        \n    }\n    \n    //TODO: Hacer para otros tipos de polizas\n\n    \n \n} else {\n    msg.statusCode = 500;\n    msg.payload = \"Cliente inexistente\";\n}\n\nreturn msg;\n\n",
+        "func": "if (msg.statusCode === 200) {\n    \n    //Si encontro polizas\n    if (msg.payload.data.Polizas != undefined) {\n       \n        var document = msg.req.params.document;\n        //Chequear si existe el cliente y tiene Polizas\n        let policies = msg.payload.data.Polizas\n        \n        node.warn([\"Client_1\", policies])\n        \n        //Chequear poliza automotor\n        let policiesCar = msg.payload.data.Polizas.filter(poliza => poliza.Ramo == \"4\")\n        \n        node.warn([\"Client_2\", policiesCar])\n        \n        let securityQuestion = {};\n        \n        //Preguntas de seguridad\n        msg.payload.securityQuestions = [];\n        \n        //Si tiene patentes de Auto, agrego estas preguntas\n        if (policiesCar) {\n            \n            securityQuestion.question = \"¿Puede indicarnos la patente de uno de sus vehiculos asegurado en la compañia?\";\n            //Puedo tener mas de una respuesta valida - Agrego las patentes validas\n            securityQuestion.answer = [];\n            policiesCar.forEach(policy => { securityQuestion.answer.push(policy.Patente)});\n            \n            msg.payload.securityQuestions.push(securityQuestion);\n            \n        }\n    \n    //TODO: Hacer para otros tipos de polizas \n    } else {\n        //Codigo de error cliente no encontrado\n        msg.statusCode = 404;\n        msg.payload = \"Cliente no encontrado\";\n        \n    }\n    \n\n    \n \n} else {\n    msg.statusCode = 500;\n    msg.payload = \"Error - vuelva a intentar nuevamente\";\n}\n\nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2607,6 +2607,27 @@
                 "p": "psegurosEmision_2_Url",
                 "pt": "global",
                 "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/2.0/",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "public",
+                "pt": "global",
+                "to": "http://rocket.it.mindbot.com.ar:1881/",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "promo_template",
+                "pt": "global",
+                "to": "Cotizacion - Promos - Template v1.0.png",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "rc_template",
+                "pt": "global",
+                "to": "Talon RC - Template v1.0.png",
                 "tot": "str"
             }
         ],
@@ -2943,9 +2964,9 @@
         "y": 1320,
         "wires": [
             [
-                "9e035bb2.6d5678",
                 "635b1352.d3259c",
-                "31047e79.12a852"
+                "31047e79.12a852",
+                "fcce0faf.bb7ca"
             ]
         ]
     },
@@ -2954,7 +2975,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Define header",
-        "func": "msg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\nmsg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 58;\nmsg.image.y = 5;\nmsg.image.text = `Cotizacion: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: ${msg.payload.response.sumaAsegurada} - ${new Date().toString(\"dd/MM/yyyy\")}`;\n\nreturn msg;",
+        "func": "msg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\n//msg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.url = global.get(\"public\") + global.get(\"promo_template\");\n\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 58;\nmsg.image.y = 5;\nmsg.image.text = `Cotizacion: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: ${msg.payload.response.sumaAsegurada} - ${new Date().toString(\"dd'/'MM'/'yyyy\")}`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2969,108 +2990,11 @@
         ]
     },
     {
-        "id": "9e035bb2.6d5678",
-        "type": "function",
-        "z": "7ee549ef.0fbb28",
-        "name": "Define footer",
-        "func": "msg.image.font = \"FONT_SANS_10_BLACK\";\nmsg.image.x = 20;\nmsg.image.y = 1170;\nmsg.image.text = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\nmsg.image.maxWidth = 720;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 910,
-        "y": 1320,
-        "wires": [
-            [
-                "35195284.f71cee"
-            ]
-        ]
-    },
-    {
-        "id": "35195284.f71cee",
-        "type": "jimp-image",
-        "z": "7ee549ef.0fbb28",
-        "name": "Get template",
-        "data": "image.payload",
-        "dataType": "msg",
-        "ret": "img",
-        "parameter1": "image.font",
-        "parameter1Type": "msg",
-        "parameter2": "image.x",
-        "parameter2Type": "msg",
-        "parameter3": "image.y",
-        "parameter3Type": "msg",
-        "parameter4": "image.text",
-        "parameter4Type": "msg",
-        "parameter5": "image.maxWidth",
-        "parameter5Type": "msg",
-        "parameter6": "",
-        "parameter6Type": "msg",
-        "parameter7": "",
-        "parameter7Type": "msg",
-        "parameter8": "",
-        "parameter8Type": "msg",
-        "sendProperty": "image.payload",
-        "sendPropertyType": "msg",
-        "parameterCount": 6,
-        "jimpFunction": "print",
-        "selectedJimpFunction": {
-            "name": "print",
-            "fn": "print",
-            "description": "Print text to the image",
-            "parameters": [
-                {
-                    "name": "font|str",
-                    "type": "jimpFont",
-                    "required": true,
-                    "hint": "font to print. NOTE: This can be one of the presets or the path to a fnt file"
-                },
-                {
-                    "name": "x",
-                    "type": "num",
-                    "required": true,
-                    "hint": "x coordinate to print text"
-                },
-                {
-                    "name": "y",
-                    "type": "num",
-                    "required": true,
-                    "hint": "y coordinate to print text"
-                },
-                {
-                    "name": "text",
-                    "type": "str",
-                    "required": true,
-                    "hint": "text to print"
-                },
-                {
-                    "name": "maxWidth",
-                    "type": "num",
-                    "required": false,
-                    "hint": "wrap text at maxWidth"
-                },
-                {
-                    "name": "maxHeight",
-                    "type": "num",
-                    "required": false,
-                    "hint": "max height"
-                }
-            ]
-        },
-        "x": 1110,
-        "y": 1320,
-        "wires": [
-            [
-                "fcce0faf.bb7ca"
-            ]
-        ]
-    },
-    {
         "id": "fcce0faf.bb7ca",
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 1 - valor NOAP",
-        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 40;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\n\nmsg.image.text = `$ ${valorNoAP} / MES`;\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 290;\nmsg.image.y = 60;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\nmsg.image.text = `$ ${valorNoAP} POR MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3167,7 +3091,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 1 - valor PROMO",
-        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 115;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorPromo = plan.promocionesPorPlan[0].premio;\n\nmsg.image.text = `$ ${valorPromo} / MES`;\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 220;\nmsg.image.y = 115;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[0];\nlet valorPromo = plan.promocionesPorPlan[0].premio;\n\nmsg.image.text = `$ ${valorPromo} POR MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -4286,7 +4210,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Define Tomador",
-        "func": "msg.image = {};\n\nmsg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Talon RC - Template v1.0.png\";\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 34;\nmsg.image.y = 126;\nmsg.image.text = `Tomador/Asegurado: ${msg.req.query.client}`;\n\nmsg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Talon circulacion - ${msg.req.query.policy}.png\"`\n\nreturn msg;",
+        "func": "msg.image = {};\n\n//msg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Talon RC - Template v1.0.png\";\nmsg.image.url = global.get(\"public\") + global.get(\"rc_template\");\n\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 34;\nmsg.image.y = 126;\nmsg.image.text = `Tomador/Asegurado: ${msg.req.query.client}`;\n\nmsg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Talon circulacion - ${msg.req.query.policy}.png\"`\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5459,7 +5383,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 2 - valor NOAP",
-        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 420;\nmsg.image.text = \"$ 3247 / MES\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 290;\nmsg.image.y = 440;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[1];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\nmsg.image.text = `$ ${valorNoAP} por MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5556,7 +5480,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 2 - valor PROMO",
-        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 488;\nmsg.image.text = \"$ 2292 / MES\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 220;\nmsg.image.y = 488;\n\nlet plan = msg.payload.response.planes[1];\nlet valorPromo = plan.promocionesPorPlan[0].premio;\n\nmsg.image.text = `$ ${valorPromo} por MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5653,7 +5577,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 2 - Producto",
-        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 549;\nmsg.image.text = \"TERCEROS COMPLETOS FULL\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 549;\n\nlet plan = msg.payload.response.planes[1];\nlet producto = plan.descripcion;\n\nmsg.image.text = `${producto}`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5750,7 +5674,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 2 - Coberturas",
-        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 612;\n\nmsg.image.text = \"Todo riesgo fcia varaible\" + \"\\n\";\nmsg.image.text += \"Talleres Autorizados\" + \"\\n\";\nmsg.image.text += \"Auto sustituto\" + \"\\n\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 612;\n\nlet plan = msg.payload.response.planes[1];\nlet coberturas = plan.coberturas.slice(0,7);\n\n\nmsg.image.text = \"\";\ncoberturas.forEach(cobertura => {msg.image.text += cobertura + \"\\n\"} )\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5847,7 +5771,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 3 - valor NOAP",
-        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 270;\nmsg.image.y = 792;\nmsg.image.text = \"$ 3247 / MES\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 290;\nmsg.image.y = 812;\n\n//Selecciono primer plan???\nlet plan = msg.payload.response.planes[2];\nlet valorNoAP = plan.promocionesPorPlan[1].premio;\n\nmsg.image.text = `$ ${valorNoAP} POR MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5944,7 +5868,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 3 - valor PROMO",
-        "func": "msg.image.font = \"FONT_SANS_64_WHITE\";\nmsg.image.x = 190;\nmsg.image.y = 860;\nmsg.image.text = \"$ 2292 / MES\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_32_WHITE\";\nmsg.image.x = 220;\nmsg.image.y = 860;\n\nlet plan = msg.payload.response.planes[2];\nlet valorPromo = plan.promocionesPorPlan[0].premio;\n\nmsg.image.text = `$ ${valorPromo} por MES`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6041,7 +5965,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 3 - Producto",
-        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 920;\nmsg.image.text = \"TODO RIESGO FRANQUICIA FIJA\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_WHITE\";\nmsg.image.x = 250;\nmsg.image.y = 920;\n\nlet plan = msg.payload.response.planes[2];\nlet producto = plan.descripcion;\n\nmsg.image.text = `${producto}`;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6138,7 +6062,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 3 - Coberturas",
-        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 988;\n\nmsg.image.text = \"Todo riesgo fcia varaible\" + \"\\n\";\nmsg.image.text += \"Talleres Autorizados\" + \"\\n\";\nmsg.image.text += \"Auto sustituto\" + \"\\n\";\n\n\nreturn msg;",
+        "func": "msg.image.font = \"FONT_SANS_16_BLACK\";\nmsg.image.x = 121;\nmsg.image.y = 988;\n\nlet plan = msg.payload.response.planes[2];\nlet coberturas = plan.coberturas.slice(0,7);\n\n\nmsg.image.text = \"\";\ncoberturas.forEach(cobertura => {msg.image.text += cobertura + \"\\n\"} )\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6477,7 +6401,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "response",
-        "func": "if (msg.payload.code === 200) {\n\n    let policiesAndMenssage = {};\n    \n    if ( msg.payload.data.Polizas === undefined ) {\n        policiesAndMenssage = msg.payload.data.Mensaje;\n    } else if ( msg.payload.data.Polizas.length >= 1 ) {\n        policiesAndMenssage = msg.payload.data;\n    } else {\n        policiesAndMenssage = msg.payload.data;\n    }\n\n    msg.payload = policiesAndMenssage;\n \n} else if ( msg.payload.code === 500 ) {\n    msg.payload = \"Polizas no encontradas\";\n}\n\nreturn msg;",
+        "func": "if (msg.payload.code === 200) {\n\n    let policiesAndMenssage = {};\n    \n    if ( msg.payload.data.Polizas === undefined ) {\n        policiesAndMenssage = msg.payload.data.Mensaje;\n    } else if ( msg.payload.data.Polizas.length >= 1 ) {\n        policiesAndMenssage = msg.payload.data;\n    } else {\n        policiesAndMenssage = msg.payload.data;\n    }\n\n    msg.payload = policiesAndMenssage;\n \n} else if ( msg.payload.code === 500 ) {\n    msg.payload = \"Error intente\";\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6585,8 +6509,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1470,
-        "y": 960,
+        "x": 1350,
+        "y": 1020,
         "wires": []
     },
     {
@@ -6613,7 +6537,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "",
-        "func": "//  en caso de no haber error devuelve la poliza \nmsg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Poliza digital - ${msg.policy}.pdf\"`\n\n\nreturn msg;",
+        "func": "//  en caso de no haber error devuelve la poliza\n\nif (msg.statusCode === 200) {\n\n    msg.headers = {};\n    msg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Poliza digital - ${msg.policy}.pdf\"`\n    msg.headers[\"content-type\"] = \"application/pdf\";\n    \n    msg.statusCode = 200\n\n} else {\n    \n    msg.statusCode = 500;\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6622,7 +6546,7 @@
         "y": 1020,
         "wires": [
             [
-                "4b937199.8a2eb"
+                "b0fd4016.15baf"
             ]
         ]
     },
@@ -6965,29 +6889,101 @@
         ]
     },
     {
-        "id": "4b937199.8a2eb",
-        "type": "change",
-        "z": "c289f04a.5490c",
+        "id": "7e5770fc.f51f5",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
         "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "headers.content-type",
-                "pt": "msg",
-                "to": "application/pdf",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1230,
-        "y": 1020,
+        "url": "coverage/:quotationNumber/:plan/:promo",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 3900,
         "wires": [
             [
-                "b0fd4016.15baf"
+                "44f6d34a.9fdf2c"
+            ]
+        ]
+    },
+    {
+        "id": "5b74b241.41413c",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Detalle de Planes",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 780,
+        "y": 3980,
+        "wires": [
+            [
+                "ec019244.9faf1"
+            ]
+        ]
+    },
+    {
+        "id": "a943e919.172e58",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1190,
+        "y": 3980,
+        "wires": []
+    },
+    {
+        "id": "44f6d34a.9fdf2c",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 240,
+        "y": 3980,
+        "wires": [
+            [
+                "959f0515.d044a8"
+            ]
+        ]
+    },
+    {
+        "id": "959f0515.d044a8",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Detalle de Planes",
+        "func": "let quotationNumber = msg.req.params.quotationNumber;\nlet plan = msg.req.params.plan;\nlet promo = msg.req.params.promo;\n\n\nmsg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/detallePlan/${quotationNumber}/${plan}/${promo}?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 520,
+        "y": 3980,
+        "wires": [
+            [
+                "5b74b241.41413c"
+            ]
+        ]
+    },
+    {
+        "id": "ec019244.9faf1",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "response",
+        "func": "var details = msg.payload;\nvar coverage = [];\n\ndetails.forEach(item => {\n    coverage.push(item.cobertura)\n})\n\nmsg.payload = coverage\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1020,
+        "y": 3980,
+        "wires": [
+            [
+                "a943e919.172e58"
             ]
         ]
     }
