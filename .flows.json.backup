@@ -2975,7 +2975,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Define header",
-        "func": "msg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\n//msg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.url = global.get(\"public\") + global.get(\"promo_template\");\n\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 58;\nmsg.image.y = 5;\nmsg.image.text = `Cotización: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: ${msg.payload.response.sumaAsegurada} - ${new Date().toString(\"dd'/'MM'/'yyyy\")}`;\n\nreturn msg;",
+        "func": "msg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\n//msg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.url = global.get(\"public\") + global.get(\"promo_template\");\n\nmsg.image.font = \"FONT_SANS_14_BLACK\";\nmsg.image.x = 58;\nmsg.image.y = 5;\nmsg.image.text = `Cotizacion: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: ${msg.payload.response.sumaAsegurada} - ${new Date().toString(\"dd'/'MM'/'yyyy\")}`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6985,6 +6985,46 @@
             [
                 "a943e919.172e58"
             ]
+        ]
+    },
+    {
+        "id": "20dcaa8f.71e1a6",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "",
+        "parameter1Type": "msg",
+        "parameter2": "",
+        "parameter2Type": "msg",
+        "parameter3": "",
+        "parameter3Type": "msg",
+        "parameter4": "",
+        "parameter4Type": "msg",
+        "parameter5": "",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 0,
+        "jimpFunction": "none",
+        "selectedJimpFunction": {
+            "name": "none",
+            "fn": "none",
+            "description": "Just loads the image.",
+            "parameters": []
+        },
+        "x": 1740,
+        "y": 1620,
+        "wires": [
+            []
         ]
     }
 ]

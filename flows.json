@@ -1719,7 +1719,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Cotizacion",
-        "func": "msg.url = global.get(\"psegurosCotizacion_Url\") + `cotizar?apikey=` + global.get(\"psegurosApiKey\");\n\nlet bodyCotizacion = {};\n\nlet year = msg.payload.year;\nlet newCar = msg.payload.new;\nlet brand = msg.payload.brand;\nlet model = msg.payload.model;\nlet zipcode = msg.payload.zipcode;\nlet gender = msg.payload.gender;\nlet province = msg.payload.province;\n\nbodyCotizacion.bien = {};\nbodyCotizacion.bien[\"40012_anio\"] = year;\nbodyCotizacion.bien[\"40013_es0km\"] = newCar;\nbodyCotizacion.bien[\"40020_marca\"] = brand;\nbodyCotizacion.bien[\"40021_modelo\"] = model;\nbodyCotizacion.bien[\"900008_codPostal\"] = zipcode;\nbodyCotizacion.bien[\"40086_genero\"] = gender;\nbodyCotizacion.bien[\"40008_Uso\"] = \"1\";\nbodyCotizacion.bien.montoAccesorios = \"0\"; // por ahora hardcode\n\nbodyCotizacion.ramoProducto = {};\nbodyCotizacion.ramoProducto.ramo = \"4\";\nbodyCotizacion.ramoProducto.producto = \"04100\";\n\nbodyCotizacion.datosGenerales = {};\nbodyCotizacion.datosGenerales.codProductor = \"15925\";\nbodyCotizacion.datosGenerales.provincia = province;\nbodyCotizacion.datosGenerales.tipoPersona = \"F\";  // unico valor aceptable (persona fisica)\nbodyCotizacion.datosGenerales.medioDePago = \"2\";\nbodyCotizacion.datosGenerales.origenDePago = \"VISO\";\nbodyCotizacion.datosGenerales.condicionIva = \"CF\";  // unico valor aceptable (consumidor final)\nbodyCotizacion.datosGenerales.cuit = \"\";\nbodyCotizacion.datosGenerales.vigencia = \"E\";\nbodyCotizacion.datosGenerales.vigenciaTecnica = \"A\";\nbodyCotizacion.datosGenerales.tipoFacturacion = \"F\";\nbodyCotizacion.datosGenerales.moneda = \"01\";\nbodyCotizacion.datosGenerales.planDePago = \"1\";\nbodyCotizacion.datosGenerales.modoDeCalculo = \"N\";\n\nbodyCotizacion.promociones = [{promocion : \"COTFIN2\"}, {promocion : \"CLIFIN\"}, {promocion : \"NOAP\"}];\n\nmsg.year = year; // se guarda el año para saber que planes corresponden mostrar\n\nmsg.payload = bodyCotizacion;\n\nreturn msg;",
+        "func": "msg.url = global.get(\"psegurosCotizacion_Url\") + `cotizar?apikey=` + global.get(\"psegurosApiKey\");\n\nlet bodyCotizacion = {};\n\nlet year = msg.payload.year;\nlet newCar = msg.payload.new;\nlet brand = msg.payload.brand;\nlet model = msg.payload.model;\nlet zipcode = msg.payload.zipcode;\nlet gender = msg.payload.gender;\nlet province = msg.payload.province;\n\nbodyCotizacion.bien = {};\nbodyCotizacion.bien[\"40012_anio\"] = year;\nbodyCotizacion.bien[\"40013_es0km\"] = newCar;\nbodyCotizacion.bien[\"40020_marca\"] = brand;\nbodyCotizacion.bien[\"40021_modelo\"] = model;\nbodyCotizacion.bien[\"900008_codPostal\"] = zipcode;\nbodyCotizacion.bien[\"40086_genero\"] = gender;\nbodyCotizacion.bien[\"40008_Uso\"] = \"1\";\nbodyCotizacion.bien[\"40105_Cuil_Beneficiario_Art\"] = \"\";\nbodyCotizacion.bien.montoAccesorios = \"0\"; // por ahora hardcode\n\nbodyCotizacion.ramoProducto = {};\nbodyCotizacion.ramoProducto.ramo = \"4\";\nbodyCotizacion.ramoProducto.producto = \"04100\";\n\nbodyCotizacion.datosGenerales = {};\nbodyCotizacion.datosGenerales.codProductor = \"15925\";\nbodyCotizacion.datosGenerales.provincia = province;\nbodyCotizacion.datosGenerales.tipoPersona = \"F\";  // unico valor aceptable (persona fisica)\nbodyCotizacion.datosGenerales.medioDePago = \"2\";\nbodyCotizacion.datosGenerales.origenDePago = \"VISO\";\nbodyCotizacion.datosGenerales.condicionIva = \"CF\";  // unico valor aceptable (consumidor final)\nbodyCotizacion.datosGenerales.cuit = \"\";\nbodyCotizacion.datosGenerales.vigencia = \"E\";\nbodyCotizacion.datosGenerales.vigenciaTecnica = \"A\";\nbodyCotizacion.datosGenerales.tipoFacturacion = \"F\";\nbodyCotizacion.datosGenerales.moneda = \"01\";\nbodyCotizacion.datosGenerales.planDePago = \"1\";\nbodyCotizacion.datosGenerales.modoDeCalculo = \"N\";\n\nbodyCotizacion.promociones = [{promocion : \"COTFIN2\"}, {promocion : \"CLIFIN\"}, {promocion : \"NOAP\"}];\n\nmsg.year = year; // se guarda el año para saber que planes corresponden mostrar\n\nmsg.payload = bodyCotizacion;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6985,6 +6985,46 @@
             [
                 "a943e919.172e58"
             ]
+        ]
+    },
+    {
+        "id": "20dcaa8f.71e1a6",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "",
+        "parameter1Type": "msg",
+        "parameter2": "",
+        "parameter2Type": "msg",
+        "parameter3": "",
+        "parameter3Type": "msg",
+        "parameter4": "",
+        "parameter4Type": "msg",
+        "parameter5": "",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 0,
+        "jimpFunction": "none",
+        "selectedJimpFunction": {
+            "name": "none",
+            "fn": "none",
+            "description": "Just loads the image.",
+            "parameters": []
+        },
+        "x": 1740,
+        "y": 1620,
+        "wires": [
+            []
         ]
     }
 ]
