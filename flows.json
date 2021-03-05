@@ -6525,7 +6525,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "PS Poliza en PDF",
-        "func": "let policy =  msg.payload.policy\nmsg.policy = policy;\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n\n//TODO: Harcode, hasta tener polizas\npolicy = \"10000149\";\n \n//Number(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdfPS/1/4/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
+        "func": "let policy =  msg.payload.policy\nmsg.policy = policy;\n\nlet branch = msg.payload.branch\nlet ramo = msg.payload.ramo\n\n/*al usar el numero de cotizacion en la url pasa a ser string y es\n necesario que valla en el payload como numero para que\n el servicio de provincia no de error\n*/\n\n//TODO: Harcode, hasta tener polizas\npolicy = \"9427912\";\n \n//Number(policy)\n\n//msg.url =  `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/obtenerPdf/1/4/${policy}/0?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosNovedades_Url\") + `obtenerPdfPS/${branch}/${ramo}/${policy}/0?apiKey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
