@@ -35,6 +35,13 @@
         "info": ""
     },
     {
+        "id": "5eeb304d.24308",
+        "type": "tab",
+        "label": "LOG",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "248b9587.09adfa",
         "type": "subflow",
         "name": "PSeguros - Auth",
@@ -89,6 +96,15 @@
         "useselfsignedcertificate": false,
         "sslterminated": false,
         "verboselogging": false
+    },
+    {
+        "id": "6e3cb7e8.3326f8",
+        "type": "Stackhero-MySQL-Server",
+        "name": "MindbotLog",
+        "host": "rocket.it.mindbot.com.ar",
+        "port": "3306",
+        "tls": false,
+        "database": "MindbotLog"
     },
     {
         "id": "3f4b9f1f.e14f1",
@@ -2402,17 +2418,18 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "",
-        "func": "if (msg.statusCode === 200) {\n    \n    //Si encontro polizas\n    if (msg.payload.data.polizas != undefined) {\n       \n        var document = msg.req.params.document;\n        //Chequear si existe el cliente y tiene Polizas\n        let policies = msg.payload.data.polizas\n        \n        node.warn([\"Client_1\", policies])\n        \n        //Chequear poliza automotor\n        let policiesCar = msg.payload.data.polizas.filter(poliza => poliza.ramo == \"4\")\n        \n        node.warn([\"Client_2\", policiesCar])\n        \n        let securityQuestion = {};\n        \n        //Preguntas de seguridad\n        msg.payload.securityQuestions = [];\n        \n        //Si tiene patentes de Auto, agrego estas preguntas\n        if (policiesCar) {\n            \n            securityQuestion.question = \"¿Puede indicarnos la patente de uno de sus vehiculos asegurado en la compañia?\";\n            //Puedo tener mas de una respuesta valida - Agrego las patentes validas\n            securityQuestion.answer = [];\n            policiesCar.forEach(policy => { securityQuestion.answer.push(policy.patente)});\n            \n            msg.payload.securityQuestions.push(securityQuestion);\n            \n        }\n    \n    //TODO: Hacer para otros tipos de polizas \n    } else {\n        //Codigo de error cliente no encontrado\n        msg.statusCode = 404;\n        msg.payload = \"Cliente no encontrado\";\n        \n    }\n    \n\n    \n \n} else {\n    msg.statusCode = 500;\n    msg.payload = \"Error - vuelva a intentar nuevamente\";\n}\n\nreturn msg;\n\n",
+        "func": "//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.Response = JSON.stringify(msg.payload);\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\n\nif (msg.statusCode === 200) {\n    \n    //Si encontro polizas\n    if (msg.payload.data.polizas != undefined) {\n       \n        var document = msg.req.params.document;\n        //Chequear si existe el cliente y tiene Polizas\n        let policies = msg.payload.data.polizas\n        \n        node.warn([\"Client_1\", policies])\n        \n        //Chequear poliza automotor\n        let policiesCar = msg.payload.data.polizas.filter(poliza => poliza.ramo == \"4\")\n        \n        node.warn([\"Client_2\", policiesCar])\n        \n        let securityQuestion = {};\n        \n        //Preguntas de seguridad\n        msg.payload.securityQuestions = [];\n        \n        //Si tiene patentes de Auto, agrego estas preguntas\n        if (policiesCar) {\n            \n            securityQuestion.question = \"¿Puede indicarnos la patente de uno de sus vehiculos asegurado en la compañia?\";\n            //Puedo tener mas de una respuesta valida - Agrego las patentes validas\n            securityQuestion.answer = [];\n            policiesCar.forEach(policy => { securityQuestion.answer.push(policy.patente)});\n            \n            msg.payload.securityQuestions.push(securityQuestion);\n            \n        }\n    \n    //TODO: Hacer para otros tipos de polizas \n    } else {\n        //Codigo de error cliente no encontrado\n        msg.statusCode = 404;\n        msg.payload = \"Cliente no encontrado\";\n        \n    }\n\n \n} else {\n    msg.statusCode = 500;\n    msg.payload = \"Error - vuelva a intentar nuevamente\";\n}\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Obtener cliente\";\nmsg.log.url = \"/client\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\nmsg.log.integrationUrl = msg.url;\n\n\n\nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "x": 1020,
-        "y": 480,
+        "y": 540,
         "wires": [
             [
                 "74b3a226.91758c",
-                "d9ccb293.6a787"
+                "d9ccb293.6a787",
+                "c414dfa3.0cddc"
             ]
         ]
     },
@@ -2423,8 +2440,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1190,
-        "y": 480,
+        "x": 1210,
+        "y": 540,
         "wires": []
     },
     {
@@ -6641,7 +6658,7 @@
         "type": "function",
         "z": "c289f04a.5490c",
         "name": "PSeguros IVR",
-        "func": "\nlet documentNumber =  msg.payload.document;\nlet policyNumber =  msg.payload.policyNumber || \"\";\n\nmsg.url = global.get(\"psegurosInfo_Url\") + `IVRPolizasVigentes/${documentNumber}/IVR/${policyNumber}?apiKey=` + global.get(\"psegurosApiKey\");\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\n\nreturn msg;",
+        "func": "//Guardar peticion inicial\nmsg.originalPayload = msg.payload;\n\nlet documentNumber =  msg.payload.document;\nlet policyNumber =  msg.payload.policyNumber || \"\";\n\nmsg.url = global.get(\"psegurosInfo_Url\") + `IVRPolizasVigentes/${documentNumber}/IVR/${policyNumber}?apiKey=` + global.get(\"psegurosApiKey\");\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/3.0/executeDataIVR/${documento}/IVR/${policy}?apiKey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\n\nmsg.integrationPayload = msg.payload;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6689,8 +6706,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 980,
-        "y": 420,
+        "x": 880,
+        "y": 400,
         "wires": []
     },
     {
@@ -6706,8 +6723,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1350,
-        "y": 380,
+        "x": 1390,
+        "y": 400,
         "wires": []
     },
     {
@@ -7033,5 +7050,100 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "7a9e0986.28ebd8",
+        "type": "Stackhero-MySQL",
+        "z": "5eeb304d.24308",
+        "server": "6e3cb7e8.3326f8",
+        "name": "",
+        "x": 510,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e3be7340.0049c",
+        "type": "function",
+        "z": "5eeb304d.24308",
+        "name": "Payload Log",
+        "func": "//msg.topic = 'INSERT INTO `MindbotLog`.`Message` (`chatId`, `topic`, `channel`, `departmentId`, `inbound`, `from_Id`, `from_Token`, `from_FullName`, `from_UserName`, `from_MessageType`, `from_Message`, `chat_Context`, `failStatus`) VALUES (:chatId, :topic, :channel, :departmentId, :inbound, :from_id, :from_Token, :from_FullName, :from_UserName, :from_MessageType, :from_Message, :chat_Context, :failStatus)';\nmsg.topic = 'INSERT INTO `MindbotLog`.`Service` (`origin`, `destination`, `action`, `url`, `payload`, `response`, `statusCode`, `integrationUrl`, `integrationPayload`, `integrationStatusCode`, `integrationResponse`) VALUES (:origin, :destination, :action, :url, :payload, :response, :statusCode, :integrationUrl, :integrationPayload, :integrationStatusCode, :integrationResponse)';\n\nvar payload = msg.log;\n\nmsg.payload = {\n    origin: payload.origin,\n    destination: payload.destination,\n    action: payload.action,\n    url: payload.url,\n    payload: payload.payload,\n    response: payload.response,\n    statusCode: payload.statusCode,\n    integrationUrl: payload.integrationUrl,\n    integrationPayload: payload.integrationPayload,\n    integrationStatusCode: payload.integrationStatusCode,\n    integrationResponse: payload.integrationResponse\n}\n\n\nreturn [msg, null];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 290,
+        "y": 140,
+        "wires": [
+            [
+                "7a9e0986.28ebd8",
+                "5a334e.a263ccb4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f79443e7.a7451",
+        "type": "link in",
+        "z": "5eeb304d.24308",
+        "name": "LOG-In",
+        "links": [
+            "c414dfa3.0cddc"
+        ],
+        "x": 115,
+        "y": 140,
+        "wires": [
+            [
+                "e3be7340.0049c",
+                "4da635a7.6ceaac"
+            ]
+        ]
+    },
+    {
+        "id": "4da635a7.6ceaac",
+        "type": "debug",
+        "z": "5eeb304d.24308",
+        "name": "LOG-IN",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 250,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "5a334e.a263ccb4",
+        "type": "debug",
+        "z": "5eeb304d.24308",
+        "name": "LOG-Payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c414dfa3.0cddc",
+        "type": "link out",
+        "z": "c289f04a.5490c",
+        "name": "",
+        "links": [
+            "f79443e7.a7451"
+        ],
+        "x": 1175,
+        "y": 600,
+        "wires": []
     }
 ]
