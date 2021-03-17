@@ -29,7 +29,7 @@
     "5b74b241.41413c": {},
     "6e3cb7e8.3326f8": {
         "user": "${log_User}",
-        "password": "log_Password"
+        "password": "${log_Password}"
     },
     "3907b8a4.e28e88": {},
     "7b92ba36.fe3b44": {},
