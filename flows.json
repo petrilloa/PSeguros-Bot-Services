@@ -94,8 +94,8 @@
         "id": "6e3cb7e8.3326f8",
         "type": "Stackhero-MySQL-Server",
         "name": "MindbotLog",
-        "host": "rocket.it.mindbot.com.ar",
-        "port": "3306",
+        "host": "${log_Url}",
+        "port": "${log_Port}",
         "tls": false,
         "database": "MindbotLog"
     },
@@ -6640,20 +6640,6 @@
         "wires": []
     },
     {
-        "id": "e5de69c.ace6198",
-        "type": "e-mail",
-        "z": "7ee549ef.0fbb28",
-        "server": "190.111.231.102",
-        "port": "25",
-        "secure": false,
-        "tls": false,
-        "name": "andrespetrillo@mindbot.com.ar",
-        "dname": "",
-        "x": 1710,
-        "y": 1720,
-        "wires": []
-    },
-    {
         "id": "a370c2bf.6c176",
         "type": "inject",
         "z": "7ee549ef.0fbb28",
@@ -6696,7 +6682,7 @@
         "y": 1720,
         "wires": [
             [
-                "e5de69c.ace6198"
+                "dc58742f.f2bfb8"
             ]
         ]
     },
@@ -6705,7 +6691,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Enviar email",
-        "func": "//TODO: Cambiar a ventadirecta_ps@pseguros.com.ar\nmsg.to = 'andrespetrillo@mindbot.com.ar';\n\nlet bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nmsg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\nmsg.payload = `Buenos días\n\nSe ha recibido una solicitud de emisión  a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\nNombre: ${bodyEmision.datosTomador.nombre}\nApellido: ${bodyEmision.datosTomador.apellido}\nDNI: ${bodyEmision.datosTomador.documento}\nMail: ${bodyEmision.datosTomador.email}\nTelefono: ${bodyEmision.datosTomador.telefono}\nCelular: ${bodyEmision.datosTomador.telefono}\nCotizacion: ${bodyEmision.cotizacio}\nRamo: 2 - Automotores\nProceso de control: \nFecha: ${new Date().toString(\"dd/MM/yyyy\")}\nMarca: ${originalPayload.brand}\nModelo: ${originalPayload.model}\nAño de fabricación: ${originalPayload.year}\n0KM: ${originalPayload.okm}\nPatente: ${bodyEmision.bien['40023_patente']}\nCodigo postal: ${originalPayload.zipCode}\nPlan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\nEstado de la interface: ${estadoInterfaz}\n`;\n\nreturn msg;",
+        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nmsg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\nmsg.payload = `Buenos días\n\nSe ha recibido una solicitud de emisión  a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\nNombre: ${bodyEmision.datosTomador.nombre}\nApellido: ${bodyEmision.datosTomador.apellido}\nDNI: ${bodyEmision.datosTomador.documento}\nMail: ${bodyEmision.datosTomador.email}\nTelefono: ${bodyEmision.datosTomador.telefono}\nCelular: ${bodyEmision.datosTomador.telefono}\nCotizacion: ${bodyEmision.cotizacio}\nRamo: 2 - Automotores\nProceso de control: \nFecha: ${new Date().toString(\"dd/MM/yyyy\")}\nMarca: ${originalPayload.brand}\nModelo: ${originalPayload.model}\nAño de fabricación: ${originalPayload.year}\n0KM: ${originalPayload.okm}\nPatente: ${bodyEmision.bien['40023_patente']}\nCodigo postal: ${originalPayload.zipCode}\nPlan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\nEstado de la interface: ${estadoInterfaz}\n`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6722,14 +6708,28 @@
         "id": "66a275c3.95d69c",
         "type": "e-mail",
         "z": "7ee549ef.0fbb28",
-        "server": "190.111.231.102",
-        "port": "25",
+        "server": "${email_Server}",
+        "port": "${email_Port}",
         "secure": false,
         "tls": false,
-        "name": "",
+        "name": "${email_To}",
         "dname": "",
-        "x": 1290,
+        "x": 1310,
         "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "dc58742f.f2bfb8",
+        "type": "e-mail",
+        "z": "7ee549ef.0fbb28",
+        "server": "${email_Server}",
+        "port": "${email_Port}",
+        "secure": false,
+        "tls": false,
+        "name": "${email_To}",
+        "dname": "",
+        "x": 1690,
+        "y": 1720,
         "wires": []
     }
 ]

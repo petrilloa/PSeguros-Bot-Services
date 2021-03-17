@@ -94,8 +94,8 @@
         "id": "6e3cb7e8.3326f8",
         "type": "Stackhero-MySQL-Server",
         "name": "MindbotLog",
-        "host": "rocket.it.mindbot.com.ar",
-        "port": "3306",
+        "host": "${log_Url}",
+        "port": "${log_Port}",
         "tls": false,
         "database": "MindbotLog"
     },
@@ -2090,7 +2090,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Emision",
-        "func": "msg.originalPayload = msg.payload; //LOG\n\nmsg.url = global.get(\"psegurosEmision_Url\") + `emitir?apikey=` + global.get(\"psegurosApiKey\");\n\ntry {\n    let quotation = msg.payload.quotation;\n    let plan = msg.payload.plan;\n    \n    node.warn([\"Payload emision 1\"], msg.payload);\n    \n    let document = msg.payload.document;\n    let name = msg.payload.name.toUpperCase();\n    \n    node.warn([\"Payload emision 2\"], msg.payload);\n    \n    let lastName = msg.payload.lastname.toUpperCase();\n    \n    node.warn([\"Payload emision 3\"], msg.payload);\n    \n    let gender = msg.payload.gender.toUpperCase();\n    \n    \n    let birthDate = msg.payload.birthDate;\n    let birthPlace = msg.payload.birthPlace;\n    \n    node.warn([\"Payload emision 4\"], msg.payload);\n    \n    let civilStatus = msg.payload.civilStatus.toUpperCase();\n    \n    node.warn([\"Payload emision 5\"], msg.payload);\n    \n    \n    let zipCode = msg.payload.zipCode;\n    let state = msg.payload.state;\n    let location = msg.payload.location;\n    \n    node.warn([\"Payload emision 6\"], msg.payload);\n    \n    \n    let street = msg.payload.street.toUpperCase();\n    \n    \n    let streetNumber = msg.payload.streetNumber;\n    let floor = msg.payload.floor || \"\";\n    let departament = msg.payload.departament || \"\";\n    let phone = msg.payload.phone;\n    let email = msg.payload.email;\n    let creditCard = msg.payload.creditCard;\n    let cardEntity = msg.payload.cardEntity;\n    node.warn(\"entidad tarjeta\" + cardEntity)\n    \n    let licencePlate = msg.payload.licencePlate;\n    let chasis = msg.payload.chasis;\n    let motor = msg.payload.motor;\n    \n    let bodyEmision = {};\n    \n    bodyEmision.cotizacion = quotation;\n    bodyEmision.plan = plan;\n    bodyEmision.promocion = \"CLIFIN\"; // Colocar promocion que corresponda segun año\n    bodyEmision.medioDePago  = \"2\";\n    bodyEmision.origenDePago  = cardEntity || \"VISO\";\n    \n    bodyEmision.datosTomador = {};\n    bodyEmision.datosTomador.tipoDocumento = \"DNI\";\n    bodyEmision.datosTomador.documento = document;\n    bodyEmision.datosTomador.cuitCuil = \"\";\n    bodyEmision.datosTomador.apellido = lastName;\n    bodyEmision.datosTomador.nombre = name\n    bodyEmision.datosTomador.genero = gender;\n    bodyEmision.datosTomador.fechaNacimiento = birthDate;\n    bodyEmision.datosTomador.pais = \"2\";\n    bodyEmision.datosTomador.lugarNacimiento = birthPlace;\n    bodyEmision.datosTomador.estadoCivil = civilStatus;\n    bodyEmision.datosTomador.profesion = \"100\";\n    bodyEmision.datosTomador.expuestoPoliticamente = \"N\";\n    bodyEmision.datosTomador.sujetoObligadoArt230 = \"N\";\n    bodyEmision.datosTomador.observaciones = \"\";\n    bodyEmision.datosTomador.codigoPostal = zipCode;\n    bodyEmision.datosTomador.provincia = state;\n    bodyEmision.datosTomador.localidad = location;\n    bodyEmision.datosTomador.calle = street;\n    bodyEmision.datosTomador.numero = streetNumber;\n    bodyEmision.datosTomador.piso = floor;\n    bodyEmision.datosTomador.departamento = departament;\n    bodyEmision.datosTomador.telefono = phone;\n    bodyEmision.datosTomador.email = email;\n    bodyEmision.datosTomador.datosBancarios = creditCard;\n    \n    //\"4509953566233704\"\n    \n    bodyEmision.bien = {};\n    bodyEmision.bien['40023_patente'] = licencePlate;\n    bodyEmision.bien['40004_numeroChasis'] = chasis;\n    bodyEmision.bien['40005_numeroMotor'] = motor;\n    bodyEmision.bien['40080_acreditaDominio'] = \"N\";\n    bodyEmision.bien['40210_poseeEquipoGas'] = \"N\";\n    bodyEmision.bien['40006_numeroReguladorGNC'] = \"\";\n    bodyEmision.bien['40010_alcance'] = \"I\";\n    bodyEmision.bien['40009_jurisdiccion'] = \"JN\";\n    bodyEmision.bien['40011_tipoServicio'] = \"EJ\";\n    bodyEmision.bien['40115_nroInscripcionAseguradoRuta'] = \"\";\n    bodyEmision.bien['40084_grupoAfinidad'] = \"20\";\n    bodyEmision.bien['16015_fechaNacDDmmaaaa'] = \"01051980\";\n    \n    \n    bodyEmision.accesorios = [];\n    bodyEmision.textos = [];\n    \n    \n    msg.payload = bodyEmision;\n    msg.integrationPayload = msg.payload;\n   \n    \n    return msg; \n} catch (exception) {\n    node.error([\"Payload emision\"], exception)\n}\n",
+        "func": "msg.originalPayload = msg.payload; //LOG\n\nmsg.url = global.get(\"psegurosEmision_Url\") + `emitir?apikey=` + global.get(\"psegurosApiKey\");\n\ntry {\n    let quotation = msg.payload.quotation;\n    let plan = msg.payload.plan;\n    \n    node.warn([\"Payload emision 1\"], msg.payload);\n    \n    let document = msg.payload.document;\n    let name = msg.payload.name.toUpperCase();\n    \n    node.warn([\"Payload emision 2\"], msg.payload);\n    \n    let lastName = msg.payload.lastname.toUpperCase();\n    \n    node.warn([\"Payload emision 3\"], msg.payload);\n    \n    let gender = msg.payload.gender.toUpperCase();\n    \n    \n    let birthDate = msg.payload.birthDate;\n    let birthPlace = msg.payload.birthPlace;\n    \n    node.warn([\"Payload emision 4\"], msg.payload);\n    \n    let civilStatus = msg.payload.civilStatus.toUpperCase();\n    \n    node.warn([\"Payload emision 5\"], msg.payload);\n    \n    \n    let zipCode = msg.payload.zipCode;\n    let state = msg.payload.state;\n    let location = msg.payload.location;\n    \n    node.warn([\"Payload emision 6\"], msg.payload);\n    \n    \n    let street = msg.payload.street.toUpperCase();\n    \n    \n    let streetNumber = msg.payload.streetNumber;\n    let floor = msg.payload.floor || \"\";\n    let departament = msg.payload.departament || \"\";\n    let phone = msg.payload.phone;\n    let email = msg.payload.email;\n    let creditCard = msg.payload.creditCard;\n    let cardEntity = msg.payload.cardEntity;\n    node.warn(\"entidad tarjeta\" + cardEntity)\n    \n    let licencePlate = msg.payload.licencePlate;\n    let chasis = msg.payload.chasis;\n    let motor = msg.payload.motor;\n    \n    let bodyEmision = {};\n    \n    bodyEmision.cotizacion = quotation;\n    bodyEmision.plan = plan;\n    bodyEmision.promocion = \"CLIFIN\"; // Colocar promocion que corresponda segun año\n    bodyEmision.medioDePago  = \"2\";\n    bodyEmision.origenDePago  = cardEntity ;\n    \n    bodyEmision.datosTomador = {};\n    bodyEmision.datosTomador.tipoDocumento = \"DNI\";\n    bodyEmision.datosTomador.documento = document;\n    bodyEmision.datosTomador.cuitCuil = \"\";\n    bodyEmision.datosTomador.apellido = lastName;\n    bodyEmision.datosTomador.nombre = name\n    bodyEmision.datosTomador.genero = gender;\n    bodyEmision.datosTomador.fechaNacimiento = birthDate;\n    bodyEmision.datosTomador.pais = \"2\";\n    bodyEmision.datosTomador.lugarNacimiento = birthPlace;\n    bodyEmision.datosTomador.estadoCivil = civilStatus;\n    bodyEmision.datosTomador.profesion = \"100\";\n    bodyEmision.datosTomador.expuestoPoliticamente = \"N\";\n    bodyEmision.datosTomador.sujetoObligadoArt230 = \"N\";\n    bodyEmision.datosTomador.observaciones = \"\";\n    bodyEmision.datosTomador.codigoPostal = zipCode;\n    bodyEmision.datosTomador.provincia = state;\n    bodyEmision.datosTomador.localidad = location;\n    bodyEmision.datosTomador.calle = street;\n    bodyEmision.datosTomador.numero = streetNumber;\n    bodyEmision.datosTomador.piso = floor;\n    bodyEmision.datosTomador.departamento = departament;\n    bodyEmision.datosTomador.telefono = phone;\n    bodyEmision.datosTomador.email = email;\n    bodyEmision.datosTomador.datosBancarios = creditCard;\n    \n    //\"4509953566233704\"\n    \n    bodyEmision.bien = {};\n    bodyEmision.bien['40023_patente'] = licencePlate;\n    bodyEmision.bien['40004_numeroChasis'] = chasis;\n    bodyEmision.bien['40005_numeroMotor'] = motor;\n    bodyEmision.bien['40080_acreditaDominio'] = \"N\";\n    bodyEmision.bien['40210_poseeEquipoGas'] = \"N\";\n    bodyEmision.bien['40006_numeroReguladorGNC'] = \"\";\n    bodyEmision.bien['40010_alcance'] = \"I\";\n    bodyEmision.bien['40009_jurisdiccion'] = \"JN\";\n    bodyEmision.bien['40011_tipoServicio'] = \"EJ\";\n    bodyEmision.bien['40115_nroInscripcionAseguradoRuta'] = \"\";\n    bodyEmision.bien['40084_grupoAfinidad'] = \"20\";\n    bodyEmision.bien['16015_fechaNacDDmmaaaa'] = \"01051980\";\n    \n    \n    bodyEmision.accesorios = [];\n    bodyEmision.textos = [];\n    \n    \n    msg.payload = bodyEmision;\n    msg.integrationPayload = msg.payload;\n   \n    \n    return msg; \n} catch (exception) {\n    node.error([\"Payload emision\"], exception)\n}\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6640,20 +6640,6 @@
         "wires": []
     },
     {
-        "id": "e5de69c.ace6198",
-        "type": "e-mail",
-        "z": "7ee549ef.0fbb28",
-        "server": "190.111.231.102",
-        "port": "25",
-        "secure": false,
-        "tls": false,
-        "name": "andrespetrillo@mindbot.com.ar",
-        "dname": "",
-        "x": 1710,
-        "y": 1720,
-        "wires": []
-    },
-    {
         "id": "a370c2bf.6c176",
         "type": "inject",
         "z": "7ee549ef.0fbb28",
@@ -6696,7 +6682,7 @@
         "y": 1720,
         "wires": [
             [
-                "e5de69c.ace6198"
+                "dc58742f.f2bfb8"
             ]
         ]
     },
@@ -6705,7 +6691,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Enviar email",
-        "func": "//TODO: Cambiar a ventadirecta_ps@pseguros.com.ar\nmsg.to = 'andrespetrillo@mindbot.com.ar';\n\nlet bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nmsg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\nmsg.payload = `Buenos días\n\nSe ha recibido una solicitud de emisión  a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\nNombre: ${bodyEmision.datosTomador.nombre}\nApellido: ${bodyEmision.datosTomador.apellido}\nDNI: ${bodyEmision.datosTomador.documento}\nMail: ${bodyEmision.datosTomador.email}\nTelefono: ${bodyEmision.datosTomador.telefono}\nCelular: ${bodyEmision.datosTomador.telefono}\nCotizacion: ${bodyEmision.cotizacio}\nRamo: 2 - Automotores\nProceso de control: \nFecha: ${new Date().toString(\"dd/MM/yyyy\")}\nMarca: ${originalPayload.brand}\nModelo: ${originalPayload.model}\nAño de fabricación: ${originalPayload.year}\n0KM: ${originalPayload.okm}\nPatente: ${bodyEmision.bien['40023_patente']}\nCodigo postal: ${originalPayload.zipCode}\nPlan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\nEstado de la interface: ${estadoInterfaz}\n`;\n\nreturn msg;",
+        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nmsg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\nmsg.payload = `Buenos días\n\nSe ha recibido una solicitud de emisión  a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\nNombre: ${bodyEmision.datosTomador.nombre}\nApellido: ${bodyEmision.datosTomador.apellido}\nDNI: ${bodyEmision.datosTomador.documento}\nMail: ${bodyEmision.datosTomador.email}\nTelefono: ${bodyEmision.datosTomador.telefono}\nCelular: ${bodyEmision.datosTomador.telefono}\nCotizacion: ${bodyEmision.cotizacio}\nRamo: 2 - Automotores\nProceso de control: \nFecha: ${new Date().toString(\"dd/MM/yyyy\")}\nMarca: ${originalPayload.brand}\nModelo: ${originalPayload.model}\nAño de fabricación: ${originalPayload.year}\n0KM: ${originalPayload.okm}\nPatente: ${bodyEmision.bien['40023_patente']}\nCodigo postal: ${originalPayload.zipCode}\nPlan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\nEstado de la interface: ${estadoInterfaz}\n`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6722,14 +6708,28 @@
         "id": "66a275c3.95d69c",
         "type": "e-mail",
         "z": "7ee549ef.0fbb28",
-        "server": "190.111.231.102",
-        "port": "25",
+        "server": "${email_Server}",
+        "port": "${email_Port}",
         "secure": false,
         "tls": false,
-        "name": "",
+        "name": "${email_To}",
         "dname": "",
-        "x": 1290,
+        "x": 1310,
         "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "dc58742f.f2bfb8",
+        "type": "e-mail",
+        "z": "7ee549ef.0fbb28",
+        "server": "${email_Server}",
+        "port": "${email_Port}",
+        "secure": false,
+        "tls": false,
+        "name": "${email_To}",
+        "dname": "",
+        "x": 1690,
+        "y": 1720,
         "wires": []
     }
 ]

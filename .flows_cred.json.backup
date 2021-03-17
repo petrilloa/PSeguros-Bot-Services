@@ -28,8 +28,8 @@
     "174573da.67b78c": {},
     "5b74b241.41413c": {},
     "6e3cb7e8.3326f8": {
-        "user": "apetrillo",
-        "password": "Password.01"
+        "user": "${log_User}",
+        "password": "log_Password"
     },
     "3907b8a4.e28e88": {},
     "7b92ba36.fe3b44": {},
@@ -38,5 +38,8 @@
         "userid": "rocket@it.mindbot.com.ar",
         "password": "Password.01"
     },
-    "66a275c3.95d69c": {}
+    "66a275c3.95d69c": {
+        "userid": "rocket@it.mindbot.com.ar",
+        "password": "Password.01"
+    }
 }
