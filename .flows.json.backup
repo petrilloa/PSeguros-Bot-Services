@@ -2090,7 +2090,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Emision",
-        "func": "msg.originalPayload = msg.payload; //LOG\n\nmsg.url = global.get(\"psegurosEmision_Url\") + `emitir?apikey=` + global.get(\"psegurosApiKey\");\n\ntry {\n    let quotation = msg.payload.quotation;\n    let plan = msg.payload.plan;\n    \n    node.warn([\"Payload emision 1\"], msg.payload);\n    \n    let document = msg.payload.document;\n    let name = msg.payload.name.toUpperCase();\n    \n    node.warn([\"Payload emision 2\"], msg.payload);\n    \n    let lastName = msg.payload.lastname.toUpperCase();\n    \n    node.warn([\"Payload emision 3\"], msg.payload);\n    \n    let gender = msg.payload.gender.toUpperCase();\n    \n    \n    let birthDate = msg.payload.birthDate;\n    let birthPlace = msg.payload.birthPlace;\n    \n    node.warn([\"Payload emision 4\"], msg.payload);\n    \n    let civilStatus = msg.payload.civilStatus.toUpperCase();\n    \n    node.warn([\"Payload emision 5\"], msg.payload);\n    \n    \n    let zipCode = msg.payload.zipCode;\n    let state = msg.payload.state;\n    let location = msg.payload.location;\n    \n    node.warn([\"Payload emision 6\"], msg.payload);\n    \n    \n    let street = msg.payload.street.toUpperCase();\n    \n    \n    let streetNumber = msg.payload.streetNumber;\n    let floor = msg.payload.floor || \"\";\n    let departament = msg.payload.departament || \"\";\n    let phone = msg.payload.phone;\n    let email = msg.payload.email;\n    let creditCard = msg.payload.creditCard;\n    let cardEntity = msg.payload.cardEntity;\n    \n    let licencePlate = msg.payload.licencePlate;\n    let chasis = msg.payload.chasis;\n    let motor = msg.payload.motor;\n    \n    let bodyEmision = {};\n    \n    bodyEmision.cotizacion = quotation;\n    bodyEmision.plan = plan;\n    bodyEmision.promocion = \"CLIFIN\"; // Colocar promocion que corresponda segun año\n    bodyEmision.medioDePago  = \"2\";\n    bodyEmision.origenDePago  = cardEntity || \"VISO\";\n    \n    bodyEmision.datosTomador = {};\n    bodyEmision.datosTomador.tipoDocumento = \"DNI\";\n    bodyEmision.datosTomador.documento = document;\n    bodyEmision.datosTomador.cuitCuil = \"\";\n    bodyEmision.datosTomador.apellido = lastName;\n    bodyEmision.datosTomador.nombre = name\n    bodyEmision.datosTomador.genero = gender;\n    bodyEmision.datosTomador.fechaNacimiento = birthDate;\n    bodyEmision.datosTomador.pais = \"2\";\n    bodyEmision.datosTomador.lugarNacimiento = birthPlace;\n    bodyEmision.datosTomador.estadoCivil = civilStatus;\n    bodyEmision.datosTomador.profesion = \"100\";\n    bodyEmision.datosTomador.expuestoPoliticamente = \"N\";\n    bodyEmision.datosTomador.sujetoObligadoArt230 = \"N\";\n    bodyEmision.datosTomador.observaciones = \"\";\n    bodyEmision.datosTomador.codigoPostal = zipCode;\n    bodyEmision.datosTomador.provincia = state;\n    bodyEmision.datosTomador.localidad = location;\n    bodyEmision.datosTomador.calle = street;\n    bodyEmision.datosTomador.numero = streetNumber;\n    bodyEmision.datosTomador.piso = floor;\n    bodyEmision.datosTomador.departamento = departament;\n    bodyEmision.datosTomador.telefono = phone;\n    bodyEmision.datosTomador.email = email;\n    bodyEmision.datosTomador.datosBancarios = creditCard;\n    \n    //\"4509953566233704\"\n    \n    bodyEmision.bien = {};\n    bodyEmision.bien['40023_patente'] = licencePlate;\n    bodyEmision.bien['40004_numeroChasis'] = chasis;\n    bodyEmision.bien['40005_numeroMotor'] = motor;\n    bodyEmision.bien['40080_acreditaDominio'] = \"N\";\n    bodyEmision.bien['40210_poseeEquipoGas'] = \"N\";\n    bodyEmision.bien['40006_numeroReguladorGNC'] = \"\";\n    bodyEmision.bien['40010_alcance'] = \"I\";\n    bodyEmision.bien['40009_jurisdiccion'] = \"JN\";\n    bodyEmision.bien['40011_tipoServicio'] = \"EJ\";\n    bodyEmision.bien['40115_nroInscripcionAseguradoRuta'] = \"\";\n    bodyEmision.bien['40084_grupoAfinidad'] = \"20\";\n    bodyEmision.bien['16015_fechaNacDDmmaaaa'] = \"01051980\";\n    \n    \n    bodyEmision.accesorios = [];\n    bodyEmision.textos = [];\n    \n    \n    msg.payload = bodyEmision;\n    msg.integrationPayload = msg.payload;\n   \n    \n    return msg; \n} catch (exception) {\n    node.error([\"Payload emision\"], exception)\n}\n",
+        "func": "msg.originalPayload = msg.payload; //LOG\n\nmsg.url = global.get(\"psegurosEmision_Url\") + `emitir?apikey=` + global.get(\"psegurosApiKey\");\n\ntry {\n    let quotation = msg.payload.quotation;\n    let plan = msg.payload.plan;\n    \n    node.warn([\"Payload emision 1\"], msg.payload);\n    \n    let document = msg.payload.document;\n    let name = msg.payload.name.toUpperCase();\n    \n    node.warn([\"Payload emision 2\"], msg.payload);\n    \n    let lastName = msg.payload.lastname.toUpperCase();\n    \n    node.warn([\"Payload emision 3\"], msg.payload);\n    \n    let gender = msg.payload.gender.toUpperCase();\n    \n    \n    let birthDate = msg.payload.birthDate;\n    let birthPlace = msg.payload.birthPlace;\n    \n    node.warn([\"Payload emision 4\"], msg.payload);\n    \n    let civilStatus = msg.payload.civilStatus.toUpperCase();\n    \n    node.warn([\"Payload emision 5\"], msg.payload);\n    \n    \n    let zipCode = msg.payload.zipCode;\n    let state = msg.payload.state;\n    let location = msg.payload.location;\n    \n    node.warn([\"Payload emision 6\"], msg.payload);\n    \n    \n    let street = msg.payload.street.toUpperCase();\n    \n    \n    let streetNumber = msg.payload.streetNumber;\n    let floor = msg.payload.floor || \"\";\n    let departament = msg.payload.departament || \"\";\n    let phone = msg.payload.phone;\n    let email = msg.payload.email;\n    let creditCard = msg.payload.creditCard;\n    let cardEntity = msg.payload.cardEntity;\n    node.warn(\"entidad tarjeta\" + cardEntity)\n    \n    let licencePlate = msg.payload.licencePlate;\n    let chasis = msg.payload.chasis;\n    let motor = msg.payload.motor;\n    \n    let bodyEmision = {};\n    \n    bodyEmision.cotizacion = quotation;\n    bodyEmision.plan = plan;\n    bodyEmision.promocion = \"CLIFIN\"; // Colocar promocion que corresponda segun año\n    bodyEmision.medioDePago  = \"2\";\n    bodyEmision.origenDePago  = cardEntity || \"VISO\";\n    \n    bodyEmision.datosTomador = {};\n    bodyEmision.datosTomador.tipoDocumento = \"DNI\";\n    bodyEmision.datosTomador.documento = document;\n    bodyEmision.datosTomador.cuitCuil = \"\";\n    bodyEmision.datosTomador.apellido = lastName;\n    bodyEmision.datosTomador.nombre = name\n    bodyEmision.datosTomador.genero = gender;\n    bodyEmision.datosTomador.fechaNacimiento = birthDate;\n    bodyEmision.datosTomador.pais = \"2\";\n    bodyEmision.datosTomador.lugarNacimiento = birthPlace;\n    bodyEmision.datosTomador.estadoCivil = civilStatus;\n    bodyEmision.datosTomador.profesion = \"100\";\n    bodyEmision.datosTomador.expuestoPoliticamente = \"N\";\n    bodyEmision.datosTomador.sujetoObligadoArt230 = \"N\";\n    bodyEmision.datosTomador.observaciones = \"\";\n    bodyEmision.datosTomador.codigoPostal = zipCode;\n    bodyEmision.datosTomador.provincia = state;\n    bodyEmision.datosTomador.localidad = location;\n    bodyEmision.datosTomador.calle = street;\n    bodyEmision.datosTomador.numero = streetNumber;\n    bodyEmision.datosTomador.piso = floor;\n    bodyEmision.datosTomador.departamento = departament;\n    bodyEmision.datosTomador.telefono = phone;\n    bodyEmision.datosTomador.email = email;\n    bodyEmision.datosTomador.datosBancarios = creditCard;\n    \n    //\"4509953566233704\"\n    \n    bodyEmision.bien = {};\n    bodyEmision.bien['40023_patente'] = licencePlate;\n    bodyEmision.bien['40004_numeroChasis'] = chasis;\n    bodyEmision.bien['40005_numeroMotor'] = motor;\n    bodyEmision.bien['40080_acreditaDominio'] = \"N\";\n    bodyEmision.bien['40210_poseeEquipoGas'] = \"N\";\n    bodyEmision.bien['40006_numeroReguladorGNC'] = \"\";\n    bodyEmision.bien['40010_alcance'] = \"I\";\n    bodyEmision.bien['40009_jurisdiccion'] = \"JN\";\n    bodyEmision.bien['40011_tipoServicio'] = \"EJ\";\n    bodyEmision.bien['40115_nroInscripcionAseguradoRuta'] = \"\";\n    bodyEmision.bien['40084_grupoAfinidad'] = \"20\";\n    bodyEmision.bien['16015_fechaNacDDmmaaaa'] = \"01051980\";\n    \n    \n    bodyEmision.accesorios = [];\n    bodyEmision.textos = [];\n    \n    \n    msg.payload = bodyEmision;\n    msg.integrationPayload = msg.payload;\n   \n    \n    return msg; \n} catch (exception) {\n    node.error([\"Payload emision\"], exception)\n}\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2502,113 +2502,113 @@
                 "t": "set",
                 "p": "psegurosAuth_Url",
                 "pt": "global",
-                "to": "https://autht.provinciaseguros.com.ar/auth/realms/ps/protocol/openid-connect/token",
-                "tot": "str"
+                "to": "psegurosAuth_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosAuth_GrantType",
                 "pt": "global",
-                "to": "password",
-                "tot": "str"
+                "to": "psegurosAuth_GrantType",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosAuth_UserName",
                 "pt": "global",
-                "to": "petrilloa@pseguros.com.ar",
-                "tot": "str"
+                "to": "psegurosAuth_UserName",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosAuth_Password",
                 "pt": "global",
-                "to": "andres123",
-                "tot": "str"
+                "to": "psegurosAuth_Password",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosAuth_Client_Secret",
                 "pt": "global",
-                "to": "d5cd926e-3f94-48df-9c4a-2f3d7b9381d1",
-                "tot": "str"
+                "to": "psegurosAuth_Client_Secret",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosAuth_Client_Id",
                 "pt": "global",
-                "to": "ps2",
-                "tot": "str"
+                "to": "psegurosAuth_Client_Id",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosApiKey",
                 "pt": "global",
-                "to": "9cc893f8-c119-4eeb-8d68-a3d305927fed",
-                "tot": "str"
+                "to": "psegurosApiKey",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosCotizacion_Url",
                 "pt": "global",
-                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/",
-                "tot": "str"
+                "to": "psegurosCotizacion_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosEmision_Url",
                 "pt": "global",
-                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/1.1/",
-                "tot": "str"
+                "to": "psegurosEmision_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosInspeccion_Url",
                 "pt": "global",
-                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-INSPECCION/2.0/",
-                "tot": "str"
+                "to": "psegurosInspeccion_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosInfo_Url",
                 "pt": "global",
-                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-INFO/1.0/",
-                "tot": "str"
+                "to": "psegurosInfo_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosNovedades_Url",
                 "pt": "global",
-                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-NOVEDADES/4.0/",
-                "tot": "str"
+                "to": "psegurosNovedades_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "psegurosEmision_2_Url",
                 "pt": "global",
-                "to": "https://apimt.provinciaseguros.com.ar/gateway/PS/PS-EMISION/2.0/",
-                "tot": "str"
+                "to": "psegurosEmision_2_Url",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "public",
                 "pt": "global",
-                "to": "http://rocket.it.mindbot.com.ar:1881/",
-                "tot": "str"
+                "to": "public",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "promo_template",
                 "pt": "global",
-                "to": "Cotizacion - Promos - Template v1.0.png",
-                "tot": "str"
+                "to": "promo_template",
+                "tot": "env"
             },
             {
                 "t": "set",
                 "p": "rc_template",
                 "pt": "global",
-                "to": "Talon RC - Template v1.0.png",
-                "tot": "str"
+                "to": "rc_template",
+                "tot": "env"
             }
         ],
         "action": "",
