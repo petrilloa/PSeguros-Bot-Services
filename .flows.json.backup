@@ -1248,7 +1248,7 @@
         "type": "function",
         "z": "7ee81df4.bfea84",
         "name": "Send Message",
-        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n\n//msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/message\"\n\nlet ssl = global.get(\"rocketChat_SSL\") == \"true\" ? \"https://\" : \"http://\";\nmsg.url = ssl + global.get(\"rocketChat_Url\") + \"/api/v1/livechat/message\";\n\nlet originalPayload = msg.payload;\n\nmsg.payload = {};\nmsg.payload.token = originalPayload.room.v.token;\nmsg.payload.rid = originalPayload.room._id;\nmsg.payload.msg = msg.originalMessage[0].message.text;\n\n\n//log\nmsg.log.integrationUrl = msg.url;\nmsg.log.integrationStatusCode = msg.statusCode; \nmsg.log.integrationPayload = JSON.stringify(msg.payload);\n\nreturn msg;\n",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n\n//msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/message\"\n\nlet ssl = global.get(\"rocketChat_SSL\") == \"true\" ? \"https://\" : \"http://\";\nmsg.url = ssl + global.get(\"rocketChat_Url\") + \"/api/v1/livechat/message\";\n\nlet originalPayload = msg.payload;\n\nmsg.payload = {};\nmsg.payload.token = originalPayload.room.v.token;\nmsg.payload.rid = originalPayload.room._id;\nmsg.payload.msg = msg.originalMessage.results[0].message.text;\n\n\n//log\nmsg.log.integrationUrl = msg.url;\nmsg.log.integrationStatusCode = msg.statusCode; \nmsg.log.integrationPayload = JSON.stringify(msg.payload);\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
