@@ -1652,7 +1652,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "function Response",
-        "func": "let response = msg.results;\n\nnode.warn(\"propiedades \" + Object.keys(response));\nnode.warn(\"propiedades \" + msg.results[0].modeloFiltered.descripcion);\n//item.modeloFiltered.descripcion.slice(0,-9)\nresponse.forEach(item =>{\n    var str = item.modeloFiltered.descripcion; \n    var n = str.indexOf(\"(\");\n    \n    item.modeloFiltered.descripcion=item.modeloFiltered.descripcion.slice(0,n);\n});\n\n\nmsg.payload = response;\n\nreturn msg;",
+        "func": "let response = msg.results;\n\n\n//item.modeloFiltered.descripcion.slice(0,-9)\nif (response && response.length > 0) {\n    \n    node.warn('Filter infoauto code: ' + response)\n    \n    response.forEach(item =>{\n        var str = item.modeloFiltered.descripcion; \n        \n        //Remover codigo infoauto\n        var n = str.indexOf(\"(\");\n        item.modeloFiltered.descripcion = item.modeloFiltered.descripcion.slice(0,n);\n        \n    });\n    \n    //En algunos casos excepcionales, puede traer varios modelos sin filtro, es necesario definir un maximo (50)\n    if (response.length > 50) {\n        node.warn('More than 50 results: ' + response.lenght);\n        response = response.slice(0,49);\n    }\n        \n}\n\n\n\nmsg.payload = response;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1662,7 +1662,8 @@
         "wires": [
             [
                 "ab3a6e0d.08228",
-                "20f274a.837d28c"
+                "20f274a.837d28c",
+                "218e7dbe.bb3252"
             ]
         ]
     },
@@ -2098,7 +2099,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": ";node.warn([\"payload \"]  + msg.payload);\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n\n//Nothing to do\n\nreturn msg;",
+        "func": ";node.warn([\"payload \"]  + msg.payload);\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6703,7 +6704,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Enviar email",
-        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nmsg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\nmsg.payload = `Buenos días\n\nSe ha recibido una solicitud de emisión  a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\nNombre: ${bodyEmision.datosTomador.nombre}\nApellido: ${bodyEmision.datosTomador.apellido}\nDNI: ${bodyEmision.datosTomador.documento}\nMail: ${bodyEmision.datosTomador.email}\nTelefono: ${bodyEmision.datosTomador.telefono}\nCelular: ${bodyEmision.datosTomador.telefono}\nCotizacion: ${bodyEmision.cotizacion}\nRamo: 4 - Automotores\nProceso de control: \nFecha: ${new Date().toString(\"dd/MM/yyyy\")}\nMarca: ${originalPayload.brand}\nModelo: ${originalPayload.model}\nAño de fabricación: ${originalPayload.year}\n0KM: ${originalPayload.okm}\nPatente: ${bodyEmision.bien['40023_patente']}\nCodigo postal: ${originalPayload.zipCode}\nPlan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\nEstado de la interface: ${estadoInterfaz}\n`;\n\nreturn msg;",
+        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\n// Esteban Agrega aca 29/03/21\nnode.warn([\"EKstatusCode: \"]  + msg.statusCode);\nnode.warn([\"EK-playload-observations: \"]  + msg.payload.observations);\nnode.warn([\"EK-payload-description: \"]  + msg.payload.description);\n// Fin Agrega\n\n\n\nmsg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\nmsg.payload = `Buenos días\n\nSe ha recibido una solicitud de emisión a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\nNombre: ${bodyEmision.datosTomador.nombre}\nApellido: ${bodyEmision.datosTomador.apellido}\nDNI: ${bodyEmision.datosTomador.documento}\nMail: ${bodyEmision.datosTomador.email}\nTelefono: ${bodyEmision.datosTomador.telefono}\nCelular: ${bodyEmision.datosTomador.telefono}\nCotizacion: ${bodyEmision.cotizacion}\nRamo: 4 - Automotores\nProceso de control: \nFecha: ${new Date().toString(\"dd/MM/yyyy\")}\nMarca: ${originalPayload.brand}\nModelo: ${originalPayload.model}\nAño de fabricación: ${originalPayload.year}\n0KM: ${originalPayload.okm}\nPatente: ${bodyEmision.bien['40023_patente']}\nCodigo postal: ${originalPayload.zipCode}\nPlan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\nEstado de la interface: ${estadoInterfaz}\n`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6752,6 +6753,23 @@
         "info": "",
         "x": 1520,
         "y": 580,
+        "wires": []
+    },
+    {
+        "id": "218e7dbe.bb3252",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "model filtered",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1340,
+        "y": 720,
         "wires": []
     }
 ]
