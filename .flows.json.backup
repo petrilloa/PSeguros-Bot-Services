@@ -1065,7 +1065,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "to json",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1101,7 +1101,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Send Message",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1257,7 +1257,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Send Message (new Room)",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1355,7 +1355,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Get room",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1372,7 +1372,7 @@
         "type": "debug",
         "z": "7ee81df4.bfea84",
         "name": "Whatsapp Message",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1484,7 +1484,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Marcas",
-        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.brandName; \n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + \"valores/marcas/4/04100?apikey=\" + global.get(\"psegurosApiKey\");\n\nreturn msg;",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.brandName; \n\n\nif (msg.searchCriteria == \"citroën\"){\n    msg.searchCriteria = msg.searchCriteria.replace(\"ë\", \"e\")\n}\n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + \"valores/marcas/4/04100?apikey=\" + global.get(\"psegurosApiKey\");\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1584,7 +1584,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Modelo",
-        "func": "//Primero guardo modelo que busco\nmsg.searchCriteria = msg.payload.model; \n\n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + `valores/modelo/4/04100/${msg.payload.brand}/${msg.payload.year}/${msg.payload.new}?apikey=` + global.get(\"psegurosApiKey\");\n\nreturn msg;\n",
+        "func": "//Primero guardo modelo que busco\nmsg.searchCriteria = msg.payload.model; \n\n\n// fixes: input de usuario para que de match el servicio de modelos\n// en caso exepcional\nconst regexpPeugeot = /^[0-9][0]{2}[0-9]$/;\nconst regexpCitroen = /([A-Za-z?][0-9?]){1}\\b/;\nconst regexpBenz = /([A-Za-z]+)([0-9].*)/;\n\nif (regexpPeugeot.test(msg.searchCriteria)){\n    msg.searchCriteria = msg.searchCriteria.replace(\"00\", \"OO\");\n}\n\n\n// es indistitno si user aclara si el C4 es lougne o picassa \n// el algoritmo sobre el servicio da el mismo resultado\n// solo separamos la letra del numero para q pueda consulta el servicio\nif (msg.payload.brand == \"CTR\" && regexpCitroen.test(msg.searchCriteria)){\n    msg.searchCriteria = msg.searchCriteria.slice(0,1) + \" \" + msg.searchCriteria.slice(1,2);\n}\n\nif (msg.payload.brand == \"MEB\" && regexpBenz.test(msg.searchCriteria)){\n    modelPart1 = msg.searchCriteria.match(/[A-Za-z]+/);\n    modelPart2 = msg.searchCriteria.match(/[0-9].*/);\n    msg.searchCriteria = modelPart1[0] + \" \" + modelPart2[0];\n    node.warn(\" modelo benz \" + msg.searchCriteria)\n}\n\n\n\n\n\n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + `valores/modelo/4/04100/${msg.payload.brand}/${msg.payload.year}/${msg.payload.new}?apikey=` + global.get(\"psegurosApiKey\");\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6275,8 +6275,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 250,
-        "y": 3900,
+        "x": 230,
+        "y": 3800,
         "wires": [
             [
                 "44f6d34a.9fdf2c"
@@ -6296,8 +6296,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 780,
-        "y": 3980,
+        "x": 760,
+        "y": 3880,
         "wires": [
             [
                 "ec019244.9faf1"
@@ -6311,8 +6311,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1190,
-        "y": 3980,
+        "x": 1170,
+        "y": 3880,
         "wires": []
     },
     {
@@ -6321,8 +6321,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "",
         "env": [],
-        "x": 240,
-        "y": 3980,
+        "x": 220,
+        "y": 3880,
         "wires": [
             [
                 "959f0515.d044a8"
@@ -6339,8 +6339,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 520,
-        "y": 3980,
+        "x": 500,
+        "y": 3880,
         "wires": [
             [
                 "5b74b241.41413c"
@@ -6357,8 +6357,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1020,
-        "y": 3980,
+        "x": 1000,
+        "y": 3880,
         "wires": [
             [
                 "a943e919.172e58"
@@ -6704,7 +6704,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Enviar email",
-        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\n//CASO 1 - Exito\n//statusCode = 200 -> OK Emitida\n\n\n//CASO 2 - Error de SERVICIO\n//statusCode = 401 -> Token invalido\n//statusCode = 500 -> Error\n\n//Error de negocio vs error de sistemas\n\n// Opcion validacion por negocio\n// Si viene con texto, son validaciones de Negocio\n// Observaciones == null\n\n//Salida\n// Enviar mail a Vero / Emision Manual\n// Su cotizacion quedo en manos de un agente para su emision manual\n\n\n//CASO 3 - Error de validacion de negocio\n\n//statusCode = 500 -> Error\n// Observaciones != null\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n\n// Esteban Agrega aca 29/03/21\n\nnode.warn([\"EK-playload-observations: \"]  + msg.payload.observations);\nnode.warn([\"EK-payload-description: \"]  + msg.payload.description);\nlet strCESVISearch = msg.payload.description.toLowerCase() ;\nif (msg.statusCode == 200)\n{\n    // OKAY\n    node.warn([\"EKstatusCode: \"]  + msg.statusCode);\n    msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n    \n    msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. Los datos son:\n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${originalPayload.okm}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    \n}\nelse // Allways statusCode 500\n{\n    // CON ERRORES\n    if (strCESVISearch.includes(\"cesvi\"))\n    {\n        // CESVI DETECT\n        node.warn([\"EK-CESVI-Detect: \"]  + msg.statusCode);\n         msg.topic = `Controlar Cesvi Falla - ${bodyEmision.datosTomador.nombre}  ${bodyEmision.datosTomador.apellido} DNI ${bodyEmision.datosTomador.documento} Generado en: OMNICANALIDAD - ${canal}`;\n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. Los datos son:\n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>fechaNacimiento: [${bodyEmision.datosTomador.fechaNacimiento}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Localidad: [${bodyEmision.datosTomador.localidad}]\n>>Provincia: [${bodyEmision.datosTomador.provincia}]\n>>Calle: [${bodyEmision.datosTomador.calle}]\n>>depto: [${bodyEmision.datosTomador.departamento}]\n>>nroCalle: [${bodyEmision.datosTomador.calle}]\n>>piso: [${bodyEmision.datosTomador.piso}]\n>>nacionalidad: [${bodyEmision.datosTomador.lugarNacimiento}]\n>>sexo: [${bodyEmision.datosTomador.genero}]\n>>profesion: [${bodyEmision.datosTomador.profesion}]\n>>estadoCivil: [${bodyEmision.datosTomador.estadoCivil}]\n>>medioDelPago: [${bodyEmision.medioDePago}]\n>>origenDelPago: [${bodyEmision.origenDePago}]\n>>cbuOTarjeta: [${bodyEmision.datosTomador.datosBancarios}]\n>>tipoTarjeta: [${bodyEmision.origenDePago}]\n>>tipoDoc: [${bodyEmision.datosTomador.tipoDocumento}]\n>>cuit: [${bodyEmision.datosTomador.cuitCuil}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${originalPayload.okm}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Motor: [${bodyEmision.bien['40005_numeroMotor']}]\n>>Chasis: [${bodyEmision.bien['40004_numeroChasis']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] : [${originalPayload.planDescripcion}]\n\nGracias\n`;\n    }\n    else\n    {\n        // Otros errores\n        node.warn([\"EK-ERROtros-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. Los datos son:\n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${originalPayload.okm}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    }\n}\n\nnode.warn([\"EK-Mensaje2Send: \"]  +  msg.payload);\n\n\n\n// Fin Agrega\n\n\n\n//msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\n//msg.payload = `Buenos días\n//Se ha recibido una solicitud de emisión a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\n//Nombre: ${bodyEmision.datosTomador.nombre}\n////Apellido: ${bodyEmision.datosTomador.apellido}\n//DNI: ${bodyEmision.datosTomador.documento}\n//Mail: ${bodyEmision.datosTomador.email}\n//Telefono: ${bodyEmision.datosTomador.telefono}\n//Celular: ${bodyEmision.datosTomador.telefono}\n//Cotizacion: ${bodyEmision.cotizacion}\n//Ramo: 4 - Automotores\n//Proceso de control: \n//Fecha: ${new Date().toString(\"dd/MM/yyyy\")}\n//Marca: ${originalPayload.brand}\n//Modelo: ${originalPayload.model}\n//Año de fabricación: ${originalPayload.year}\n//0KM: ${originalPayload.okm}\n//Patente: ${bodyEmision.bien['40023_patente']}\n//Codigo postal: ${originalPayload.zipCode}\n//Plan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\n//Estado de la interface: ${estadoInterfaz}\n//`;\n\nreturn msg;",
+        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\n//CASO 1 - Exito\n//statusCode = 200 \n\n\n//CASO 2 - Error de SERVICIO\n//statusCode = 400\n//Salida\n// Enviar mail a Vero / Emision Manual\n// Su cotizacion quedo en manos de un agente para su emision manual\n\n\n//CASO 3 - Error de validacion de negocio\n//statusCode = 500 \n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n\n//TODO: Esteban\n\n// Esteban Agrega aca 29/03/21\n\nnode.warn([\"EK-playload-observations: \"]  + msg.payload.observations);\nnode.warn([\"EK-payload-description: \"]  + msg.payload.description);\nlet strCESVISearch = msg.payload.description.toLowerCase() ;\nif (msg.statusCode == 200)\n{\n    // OKAY\n    node.warn([\"EKstatusCode: \"]  + msg.statusCode);\n    msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n    \n    msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. Los datos son:\n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${originalPayload.okm}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    \n}\nelse // Allways statusCode 500\n{\n    // CON ERRORES\n    if (strCESVISearch.includes(\"cesvi\"))\n    {\n        // CESVI DETECT\n        node.warn([\"EK-CESVI-Detect: \"]  + msg.statusCode);\n         msg.topic = `Controlar Cesvi Falla - ${bodyEmision.datosTomador.nombre}  ${bodyEmision.datosTomador.apellido} DNI ${bodyEmision.datosTomador.documento} Generado en: OMNICANALIDAD - ${canal}`;\n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. Los datos son:\n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>fechaNacimiento: [${bodyEmision.datosTomador.fechaNacimiento}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Localidad: [${bodyEmision.datosTomador.localidad}]\n>>Provincia: [${bodyEmision.datosTomador.provincia}]\n>>Calle: [${bodyEmision.datosTomador.calle}]\n>>depto: [${bodyEmision.datosTomador.departamento}]\n>>nroCalle: [${bodyEmision.datosTomador.calle}]\n>>piso: [${bodyEmision.datosTomador.piso}]\n>>nacionalidad: [${bodyEmision.datosTomador.lugarNacimiento}]\n>>sexo: [${bodyEmision.datosTomador.genero}]\n>>profesion: [${bodyEmision.datosTomador.profesion}]\n>>estadoCivil: [${bodyEmision.datosTomador.estadoCivil}]\n>>medioDelPago: [${bodyEmision.medioDePago}]\n>>origenDelPago: [${bodyEmision.origenDePago}]\n>>cbuOTarjeta: [${bodyEmision.datosTomador.datosBancarios}]\n>>tipoTarjeta: [${bodyEmision.origenDePago}]\n>>tipoDoc: [${bodyEmision.datosTomador.tipoDocumento}]\n>>cuit: [${bodyEmision.datosTomador.cuitCuil}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${originalPayload.okm}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Motor: [${bodyEmision.bien['40005_numeroMotor']}]\n>>Chasis: [${bodyEmision.bien['40004_numeroChasis']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] : [${originalPayload.planDescripcion}]\n\nGracias\n`;\n    }\n    else\n    {\n        // Otros errores\n        node.warn([\"EK-ERROtros-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. Los datos son:\n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${originalPayload.okm}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    }\n}\n\nnode.warn([\"EK-Mensaje2Send: \"]  +  msg.payload);\n\n\n\n// Fin Agrega\n\n\n\n//msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\n//msg.payload = `Buenos días\n//Se ha recibido una solicitud de emisión a través del cotizador de cliente final, que requiere verificación para completar la operación. Los datos son:\n\n//Nombre: ${bodyEmision.datosTomador.nombre}\n////Apellido: ${bodyEmision.datosTomador.apellido}\n//DNI: ${bodyEmision.datosTomador.documento}\n//Mail: ${bodyEmision.datosTomador.email}\n//Telefono: ${bodyEmision.datosTomador.telefono}\n//Celular: ${bodyEmision.datosTomador.telefono}\n//Cotizacion: ${bodyEmision.cotizacion}\n//Ramo: 4 - Automotores\n//Proceso de control: \n//Fecha: ${new Date().toString(\"dd/MM/yyyy\")}\n//Marca: ${originalPayload.brand}\n//Modelo: ${originalPayload.model}\n//Año de fabricación: ${originalPayload.year}\n//0KM: ${originalPayload.okm}\n//Patente: ${bodyEmision.bien['40023_patente']}\n//Codigo postal: ${originalPayload.zipCode}\n//Plan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\n//Estado de la interface: ${estadoInterfaz}\n//`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6770,6 +6770,238 @@
         "statusType": "auto",
         "x": 1340,
         "y": 720,
+        "wires": []
+    },
+    {
+        "id": "cfb28d6d.168e4",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "locationStreet/:zipCode",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 4080,
+        "wires": [
+            [
+                "ce0637d.b3453c8"
+            ]
+        ]
+    },
+    {
+        "id": "bf7bf4fa.a60d18",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1200,
+        "y": 4180,
+        "wires": []
+    },
+    {
+        "id": "ce0637d.b3453c8",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 260,
+        "y": 4180,
+        "wires": [
+            [
+                "56a5022b.2a307c"
+            ]
+        ]
+    },
+    {
+        "id": "eb5cb6c9.434b68",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Locaclides y Calles",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 800,
+        "y": 4180,
+        "wires": [
+            [
+                "d83c76be.9fba38"
+            ]
+        ]
+    },
+    {
+        "id": "56a5022b.2a307c",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Locaclides y Calles",
+        "func": "let zipCode = msg.req.params.zipCode;\n\nmsg.url = global.get(\"psegurosEmision_Url\") + `info/localidadesCalles/${zipCode}?apikey=` + global.get(\"psegurosApiKey\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 560,
+        "y": 4180,
+        "wires": [
+            [
+                "eb5cb6c9.434b68"
+            ]
+        ]
+    },
+    {
+        "id": "d83c76be.9fba38",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Response",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1020,
+        "y": 4180,
+        "wires": [
+            [
+                "bf7bf4fa.a60d18"
+            ]
+        ]
+    },
+    {
+        "id": "a17bc848.d98238",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "locationStreet/:zipCode/:streetName",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 280,
+        "y": 4300,
+        "wires": [
+            [
+                "5fa6cb0f.775084"
+            ]
+        ]
+    },
+    {
+        "id": "5fa6cb0f.775084",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 260,
+        "y": 4400,
+        "wires": [
+            [
+                "fb4cae0b.2857b"
+            ]
+        ]
+    },
+    {
+        "id": "fb4cae0b.2857b",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Locaclides y Calles",
+        "func": "let zipCode = msg.req.params.zipCode;\n\n//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.streetName;\n\nmsg.url = global.get(\"psegurosEmision_Url\") + `info/localidadesCalles/${zipCode}?apikey=` + global.get(\"psegurosApiKey\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 560,
+        "y": 4400,
+        "wires": [
+            [
+                "eb56589f.8d8948"
+            ]
+        ]
+    },
+    {
+        "id": "eb56589f.8d8948",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Locaclides y Calles",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 800,
+        "y": 4400,
+        "wires": [
+            [
+                "2b3faffa.51438",
+                "128e9d9b.8460d2"
+            ]
+        ]
+    },
+    {
+        "id": "eae2f48a.c5d3e8",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1200,
+        "y": 4400,
+        "wires": []
+    },
+    {
+        "id": "2b3faffa.51438",
+        "type": "function-npm",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "func": "const {distance, closest} = require('fastest-levenshtein');\n\n//Si encontre localidades o es Capital Federal\nif(msg.statusCode == 200) {\n    \n    try {\n        let locations = msg.payload\n        var searchCriteria = msg.searchCriteria;\n        var results = [];\n    \n        node.warn(\"searchStreet - 1\");\n        //Busco por calle\n        locations.forEach(location => {\n            let dist = distance(searchCriteria.toLowerCase(), location.calle.toLowerCase().replace(/ /g, ''));\n            results.push({dist, location});\n        }) \n       \n        node.warn(\"searchStreet - 2\");\n    \n        //Algoritmo para ordenar\n        msg.results = results.sort((a,b) => (a.dist > b.dist) ? 1 : ((b.dist > a.dist) ? -1 : 0));\n        \n        node.warn(\"searchStreet - 3: \" + msg.results.length);\n        \n        //Limitar a 5 resultados\n        if (msg.results.length > 5)\n            msg.results = msg.results.slice(0,5);\n        \n        node.warn(\"searchStreet - 4: \" + msg.results.length);\n        \n        \n        //Devuelvo mejor resultado\n        msg.payload = msg.results;\n    \n    }catch (exception) {\n        node.error([\"Error\", exception])\n    }\n    \n} else {\n    \n    //No se encontraron localidades\n    \n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1010,
+        "y": 4480,
+        "wires": [
+            [
+                "eae2f48a.c5d3e8",
+                "43c4e01a.03929"
+            ]
+        ]
+    },
+    {
+        "id": "128e9d9b.8460d2",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "locationStreet 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 4580,
+        "wires": []
+    },
+    {
+        "id": "43c4e01a.03929",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "locationStreet 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 4580,
         "wires": []
     }
 ]
