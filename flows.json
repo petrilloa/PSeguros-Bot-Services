@@ -7032,7 +7032,7 @@
         "name": "Get template",
         "data": "image.payload",
         "dataType": "msg",
-        "ret": "img",
+        "ret": "buf",
         "parameter1": "image.font",
         "parameter1Type": "msg",
         "parameter2": "image.x",

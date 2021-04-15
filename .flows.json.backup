@@ -7021,6 +7021,48 @@
                 "76d28ee6.db566"
             ],
             [
+                "5ddad847.4f8f48"
+            ]
+        ]
+    },
+    {
+        "id": "5ddad847.4f8f48",
+        "type": "jimp-image",
+        "z": "7ee549ef.0fbb28",
+        "name": "Get template",
+        "data": "image.payload",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "image.font",
+        "parameter1Type": "msg",
+        "parameter2": "image.x",
+        "parameter2Type": "msg",
+        "parameter3": "image.y",
+        "parameter3Type": "msg",
+        "parameter4": "image.text",
+        "parameter4Type": "msg",
+        "parameter5": "image.maxWidth",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 0,
+        "jimpFunction": "none",
+        "selectedJimpFunction": {
+            "name": "none",
+            "fn": "none",
+            "description": "Just loads the image.",
+            "parameters": []
+        },
+        "x": 2870,
+        "y": 1560,
+        "wires": [
+            [
                 "3a08c45e.21564c"
             ]
         ]
