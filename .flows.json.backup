@@ -5155,7 +5155,7 @@
         "y": 1340,
         "wires": [
             [
-                "76d28ee6.db566"
+                "fcfb53f0.40a12"
             ]
         ]
     },
@@ -7003,5 +7003,26 @@
         "x": 1220,
         "y": 4580,
         "wires": []
+    },
+    {
+        "id": "fcfb53f0.40a12",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - Check",
+        "func": "\n//Selecciono primer plan???\nif (msg.payload.response.planes.lenght > 2)\n    return [msg, null];\nelse\n    return [null, msg];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1090,
+        "y": 1500,
+        "wires": [
+            [
+                "76d28ee6.db566"
+            ],
+            [
+                "3a08c45e.21564c"
+            ]
+        ]
     }
 ]
