@@ -2099,7 +2099,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "node.warn([\"payload \"]  + msg.payload);\n\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n//https://pseguros.visualstudio.com/PS/_wiki/wikis/Wiki%20WhatsApp/1512/L%C3%B3gica-de-Servicio-de-Emisi%C3%B3n-Planes-y-Promociones\n\nif (msg.statusCode == 200) { \n    //Caso 1 = TODO OK\n    //No hace falta hacer nada \n    //Logica para definir si lleva IP y si es ONLINE\n    let plan = msg.originalPayload.plan;\n    if (plan == 22 || plan == 41 || plan == 50 || plan == 2 || plan == 8) {\n        msg.payload.ip = true; //Llamar a servicio\n        msg.payload.ipGenerada = true; //Mostrar mensaje\n    } else {\n        msg.payload.ip = false;\n        msg.payload.ipGenerada = false;\n    }\n    \n    if (plan == 22 || plan == 2 || plan == 8 || plan == 7 || plan == 4) {\n        msg.payload.online = true;   \n    } else {\n        msg.payload.online = false;  \n    }\n    \n} else if (msg.statusCode == 401) {\n    // Caso 2 = Error de servicio\n    // No genero Emision observada\n    msg.statusCode = 401;\n} else  if(msg.statusCode == 400) {\n    // Caso 3 = Error de negocio\n    // No genera Emision observada\n    msg.statusCode = 400;\n} else  if(msg.statusCode == 500) {\n    // Caso 4 = Error de negocio\n    // Emision observada\n    msg.statusCode = 500;\n    \n    //Avisar de que se genero IP, no llamar al servicio, solo informar\n     //Movido aca para error 500\n    let strInspeccion = msg.payload.observations.toLowerCase() ;\n    \n    // CON ERRORES\n    if (strInspeccion.includes(\"inspeccion\")) {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = true; //Informo IP\n    } else {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = false; //Informo IP\n    }\n    \n}\n\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
+        "func": "node.warn([\"payload \"]  + msg.payload);\n\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n//https://pseguros.visualstudio.com/PS/_wiki/wikis/Wiki%20WhatsApp/1512/L%C3%B3gica-de-Servicio-de-Emisi%C3%B3n-Planes-y-Promociones\n\nif (msg.statusCode == 200) { \n    //Caso 1 = TODO OK\n    //No hace falta hacer nada \n    //Logica para definir si lleva IP y si es ONLINE\n    let plan = msg.originalPayload.plan;\n    if (plan == 22 || plan == 41 || plan == 50 || plan == 2 || plan == 8) {\n        msg.payload.ip = true; //Llamar a servicio\n        msg.payload.ipGenerada = true; //Mostrar mensaje\n    } else {\n        msg.payload.ip = false;\n        msg.payload.ipGenerada = false;\n    }\n    \n    if (plan == 22 || plan == 2 || plan == 8 || plan == 7 || plan == 4) {\n        msg.payload.online = true;   \n    } else {\n        msg.payload.online = false;  \n    }\n    \n} else if (msg.statusCode == 401) {\n    // Caso 2 = Error de servicio\n    // No genero Emision observada\n    msg.statusCode = 401;\n} else  if(msg.statusCode == 400) {\n    // Caso 3 = Error de negocio\n    // No genera Emision observada\n    msg.statusCode = 400;\n} else  if(msg.statusCode == 500) {\n    // Caso 4 = Error de negocio\n    // Emision observada\n    msg.statusCode = 500;\n    \n    //Avisar de que se genero IP, no llamar al servicio, solo informar\n     //Movido aca para error 500\n    let strInspeccion = msg.payload.observations.toLowerCase() ;\n    \n    // CON ERRORES\n    if (strInspeccion.includes(\"inspeccion\")) {\n        msg.payload.ip = true;//false; //No genero IP\n        msg.payload.ipGenerada = true; //Informo IP\n    } else {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = false; //Informo IP\n    }\n    \n}\n\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6334,7 +6334,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PS Detalle de Planes",
-        "func": "let quotationNumber = msg.req.params.quotationNumber;\nlet plan = msg.req.params.plan;\nlet promo = msg.req.params.promo;\n\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/detallePlan/${quotationNumber}/${plan}/${promo}?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosCotizacion_Url\") + `detallePlan/${quotationNumber}/${plan}/${promo}?apikey` + global.get(\"psegurosApiKey\");\n\nreturn msg;",
+        "func": "let quotationNumber = msg.req.params.quotationNumber;\nlet plan = msg.req.params.plan;\nlet promo = msg.req.params.promo;\n\n//msg.url = `https://apimt.provinciaseguros.com.ar/gateway/PS/PS-COTIZACION/2.2/detallePlan/${quotationNumber}/${plan}/${promo}?apikey=9cc893f8-c119-4eeb-8d68-a3d305927fed`;\nmsg.url = global.get(\"psegurosCotizacion_Url\") + `detallePlan/${quotationNumber}/${plan}/${promo}?apikey=` + global.get(\"psegurosApiKey\");\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6352,7 +6352,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "response",
-        "func": "var details = msg.payload;\nvar coverage = [];\n\ndetails.forEach(item => {\n    coverage.push(item.cobertura)\n})\n\nmsg.payload = coverage\n\nreturn msg;",
+        "func": "var details = msg.payload;\nvar coverage = [];\n\ndetails.forEach(item => {\n    coverage.push(item.cobertura)\n})\n\n\n\nmsg.payload = coverage \n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -7009,7 +7009,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Promo 3 - Check",
-        "func": "\n//Selecciono primer plan???\nif (msg.payload.response.planes.lenght > 2)\n    return [msg, null];\nelse\n    return [null, msg];",
+        "func": "\n//Selecciono primer plan???\nif (msg.payload.response.planes.length > 2)\n    return [msg, null];\nelse\n    return [null, msg];",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -7018,10 +7018,12 @@
         "y": 1500,
         "wires": [
             [
-                "76d28ee6.db566"
+                "76d28ee6.db566",
+                "47116385.b1d4cc"
             ],
             [
-                "5ddad847.4f8f48"
+                "5ddad847.4f8f48",
+                "20cdca00.513cd6"
             ]
         ]
     },
@@ -7066,5 +7068,39 @@
                 "3a08c45e.21564c"
             ]
         ]
+    },
+    {
+        "id": "47116385.b1d4cc",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - Ok",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "20cdca00.513cd6",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "Promo 3 - not Ok",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1310,
+        "y": 1560,
+        "wires": []
     }
 ]
