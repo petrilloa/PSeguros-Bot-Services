@@ -2099,7 +2099,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "node.warn([\"payload \"]  + msg.payload);\n\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n//https://pseguros.visualstudio.com/PS/_wiki/wikis/Wiki%20WhatsApp/1512/L%C3%B3gica-de-Servicio-de-Emisi%C3%B3n-Planes-y-Promociones\n\nif (msg.statusCode == 200) { \n    //Caso 1 = TODO OK\n    //No hace falta hacer nada \n    //Logica para definir si lleva IP y si es ONLINE\n    let plan = msg.originalPayload.plan;\n    if (plan == 22 || plan == 41 || plan == 50 || plan == 2 || plan == 8) {\n        msg.payload.ip = true; //Llamar a servicio\n        msg.payload.ipGenerada = true; //Mostrar mensaje\n    } else {\n        msg.payload.ip = false;\n        msg.payload.ipGenerada = false;\n    }\n    \n    if (plan == 22 || plan == 2 || plan == 8 || plan == 7 || plan == 4) {\n        msg.payload.online = true;   \n    } else {\n        msg.payload.online = false;  \n    }\n    \n} else if (msg.statusCode == 401) {\n    // Caso 2 = Error de servicio\n    // No genero Emision observada\n    msg.statusCode = 401;\n} else  if(msg.statusCode == 400) {\n    // Caso 3 = Error de negocio\n    // No genera Emision observada\n    msg.statusCode = 400;\n} else  if(msg.statusCode == 500) {\n    // Caso 4 = Error de negocio\n    // Emision observada\n    msg.statusCode = 500;\n    \n    //Avisar de que se genero IP, no llamar al servicio, solo informar\n     //Movido aca para error 500\n    let strInspeccion = msg.payload.observations.toLowerCase() ;\n    \n    // CON ERRORES\n    if (strInspeccion.includes(\"inspeccion\")) {\n        msg.payload.ip = true;//false; //No genero IP\n        msg.payload.ipGenerada = true; //Informo IP\n    } else {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = false; //Informo IP\n    }\n    \n}\n\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
+        "func": "node.warn([\"payload \"]  + msg.payload);\n\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n//https://pseguros.visualstudio.com/PS/_wiki/wikis/Wiki%20WhatsApp/1512/L%C3%B3gica-de-Servicio-de-Emisi%C3%B3n-Planes-y-Promociones\n\nif (msg.statusCode == 200) { \n    //Caso 1 = TODO OK\n    //No hace falta hacer nada \n    //Logica para definir si lleva IP y si es ONLINE\n    let plan = msg.originalPayload.plan;\n    if (plan == 22 || plan == 41 || plan == 50 || plan == 2 || plan == 8) {\n        msg.payload.ip = true; //Llamar a servicio\n        msg.payload.ipGenerada = true; //Mostrar mensaje\n    } else {\n        msg.payload.ip = false;\n        msg.payload.ipGenerada = false;\n    }\n    \n    if (plan == 22 || plan == 2 || plan == 8 || plan == 7 || plan == 4) {\n        msg.payload.online = true;   \n    } else {\n        msg.payload.online = false;  \n    }\n    \n} else if (msg.statusCode == 401) {\n    // Caso 2 = Error de servicio\n    // No genero Emision observada\n    msg.statusCode = 401;\n} else  if(msg.statusCode == 400) {\n    // Caso 3 = Error de negocio\n    // No genera Emision observada\n    msg.statusCode = 400;\n} else  if(msg.statusCode == 500) {\n    // Caso 4 = Error de negocio\n    // Emision observada\n    msg.statusCode = 500;\n    \n    //Avisar de que se genero IP, no llamar al servicio, solo informar\n     //Movido aca para error 500\n    let strInspeccion = msg.payload.observations.toLowerCase() ;\n    \n    // CON ERRORES\n    if (strInspeccion.includes(\"inspeccion\")) {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = true; //Informo IP\n    } else {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = false; //Informo IP\n    }\n    \n}\n\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -6704,7 +6704,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "Enviar email",
-        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nlet ceroKMConvert= originalPayload.okm == true ? \"S\" : \"N\";\n\nlet today = new Date();\nlet fecha = String(today.getDate()).padStart(2,'0') + \"/\" + String(today.getMonth() +1).padStart(2, '0') + \"/\" + today.getFullYear();\nlet horario = today.getHours() + \":\" + today.getMinutes() + \":\" +  today.getSeconds();\nvar fechaCorrecta = fecha + \" \" + horario;\n\n// Esteban Agrega aca 29/03/21\n\nnode.warn([\"EK-playload-observations: \"]  + msg.payload.observations);\nnode.warn([\"EK-payload-description: \"]  + msg.payload.description);\nnode.warn([\"EK-bodyEmision: \"] + bodyEmision);\nif (msg.statusCode == 200)\n{\n    // OKAY\n    node.warn([\"EKstatusCode: \"]  + msg.statusCode);\n    msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n    \n    msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    \n}\nelse if (msg.statusCode == 401)\n{ \n    // Errore de Token no deberia pasar nada\n}\nelse if (msg.statusCode == 400)\n{ \n // Otros errores\n        node.warn([\"EK-400-Error-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n}\nelse // Allways statusCode 500\n{\n    //Movido aca para error 500\n    let strCESVISearch = msg.payload.observations.toLowerCase() ;\n    node.warn([\"EK-CESVI-Detect: \"]  + strCESVISearch);\n    // CON ERRORES\n    if (strCESVISearch.includes(\"cesvi\"))\n    {\n        // CESVI DETECT\n        node.warn([\"EK-CESVI-Detect: \"]  + msg.statusCode);\n         msg.topic = `Controlar CESVI Falla - ${bodyEmision.datosTomador.nombre}  ${bodyEmision.datosTomador.apellido} DNI ${bodyEmision.datosTomador.documento} Generado en: OMNICANALIDAD - ${canal}`;\n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>fechaNacimiento: [${bodyEmision.datosTomador.fechaNacimiento}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Localidad: [${bodyEmision.datosTomador.localidad}]\n>>Provincia: [${bodyEmision.datosTomador.provincia}]\n>>Calle: [${bodyEmision.datosTomador.calle}]\n>>depto: [${bodyEmision.datosTomador.departamento}]\n>>nroCalle: [${bodyEmision.datosTomador.calle}]\n>>piso: [${bodyEmision.datosTomador.piso}]\n>>nacionalidad: [${bodyEmision.datosTomador.lugarNacimiento}]\n>>sexo: [${bodyEmision.datosTomador.genero}]\n>>profesion: [${bodyEmision.datosTomador.profesion}]\n>>estadoCivil: [${bodyEmision.datosTomador.estadoCivil}]\n>>medioDelPago: [${bodyEmision.medioDePago}]\n>>origenDelPago: [${bodyEmision.origenDePago}]\n>>cbuOTarjeta: [${bodyEmision.datosTomador.datosBancarios}]\n>>tipoTarjeta: [${bodyEmision.origenDePago}]\n>>tipoDoc: [${bodyEmision.datosTomador.tipoDocumento}]\n>>cuit: [${bodyEmision.datosTomador.cuitCuil}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Motor: [${bodyEmision.bien['40005_numeroMotor']}]\n>>Chasis: [${bodyEmision.bien['40004_numeroChasis']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] : [${originalPayload.planDescripcion}]\n\nGracias\n`;\n    }\n    else if (strCESVISearch==\"\")//.includes(\"condiciones de los bienes incluidos en la propuesta\"))\n    {\n           // Se registran observaciones en la cotización. La misma quedará en poder de un operador de Provincia Seguros que efectuará el análisis correspondiente para proceder a su emisión\n        node.warn([\"EK-500InspeccionGenerada-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface:  Por condiciones del bien - Requiere Proceso por Operador  //[${estadoInterfaz}]\n\nGracias\n`;\n        \n    }\n    else  \n    {\n        // Otros errores\n        node.warn([\"EK-ERROtros-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Año de fabricación: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    }\n}\n\nnode.warn([\"EK-Mensaje2Send: \"]  +  msg.payload);\n\n\n\n// Fin Agrega\n\n\n\n//msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\n//msg.payload = `Buenos días\n//Se ha recibido una solicitud de emisión a través del cotizador de cliente final, que requiere verificación para completar la operación.  \n\n//Nombre: ${bodyEmision.datosTomador.nombre}\n////Apellido: ${bodyEmision.datosTomador.apellido}\n//DNI: ${bodyEmision.datosTomador.documento}\n//Mail: ${bodyEmision.datosTomador.email}\n//Telefono: ${bodyEmision.datosTomador.telefono}\n//Celular: ${bodyEmision.datosTomador.telefono}\n//Cotizacion: ${bodyEmision.cotizacion}\n//Ramo: 4 - Automotores\n//Proceso de control: \n//Fecha: ${new Date().toString(\"dd/MM/yyyy\")}\n//Marca: ${originalPayload.brand}\n//Modelo: ${originalPayload.model}\n//Año de fabricación: ${originalPayload.year}\n//0KM: ${originalPayload.okm}\n//Patente: ${bodyEmision.bien['40023_patente']}\n//Codigo postal: ${originalPayload.zipCode}\n//Plan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\n//Estado de la interface: ${estadoInterfaz}\n//`;\n\nreturn msg;",
+        "func": "let bodyEmision = msg.integrationPayload;\nlet originalPayload = msg.originalPayload;\n\nlet clienteCompleto = `${bodyEmision.datosTomador.nombre} ${bodyEmision.datosTomador.apellido} ${bodyEmision.datosTomador.tipoDocumento} ${bodyEmision.datosTomador.documento}`;\nlet canal = `WHATSAPP`;\nlet estadoInterfaz = msg.statusCode == 200 ? \"OK\" : \"CON ERRORES\";\n\nlet ceroKMConvert= originalPayload.okm == true ? \"S\" : \"N\";\n\nlet today = new Date();\nlet fecha = String(today.getDate()).padStart(2,'0') + \"/\" + String(today.getMonth() +1).padStart(2, '0') + \"/\" + today.getFullYear();\nlet horario = today.getHours() + \":\" + today.getMinutes() + \":\" +  today.getSeconds();\nvar fechaCorrecta = fecha + \" \" + horario;\n\n// Esteban Agrega aca 29/03/21\n\nnode.warn([\"EK-playload-observations: \"]  + msg.payload.observations);\nnode.warn([\"EK-payload-description: \"]  + msg.payload.description);\nnode.warn([\"EK-bodyEmision: \"] + bodyEmision);\nif (msg.statusCode == 200)\n{\n    // OKAY\n    node.warn([\"EKstatusCode: \"]  + msg.statusCode);\n    msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n    \n    msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Ano de fabricacion: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    \n}\nelse if (msg.statusCode == 401)\n{ \n    // Errore de Token no deberia pasar nada\n}\nelse if (msg.statusCode == 400)\n{ \n // Otros errores\n        node.warn([\"EK-400-Error-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Ano de fabricacion: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n}\nelse // Allways statusCode 500\n{\n    //Movido aca para error 500\n    let strCESVISearch = msg.payload.observations.toLowerCase() ;\n    node.warn([\"EK-CESVI-Detect: \"]  + strCESVISearch);\n    // CON ERRORES\n    if (strCESVISearch.includes(\"cesvi\"))\n    {\n        // CESVI DETECT\n        node.warn([\"EK-CESVI-Detect: \"]  + msg.statusCode);\n         msg.topic = `Controlar CESVI Falla - ${bodyEmision.datosTomador.nombre}  ${bodyEmision.datosTomador.apellido} DNI ${bodyEmision.datosTomador.documento} Generado en: OMNICANALIDAD - ${canal}`;\n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación. \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>fechaNacimiento: [${bodyEmision.datosTomador.fechaNacimiento}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Localidad: [${bodyEmision.datosTomador.localidad}]\n>>Provincia: [${bodyEmision.datosTomador.provincia}]\n>>Calle: [${bodyEmision.datosTomador.calle}]\n>>depto: [${bodyEmision.datosTomador.departamento}]\n>>nroCalle: [${bodyEmision.datosTomador.calle}]\n>>piso: [${bodyEmision.datosTomador.piso}]\n>>nacionalidad: [${bodyEmision.datosTomador.lugarNacimiento}]\n>>sexo: [${bodyEmision.datosTomador.genero}]\n>>profesion: [${bodyEmision.datosTomador.profesion}]\n>>estadoCivil: [${bodyEmision.datosTomador.estadoCivil}]\n>>medioDelPago: [${bodyEmision.medioDePago}]\n>>origenDelPago: [${bodyEmision.origenDePago}]\n>>cbuOTarjeta: [${bodyEmision.datosTomador.datosBancarios}]\n>>tipoTarjeta: [${bodyEmision.origenDePago}]\n>>tipoDoc: [${bodyEmision.datosTomador.tipoDocumento}]\n>>cuit: [${bodyEmision.datosTomador.cuitCuil}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${new Date().toString(\"dd/MM/yyyy hh:mm:ss\")}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Ano de fabricacion: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Motor: [${bodyEmision.bien['40005_numeroMotor']}]\n>>Chasis: [${bodyEmision.bien['40004_numeroChasis']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] : [${originalPayload.planDescripcion}]\n\nGracias\n`;\n    }\n    else if (strCESVISearch==\"\")//.includes(\"condiciones de los bienes incluidos en la propuesta\"))\n    {\n           // Se registran observaciones en la cotización. La misma quedará en poder de un operador de Provincia Seguros que efectuará el análisis correspondiente para proceder a su emisión\n        node.warn([\"EK-500InspeccionGenerada-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Ano de fabricacion: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface:  Por condiciones del bien - Requiere Proceso por Operador  //[${estadoInterfaz}]\n\nGracias\n`;\n        \n    }\n    else  \n    {\n        // Otros errores\n        node.warn([\"EK-ERROtros-Detect: \"]  + msg.statusCode);\n        msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal}`;\n            \n        msg.payload = `Buenos días\n    \nSe ha recibido una solicitud de emisión  a través del cotizador de OMNICANALIDAD - ${canal}, que requiere verificación para completar la operación.  \n\nLos datos de la propuesta son:\n\n>>Nombre: [${bodyEmision.datosTomador.nombre}]\n>>Apellido: [${bodyEmision.datosTomador.apellido}]\n>>DNI: [${bodyEmision.datosTomador.documento}]\n>>Mail: [${bodyEmision.datosTomador.email}]\n>>Telefono: [${bodyEmision.datosTomador.telefono}]\n>>Celular: [${bodyEmision.datosTomador.telefono}]\n>>Cotizacion: [${bodyEmision.cotizacion}]\n>>Ramo: [4][Automotores]\n>>Proceso de control: [ ]\n>>Fecha: [${fechaCorrecta}]\n>>Marca: [${originalPayload.brand}]\n>>Modelo: [${originalPayload.modelCode} ${originalPayload.model}]\n>>Ano de fabricacion: [${originalPayload.year}]\n>>0KM: [${ceroKMConvert}]\n>>Patente: [${bodyEmision.bien['40023_patente']}]\n>>Codigo postal: [${originalPayload.zipCode}]\n>>Plan seleccionado: [${bodyEmision.plan}] \n: [${originalPayload.planDescripcion}]\n>>Estado de la interface: [${estadoInterfaz}]\n\nGracias\n`;\n    }\n}\n\nnode.warn([\"EK-Mensaje2Send: \"]  +  msg.payload);\n\n\n\n// Fin Agrega\n\n\n\n//msg.topic = `Controlar / Emitir poliza - Generado en: OMNICANALIDAD - ${canal} - ${clienteCompleto}`;\n\n\n//msg.payload = `Buenos días\n//Se ha recibido una solicitud de emisión a través del cotizador de cliente final, que requiere verificación para completar la operación.  \n\n//Nombre: ${bodyEmision.datosTomador.nombre}\n////Apellido: ${bodyEmision.datosTomador.apellido}\n//DNI: ${bodyEmision.datosTomador.documento}\n//Mail: ${bodyEmision.datosTomador.email}\n//Telefono: ${bodyEmision.datosTomador.telefono}\n//Celular: ${bodyEmision.datosTomador.telefono}\n//Cotizacion: ${bodyEmision.cotizacion}\n//Ramo: 4 - Automotores\n//Proceso de control: \n//Fecha: ${new Date().toString(\"dd/MM/yyyy\")}\n//Marca: ${originalPayload.brand}\n//Modelo: ${originalPayload.model}\n//Ano de fabricacion: [${originalPayload.year}]\n//0KM: ${originalPayload.okm}\n//Patente: ${bodyEmision.bien['40023_patente']}\n//Codigo postal: ${originalPayload.zipCode}\n//Plan seleccionado: ${bodyEmision.plan} - ${originalPayload.planDescripcion}\n//Estado de la interface: ${estadoInterfaz}\n//`;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -7101,6 +7101,139 @@
         "statusType": "auto",
         "x": 1310,
         "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "c15ada04.4f50f8",
+        "type": "http in",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "url": "/franchise/:branch/:product/:plan",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 4680,
+        "wires": [
+            [
+                "7e912171.f08c9"
+            ]
+        ]
+    },
+    {
+        "id": "464dd48b.e7d53c",
+        "type": "http request",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Servicio de Franquicias",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 900,
+        "y": 4800,
+        "wires": [
+            [
+                "36555543.ea5d0a",
+                "4b0b15ee.2b0f8c"
+            ]
+        ]
+    },
+    {
+        "id": "7fd2f5db.e56aec",
+        "type": "http response",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1350,
+        "y": 4800,
+        "wires": []
+    },
+    {
+        "id": "7e912171.f08c9",
+        "type": "subflow:248b9587.09adfa",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "env": [],
+        "x": 320,
+        "y": 4800,
+        "wires": [
+            [
+                "a1e16cb3.70a3c"
+            ]
+        ]
+    },
+    {
+        "id": "a1e16cb3.70a3c",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "PS Servicio de Franquicias",
+        "func": "let branch = msg.req.params.branch;\nlet product = msg.req.params.product;\nlet plan = msg.req.params.plan;\n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + `detallePlanPromocion/${branch}/${product}/${plan}?apikey=` + global.get(\"psegurosApiKey\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 600,
+        "y": 4800,
+        "wires": [
+            [
+                "464dd48b.e7d53c"
+            ]
+        ]
+    },
+    {
+        "id": "36555543.ea5d0a",
+        "type": "function",
+        "z": "7ee549ef.0fbb28",
+        "name": "Response",
+        "func": "let unicodeFlecha = '\\u27A4'\nlet response = { 'informacion': [], 'franquicia': []};\n\nmsg.payload.forEach(element => {\n    response.informacion.push(element.informacion.toUpperCase())\n    if(element.ayuda === \"S\"){\n        response.franquicia.push(element.franquicia.toUpperCase());\n    }\n})\n\n\nmsg.payload = response;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1180,
+        "y": 4780,
+        "wires": [
+            [
+                "7fd2f5db.e56aec",
+                "6afc6053.fcf88"
+            ]
+        ]
+    },
+    {
+        "id": "4b0b15ee.2b0f8c",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 4700,
+        "wires": []
+    },
+    {
+        "id": "6afc6053.fcf88",
+        "type": "debug",
+        "z": "7ee549ef.0fbb28",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 4700,
         "wires": []
     }
 ]
