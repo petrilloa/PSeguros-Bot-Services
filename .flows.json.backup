@@ -2975,8 +2975,7 @@
         "y": 1320,
         "wires": [
             [
-                "918fc464.6531a8",
-                "920fad56.07898"
+                "918fc464.6531a8"
             ]
         ]
     },
@@ -3281,7 +3280,8 @@
         "y": 1320,
         "wires": [
             [
-                "c57d877f.f6e9b8"
+                "c57d877f.f6e9b8",
+                "920fad56.07898"
             ]
         ]
     },
@@ -5520,8 +5520,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 610,
-        "y": 1460,
+        "x": 450,
+        "y": 1420,
         "wires": []
     },
     {
@@ -7160,7 +7160,7 @@
         "type": "function-npm",
         "z": "7ee549ef.0fbb28",
         "name": "Define header",
-        "func": "var moment = require('moment'); \n\nmsg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\n//msg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.url = global.get(\"public\") + global.get(\"promo_template\");\n\nlet sumaAsegurada = parseFloat(msg.payload.response.sumaAsegurada, 10)\nlet sumaAseguradaStr = new Intl.NumberFormat(\"es-AR\").format(sumaAsegurada).toString();\n\nsumaAseguradaStr = sumaAseguradaStr.replace(\",\",\"*\");  \nsumaAseguradaStr = sumaAseguradaStr.replace(\".\",\",\");  \nsumaAseguradaStr = sumaAseguradaStr.replace(\"*\",\".\");  \n\n\nmsg.image.font = \"FONT_SANS_12_BLACK\";\nmsg.image.x = 30;\nmsg.image.y = 6;\nmsg.image.text = `Propuesta: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: $ ${sumaAseguradaStr} - Rastreo Satelital Obligatorio: No - ${moment().format('DD/MM/yyyy')}`;\n\nreturn msg;\n\n",
+        "func": "var moment = require('moment'); \n\nmsg.headers = {};\nmsg.headers[\"content-Disposition\"] = ` attachment; filename=\"PSeguros - Promos.png\"`\n\nmsg.image = {};\n\n//msg.image.url = \"http://rocket.it.mindbot.com.ar:1881/Cotizacion - Promos - Template v1.0.png\";\nmsg.image.url = global.get(\"public\") + global.get(\"promo_template\");\n\nlet sumaAsegurada = parseFloat(msg.payload.response.sumaAsegurada, 10)\nlet sumaAseguradaStr = new Intl.NumberFormat(\"es-AR\").format(sumaAsegurada).toString();\n\nlet satelital = msg.payload.satelital == \"N\" ? \"No\" : \"Si\";\n\nsumaAseguradaStr = sumaAseguradaStr.replace(\",\",\"*\");  \nsumaAseguradaStr = sumaAseguradaStr.replace(\".\",\",\");  \nsumaAseguradaStr = sumaAseguradaStr.replace(\"*\",\".\");  \n\n\nmsg.image.font = \"FONT_SANS_12_BLACK\";\nmsg.image.x = 30;\nmsg.image.y = 6;\nmsg.image.text = `Propuesta: ${msg.payload.response.numeroCotizacion} - ${msg.payload.modelOutput} - Suma asegurada: $ ${sumaAseguradaStr} - Rastreo Satelital Obligatorio: ${satelital} - ${moment().format('DD/MM/yyyy')}`;\n\nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "x": 390,

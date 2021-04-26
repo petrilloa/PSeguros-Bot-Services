@@ -1484,7 +1484,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "PSeguros - Marcas",
-        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.brandName; \n\n\nif (msg.searchCriteria == \"citroën\"){\n    msg.searchCriteria = msg.searchCriteria.replace(\"ë\", \"e\")\n}\n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + \"valores/marcas/4/04100?apikey=\" + global.get(\"psegurosApiKey\");\n\nreturn msg;",
+        "func": "//Primero guardo marca que busco\nmsg.searchCriteria = msg.req.params.brandName; \n\n\nif (msg.searchCriteria.toLowerCase() == \"citroën\"){\n    msg.searchCriteria = msg.searchCriteria.replace(\"ë\", \"e\")\n}\n\nmsg.url = global.get(\"psegurosCotizacion_Url\") + \"valores/marcas/4/04100?apikey=\" + global.get(\"psegurosApiKey\");\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
