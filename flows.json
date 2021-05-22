@@ -2,7 +2,7 @@
     {
         "id": "60e059d3.b0f6b8",
         "type": "tab",
-        "label": "Configuracion",
+        "label": "Configuracion / Watch dog",
         "disabled": false,
         "info": ""
     },
@@ -31,6 +31,13 @@
         "id": "5eeb304d.24308",
         "type": "tab",
         "label": "LOG",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ad37a5de.0fc4d8",
+        "type": "tab",
+        "label": "Quote LOG",
         "disabled": false,
         "info": ""
     },
@@ -1695,7 +1702,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 280,
+        "x": 320,
         "y": 1200,
         "wires": [
             [
@@ -1819,7 +1826,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "response",
-        "func": "//Armo LOG\n\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload); // este el response\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\nvar year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else if (msg.payload.code == 500) { \n    msg.payload = \"Error servicio NO disponible\";\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        if (planes.filter(plan => plan.plan == \"22\").length != 0) {\n            node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n             info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        }\n            \n        \n        if (planes.filter(plan => plan.plan == \"50\").length != 0) {\n            node.warn([\"plan_50\", planes.filter(plan => plan.plan == \"50\")]);\n            info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        }\n        \n        if (planes.filter(plan => plan.plan == \"41\").length != 0) {\n            node.warn([\"plan_41\", planes.filter(plan => plan.plan == \"41\")]);\n            info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        }\n        // info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n\n    } else if (yearDiff >= 11 && yearDiff <= 14 ) {\n        \n        if (planes.filter(plan => plan.plan == \"1\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"2\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"8\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n            \n    } else if (yearDiff >= 15 && yearDiff <=20){\n        \n        if (planes.filter(plan => plan.plan == \"1\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"4\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"7\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    node.warn([\"planes\", info.planes]);\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"Responsabilidad civil hasta $17.500.000\");\n        plan_1.coberturas.push(\"Robo, incendio y destrucción total\");\n        plan_1.coberturas.push(\"Auto Sustituto\");\n        plan_1.coberturas.push(\"Asistencia al vehiculo\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"RC, Robo e incendio total y parcial\");\n        plan_2.coberturas.push(\"Daño total por accidente\");\n        plan_2.coberturas.push(\"Auto Sustituto\");\n        plan_2.coberturas.push(\"Asistencia al vehiculo\");\n        \n    }\n    \n    //Plan 4\n    let plan_4 = info.planes.filter(plan => plan.plan == \"4\")[0];\n    if (plan_4 != null) {\n        plan_4.coberturas = [];\n        plan_4.coberturas.push(\"Responsabilidad civil hasta $17.500.000\");\n        plan_4.coberturas.push(\"Asistencia al vehiculo\");\n        \n    }\n    \n    //Plan 7\n    let plan_7 = info.planes.filter(plan => plan.plan == \"7\")[0];\n    if (plan_7 != null) {\n        plan_7.coberturas = [];\n        plan_7.coberturas.push(\"Responsabilidad civil hasta $17.500.000\");\n        plan_7.coberturas.push(\"Robo e incendio Total\");\n        plan_7.coberturas.push(\"Asistencia al vehiculo\");\n        \n        \n    }\n    \n    //Plan 8\n    let plan_8 = info.planes.filter(plan => plan.plan == \"8\")[0];\n    if (plan_8 != null) {\n        plan_8.coberturas = [];\n        plan_8.coberturas.push(\"RC, Robo e incendio total y parcial\");\n        plan_8.coberturas.push(\"Daño total por accidente\");\n        plan_8.coberturas.push(\"Auto Sustituto\");\n        plan_8.coberturas.push(\"Asistencia Al vehiculo\");\n        \n    }\n    \n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"RC, Robo e incendio total y parcial\");\n        plan_22.coberturas.push(\"Daño total por accidente\");\n        plan_22.coberturas.push(\"Asistencia al vehiculo\");\n        plan_22.coberturas.push(\"\");\n        plan_22.coberturas.push(\"SIN FRANQUICIA\");\n        plan_22.coberturas.push(\"\\t- Rotura de cristales, luneta y techo\");\n        plan_22.coberturas.push(\"\\t- Daño Parabrisas y cerradura\");\n        plan_22.coberturas.push(\"\\t- Robo de cubiertas y daño por granizo\");\n        \n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"RC, Robo e incendio total y parcial\\nDaño total por accidente\");\n        plan_50.coberturas.push(\"Daño parcial por accidente\\ncon franquicia variable\");\n        plan_50.coberturas.push(\"\\tAuto Nacional 3,5% / Importado 5,5%\")\n        plan_50.coberturas.push(\"Asistencia al vehiculo\");\n        plan_50.coberturas.push(\"SIN FRANQUICIA\");\n        plan_50.coberturas.push(\"\\t- Rotura de cirstales, luneta y techo\");\n        plan_50.coberturas.push(\"\\t- Daño Parabrisas y cerradura\");\n        plan_50.coberturas.push(\"\\t- Robo de cubiertas y daño por granizo\");\n\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"RC, Robo e incendio total y parcial\\nDaño total por accidente\");\n        plan_41.coberturas.push(\"Daño parcial por accidente\\ncon franquicia fija\");\n        plan_41.coberturas.push(\"\\tAuto Nacional=$15000 / Importado=$22500\")\n        plan_41.coberturas.push(\"Asistencia al vehiculo\");\n        plan_41.coberturas.push(\"SIN FRANQUICIA\");\n        plan_41.coberturas.push(\"\\t- Rotura de cirstales, luneta y techo\");\n        plan_41.coberturas.push(\"\\t- Daño Parabrisas y cerradura\");\n        plan_41.coberturas.push(\"\\t- Robo de cubiertas y daño por granizo\");\n        \n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    node.warn([\"planes/coberturas\", info.planes]);\n    \n    msg.payload = info \n}\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Cotizar\";\nmsg.log.url = \"/quotation\";\nmsg.log.integrationResponse = JSON.stringify(msg.payload); // este deberia ser el integration response\nmsg.log.statusCode = msg.statusCode;\n\n\nreturn msg;",
+        "func": "//Armo LOG\n\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload); // este el response\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\nvar year = msg.year;\n//Obtengo la diferencia de años\nvar yearDiff = new Date().getFullYear() - year;\n\n\nif (msg.payload.code === 404) {\n    msg.payload = msg.payload.message\n} else if (msg.payload.code == 500) { \n    msg.payload = \"Error servicio NO disponible\";\n} else {\n    var info ={\n        \"numeroCotizacion\" : msg.payload.numeroCotizacion,\n        \"sumaAsegurada\" : msg.payload.bienesCotizados[0].sumaAsegurada,\n        \"planes\" : []\n    };\n    //Obtengo todos los planes\n    var planes = msg.payload.planes;\n    \n    node.warn([\"yearDiff\", yearDiff]);\n    \n    // pusheo los planes que corresponden segun la antiguedad\n    if (yearDiff <= 10){\n        \n        if (planes.filter(plan => plan.plan == \"22\").length != 0) {\n            node.warn([\"plan_22\", planes.filter(plan => plan.plan == \"22\")]);\n             info.planes.push(planes.filter(plan => plan.plan == \"22\")[0]);\n        }\n            \n        \n        if (planes.filter(plan => plan.plan == \"50\").length != 0) {\n            node.warn([\"plan_50\", planes.filter(plan => plan.plan == \"50\")]);\n            info.planes.push(planes.filter(plan => plan.plan == \"50\")[0]);\n        }\n        \n        if (planes.filter(plan => plan.plan == \"41\").length != 0) {\n            node.warn([\"plan_41\", planes.filter(plan => plan.plan == \"41\")]);\n            info.planes.push(planes.filter(plan => plan.plan == \"41\")[0]);\n        }\n        // info.planes.push(planes.filter(plan => plan.plan == \"42\")[0]);\n        // info.planes.push(planes.filter(plan => plan.plan == \"43\")[0]);\n\n    } else if (yearDiff >= 11 && yearDiff <= 14 ) {\n        \n        if (planes.filter(plan => plan.plan == \"1\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"2\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"2\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"8\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"8\")[0]);\n            \n    } else if (yearDiff >= 15 && yearDiff <=20){\n        \n        if (planes.filter(plan => plan.plan == \"1\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"1\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"4\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"4\")[0]);\n        \n        if (planes.filter(plan => plan.plan == \"7\").length != 0)\n            info.planes.push(planes.filter(plan => plan.plan == \"7\")[0]);\n    } else if (yearDiff > 20 ) {\n         info.planes.push(\"No contamos con planes disponibles para la antigüedad de su vehículo\")\n    } else {\n        info.planes.push(\"sorry, something went grong\")\n    }\n    \n    node.warn([\"planes\", info.planes]);\n    \n    //Agregar disclaimer y terms\n    info.disclaimer = \"La información que otorgo en virtud de la presente operacion informatica, implica la prestacion del consentimiento o dispuesto por la ley 25.326. Conozco que podrá ejercer los derechos de acceso, rectificación y supresión de datos y acepto que la información que otorgo podrá ser utilizada para acciones de marketing en forma directa o a través de terceros. La información sera archivada por Provincia Seguros SA con domicilio en Carlos Pellegrini 71 Ciudad Autónoma de Buenos Aires\";\n    info.terms = \"Pólizas emitidas por Provincia Seguros SA consulta por las coberturas, sus limites y condiciones de suscripción en www.provinciaseguros.com.ar, Provincia Seguros SA, Carlos Pellegrini 71, CABA, CUIT 30-52750816-5, Superintendencia de Seguros de la Nacion www.ssn.gob.ar 0800-666-8400 - N° de inscripción SSN:499\";\n    \n    \n    //Agregar coberturas/caracteristicas\n    //Plan 1\n    let plan_1 = info.planes.filter(plan => plan.plan == \"1\")[0];\n    if (plan_1 != null) {\n        plan_1.coberturas = [];\n        plan_1.coberturas.push(\"Responsabilidad civil hasta $17.500.000\");\n        plan_1.coberturas.push(\"Robo, incendio y destrucción total\");\n        plan_1.coberturas.push(\"Auto Sustituto\");\n        plan_1.coberturas.push(\"Asistencia al vehiculo\");\n    }\n    \n    //Plan 2\n    let plan_2 = info.planes.filter(plan => plan.plan == \"2\")[0];\n    if (plan_2 != null) {\n        plan_2.coberturas = [];\n        plan_2.coberturas.push(\"RC, Robo e incendio total y parcial\");\n        plan_2.coberturas.push(\"Daño total por accidente\");\n        plan_2.coberturas.push(\"Auto Sustituto\");\n        plan_2.coberturas.push(\"Asistencia al vehiculo\");\n        \n    }\n    \n    //Plan 4\n    let plan_4 = info.planes.filter(plan => plan.plan == \"4\")[0];\n    if (plan_4 != null) {\n        plan_4.coberturas = [];\n        plan_4.coberturas.push(\"Responsabilidad civil hasta $17.500.000\");\n        plan_4.coberturas.push(\"Asistencia al vehiculo\");\n        \n    }\n    \n    //Plan 7\n    let plan_7 = info.planes.filter(plan => plan.plan == \"7\")[0];\n    if (plan_7 != null) {\n        plan_7.coberturas = [];\n        plan_7.coberturas.push(\"Responsabilidad civil hasta $17.500.000\");\n        plan_7.coberturas.push(\"Robo e incendio Total\");\n        plan_7.coberturas.push(\"Asistencia al vehiculo\");\n        \n        \n    }\n    \n    //Plan 8\n    let plan_8 = info.planes.filter(plan => plan.plan == \"8\")[0];\n    if (plan_8 != null) {\n        plan_8.coberturas = [];\n        plan_8.coberturas.push(\"RC, Robo e incendio total y parcial\");\n        plan_8.coberturas.push(\"Daño total por accidente\");\n        plan_8.coberturas.push(\"Auto Sustituto\");\n        plan_8.coberturas.push(\"Asistencia Al vehiculo\");\n        \n    }\n    \n    //Plan 22\n    let plan_22 = info.planes.filter(plan => plan.plan == \"22\")[0];\n    if (plan_22 != null) {\n        plan_22.coberturas = [];\n        plan_22.coberturas.push(\"RC, Robo e incendio total y parcial\");\n        plan_22.coberturas.push(\"Daño total por accidente\");\n        plan_22.coberturas.push(\"Asistencia al vehiculo\");\n        plan_22.coberturas.push(\"\");\n        plan_22.coberturas.push(\"SIN FRANQUICIA\");\n        plan_22.coberturas.push(\"\\t- Rotura de cristales, luneta y techo\");\n        plan_22.coberturas.push(\"\\t- Daño Parabrisas y cerradura\");\n        plan_22.coberturas.push(\"\\t- Robo de cubiertas y daño por granizo\");\n        \n    }\n    \n    //Plan 50\n    let plan_50 = info.planes.filter(plan => plan.plan == \"50\")[0];\n    if (plan_50 != null) {\n        plan_50.coberturas = [];\n        plan_50.coberturas.push(\"RC, Robo e incendio total y parcial\\nDaño total por accidente\");\n        plan_50.coberturas.push(\"Daño parcial por accidente\\ncon franquicia variable\");\n        plan_50.coberturas.push(\"\\tAuto Nacional 3,5% / Importado 5,5%\")\n        plan_50.coberturas.push(\"Asistencia al vehiculo\");\n        plan_50.coberturas.push(\"SIN FRANQUICIA\");\n        plan_50.coberturas.push(\"\\t- Rotura de cirstales, luneta y techo\");\n        plan_50.coberturas.push(\"\\t- Daño Parabrisas y cerradura\");\n        plan_50.coberturas.push(\"\\t- Robo de cubiertas y daño por granizo\");\n\n    }\n    \n    //Plan 41\n    let plan_41 = info.planes.filter(plan => plan.plan == \"41\")[0];\n    if (plan_41 != null) {\n        plan_41.coberturas = [];\n        plan_41.coberturas.push(\"RC, Robo e incendio total y parcial\\nDaño total por accidente\");\n        plan_41.coberturas.push(\"Daño parcial por accidente\\ncon franquicia fija\");\n        plan_41.coberturas.push(\"\\tAuto Nacional=$15000 / Importado=$22500\")\n        plan_41.coberturas.push(\"Asistencia al vehiculo\");\n        plan_41.coberturas.push(\"SIN FRANQUICIA\");\n        plan_41.coberturas.push(\"\\t- Rotura de cirstales, luneta y techo\");\n        plan_41.coberturas.push(\"\\t- Daño Parabrisas y cerradura\");\n        plan_41.coberturas.push(\"\\t- Robo de cubiertas y daño por granizo\");\n        \n    }\n    \n    //Plan 42\n    let plan_42 = info.planes.filter(plan => plan.plan == \"42\")[0];\n    if (plan_42 != null) {\n        plan_42.coberturas = [];\n        plan_42.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_42.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_42.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_42.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_42.coberturas.push(\"Daños por granizo\");\n        plan_42.coberturas.push(\"Cambio de llaves por RT\");\n        plan_42.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_42.coberturas.push(\"Choque entre asegurados\");\n        plan_42.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_42.coberturas.push(\"Daño parcial por robo total\");\n        plan_42.coberturas.push(\"Robo hurto/incendio total\");\n        plan_42.coberturas.push(\"Asistencia al vehiculo\");\n        plan_42.coberturas.push(\"Daño total por accidente\");\n        plan_42.coberturas.push(\"Responsabilidad Civil\");\n        plan_42.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    //Plan 43\n    let plan_43 = info.planes.filter(plan => plan.plan == \"43\")[0];\n    if (plan_43 != null) {\n        plan_43.coberturas = [];\n        plan_43.coberturas.push(\"Todo riesgo/franquicia fija\");\n        plan_43.coberturas.push(\"Cristales Luneta y Techo\");\n        plan_43.coberturas.push(\"Parabrisa y Cerradura\");\n        plan_43.coberturas.push(\"Robo/Inc parcial s/fcia.\");\n        plan_43.coberturas.push(\"Daños por granizo\");\n        plan_43.coberturas.push(\"Cambio de llaves por RT\");\n        plan_43.coberturas.push(\"Auto sustituto 15 dias\");\n        plan_43.coberturas.push(\"Choque entre asegurados\");\n        plan_43.coberturas.push(\"Gastos de baja por DT o RT\");\n        plan_43.coberturas.push(\"Daño parcial por robo total\");\n        plan_43.coberturas.push(\"Robo hurto/incendio total\");\n        plan_43.coberturas.push(\"Asistencia al vehiculo\");\n        plan_43.coberturas.push(\"Daño total por accidente\");\n        plan_43.coberturas.push(\"Responsabilidad Civil\");\n        plan_43.coberturas.push(\"Cobertura paises Mercosur\");\n    }\n    \n    node.warn([\"planes/coberturas\", info.planes]);\n    \n    msg.payload = info \n}\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Cotizar\";\nmsg.log.url = \"/quotation\";\nmsg.log.integrationResponse = JSON.stringify(msg.payload); // este deberia ser el integration response\nmsg.log.statusCode = msg.statusCode;\n\n//LOG Cotizacion\nmsg.log.quote = {};\nmsg.log.quote.payload = msg.originalPayload.log;\nmsg.log.quote.response = msg.payload;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1830,7 +1837,8 @@
             [
                 "5a1325f8.9dc51c",
                 "d7a989ad.2106c8",
-                "52eab443.e0591c"
+                "52eab443.e0591c",
+                "a16d62ec.b52e7"
             ]
         ]
     },
@@ -2099,7 +2107,7 @@
         "type": "function",
         "z": "7ee549ef.0fbb28",
         "name": "",
-        "func": "node.warn([\"payload \"]  + msg.payload);\n\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n//https://pseguros.visualstudio.com/PS/_wiki/wikis/Wiki%20WhatsApp/1512/L%C3%B3gica-de-Servicio-de-Emisi%C3%B3n-Planes-y-Promociones\n\nif (msg.statusCode == 200) { \n    //Caso 1 = TODO OK\n    //No hace falta hacer nada \n    //Logica para definir si lleva IP y si es ONLINE\n    let plan = msg.originalPayload.plan;\n    if (plan == 22 || plan == 41 || plan == 50 || plan == 2 || plan == 8) {\n        msg.payload.ip = true; //Llamar a servicio\n        msg.payload.ipGenerada = true; //Mostrar mensaje\n    } else {\n        msg.payload.ip = false;\n        msg.payload.ipGenerada = false;\n    }\n    \n    if (plan == 22 || plan == 2 || plan == 8 || plan == 7 || plan == 4) {\n        msg.payload.online = true;   \n    } else {\n        msg.payload.online = false;  \n    }\n    \n} else if (msg.statusCode == 401) {\n    // Caso 2 = Error de servicio\n    // No genero Emision observada\n    msg.statusCode = 401;\n} else  if(msg.statusCode == 400) {\n    // Caso 3 = Error de negocio\n    // No genera Emision observada\n    msg.statusCode = 400;\n} else  if(msg.statusCode == 500) {\n    // Caso 4 = Error de negocio\n    // Emision observada\n    msg.statusCode = 500;\n    \n    //Avisar de que se genero IP, no llamar al servicio, solo informar\n     //Movido aca para error 500\n    let strInspeccion = msg.payload.observations.toLowerCase() ;\n    \n    // CON ERRORES\n    if (strInspeccion.includes(\"inspeccion\")) {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = true; //Informo IP\n    } else {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = false; //Informo IP\n    }\n    \n}\n\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
+        "func": "node.warn([\"payload \"]  + msg.payload);\n\n\n//Salida\n//Enviar mail a Vero / Emision Observada\n// Mensaje de que quedo observado\n\n//https://pseguros.visualstudio.com/PS/_wiki/wikis/Wiki%20WhatsApp/1512/L%C3%B3gica-de-Servicio-de-Emisi%C3%B3n-Planes-y-Promociones\n\nif (msg.statusCode == 200) { \n    //Caso 1 = TODO OK\n    //No hace falta hacer nada \n    //Logica para definir si lleva IP y si es ONLINE\n    let plan = msg.originalPayload.plan;\n    if (plan == 22 || plan == 41 || plan == 50 || plan == 2 || plan == 8) {\n        msg.payload.ip = true; //Llamar a servicio\n        msg.payload.ipGenerada = true; //Mostrar mensaje\n    } else {\n        msg.payload.ip = false;\n        msg.payload.ipGenerada = false;\n    }\n    \n    if (plan == 22 || plan == 2 || plan == 8 || plan == 7 || plan == 4) {\n        msg.payload.online = true;   \n    } else {\n        msg.payload.online = false;  \n    }\n    \n} else if (msg.statusCode == 401) {\n    // Caso 2 = Error de servicio\n    // No genero Emision observada\n    msg.statusCode = 401;\n} else  if(msg.statusCode == 400) {\n    // Caso 3 = Error de negocio\n    // No genera Emision observada\n    msg.statusCode = 400;\n} else  if(msg.statusCode == 500) {\n    // Caso 4 = Error de negocio\n    // Emision observada\n    msg.statusCode = 500;\n    \n    //Avisar de que se genero IP, no llamar al servicio, solo informar\n     //Movido aca para error 500\n    let strInspeccion = msg.payload.observations.toLowerCase() ;\n    \n    // CON ERRORES\n    if (strInspeccion.includes(\"inspeccion\")) {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = true; //Informo IP\n    } else {\n        msg.payload.ip = false; //No genero IP\n        msg.payload.ipGenerada = false; //Informo IP\n    }\n    \n}\n\n\n//Armo LOG\nmsg.log = {};\nmsg.log.integrationStatusCode = msg.statusCode;\nmsg.log.integrationPayload = JSON.stringify(msg.integrationPayload);\nmsg.log.integrationResponse = JSON.stringify(msg.payload);\nmsg.log.integrationUrl = msg.url;\n\n//LOG part 2\nmsg.log.origin = \"bot\";\nmsg.log.destination = \"pseguros\";\nmsg.log.action = \"Emision\";\nmsg.log.url = \"/emision\";\nmsg.log.payload = JSON.stringify(msg.originalPayload);\nmsg.log.response = JSON.stringify(msg.payload);\nmsg.log.statusCode = msg.statusCode;\n\n//Log EMISION\nmsg.log.quote_number = msg.originalPayload.quotation;\nmsg.log.emision_number = msg.payload.numeroPoliza;\n\n// Esteban Agrega aca 29/03/21\n\n// Fin Agrega\n\n\n//Nothing to do\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2110,7 +2118,8 @@
             [
                 "d38f3260.929eb",
                 "5bd5dd48.a4d074",
-                "c87703da.7e2e9"
+                "c87703da.7e2e9",
+                "d5fbe865.3d8618"
             ]
         ]
     },
@@ -6421,7 +6430,8 @@
         "z": "c289f04a.5490c",
         "name": "",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1175,
         "y": 360,
@@ -6453,7 +6463,8 @@
         "z": "c289f04a.5490c",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1085,
         "y": 600,
@@ -6465,7 +6476,8 @@
         "z": "c289f04a.5490c",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1175,
         "y": 820,
@@ -6477,7 +6489,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1265,
         "y": 660,
@@ -6489,7 +6502,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1195,
         "y": 1140,
@@ -6501,7 +6515,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1125,
         "y": 1740,
@@ -6513,7 +6528,8 @@
         "z": "7ee549ef.0fbb28",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1225,
         "y": 2280,
@@ -6525,7 +6541,8 @@
         "z": "7ee81df4.bfea84",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 3075,
         "y": 1060,
@@ -6537,7 +6554,8 @@
         "z": "7ee81df4.bfea84",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451"
+            "f79443e7.a7451",
+            "2d7c0d9a.cc2342"
         ],
         "x": 1615,
         "y": 1640,
@@ -7730,6 +7748,364 @@
         "statusType": "auto",
         "x": 2560,
         "y": 100,
+        "wires": []
+    },
+    {
+        "id": "ab58d1fa.00948",
+        "type": "Stackhero-MySQL",
+        "z": "ad37a5de.0fc4d8",
+        "server": "6e3cb7e8.3326f8",
+        "name": "",
+        "x": 530,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4ad86319.919aac",
+        "type": "function",
+        "z": "ad37a5de.0fc4d8",
+        "name": "Payload Log",
+        "func": "//msg.topic = 'INSERT INTO `MindbotLog`.`Message` (`chatId`, `topic`, `channel`, `departmentId`, `inbound`, `from_Id`, `from_Token`, `from_FullName`, `from_UserName`, `from_MessageType`, `from_Message`, `chat_Context`, `failStatus`) VALUES (:chatId, :topic, :channel, :departmentId, :inbound, :from_id, :from_Token, :from_FullName, :from_UserName, :from_MessageType, :from_Message, :chat_Context, :failStatus)';\nmsg.topic = 'INSERT INTO `MindbotLog`.`Quote` (`quote_number`, `quote_amount`, `quote_car_brand`, `quote_car_model`, `quote_car_year`, `quote_car_zipcode`, `quote_car_new`, `token`, `name`, `username`, `documentNumber`, `chanel`, `url`, `link`,`quote_statusCode`,  `quote_payload`, `quote_response`, `emision_number`, `emision_payload`, `emision_response`, `emision_statusCode`, `emision_done` ) VALUES (:quote_number, :quote_amount, :quote_car_brand, :quote_car_model, :quote_car_year, :quote_car_zipcode, :quote_car_new, :token, :name, :username, :documentNumber, :chanel, :url, :link, :quote_statusCode, :quote_payload, :quote_response, :emision_number,  :emision_payload, :emision_response, :emision_statusCode, :emision_done)';\n\nvar quote = msg.log.quote;\nvar originalPayload = msg.originalPayload;\nvar log = msg.log;\n\n\nmsg.payload = {\n    quote_number: quote.response.numeroCotizacion,\n    quote_amount: quote.response.sumaAsegurada,\n    quote_car_brand: originalPayload.brand,\n    quote_car_model: originalPayload.model,\n    quote_car_year: originalPayload.year,\n    quote_car_zipcode: originalPayload.zipcode,\n    quote_car_new: originalPayload.new,\n    token: quote.payload.token,\n    name: quote.payload.name,\n    username:quote.payload.username, \n    documentNumber: quote.payload.document, \n    chanel: quote.payload.chanel, \n    url: quote.payload.url,\n    link: `https://${quote.payload.url}/live/${quote.payload.rid}`,\n    quote_statusCode: log.integrationStatusCode,\n    quote_payload: log.payload,\n    quote_response: log.integrationResponse,\n    emision_number: null,\n    emision_payload: null,\n    emision_response: null,\n    emision_statusCode: null,\n    emision_done: \"Cotizada\"\n}\n\n\nreturn [msg, null];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 310,
+        "y": 160,
+        "wires": [
+            [
+                "ab58d1fa.00948",
+                "84efc143.7855d"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8ed7cdf.895583",
+        "type": "debug",
+        "z": "ad37a5de.0fc4d8",
+        "name": "QUOTE LOG-IN",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "84efc143.7855d",
+        "type": "debug",
+        "z": "ad37a5de.0fc4d8",
+        "name": "QUOTE LOG-Payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "8555a4af.22d2e8",
+        "type": "link in",
+        "z": "ad37a5de.0fc4d8",
+        "name": "QUOTE LOG",
+        "links": [
+            "a16d62ec.b52e7"
+        ],
+        "x": 135,
+        "y": 160,
+        "wires": [
+            [
+                "8ed7cdf.895583",
+                "4ad86319.919aac"
+            ]
+        ]
+    },
+    {
+        "id": "a16d62ec.b52e7",
+        "type": "link out",
+        "z": "7ee549ef.0fbb28",
+        "name": "QUOTE LOG",
+        "links": [
+            "8555a4af.22d2e8"
+        ],
+        "x": 1195,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "f4ba0a0f.f391f8",
+        "type": "function",
+        "z": "ad37a5de.0fc4d8",
+        "name": "Payload Log",
+        "func": "msg.topic = 'UPDATE `MindbotLog`.`Quote` SET `emision_number`=:emision_number, `emision_payload`=:emision_payload, `emision_response`=:emision_response, `emision_statusCode`=:emision_statusCode, `emision_done`=:emision_done WHERE  `quote_number`=:quote_number;';\n\nvar log = msg.log;\n\nmsg.payload = {\n    quote_number: log.quote_number,\n    emision_number: log.emision_number,\n    emision_payload: log.integrationPayload,\n    emision_response: log.integrationResponse,\n    emision_statusCode: log.integrationStatusCode,\n    emision_done: log.emision_number ? \"Emitida\" : \"Emision pendiente\"\n}\n\n\nreturn [msg, null];\n\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 310,
+        "y": 320,
+        "wires": [
+            [
+                "ab58d1fa.00948"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "591f5df.d4530a4",
+        "type": "link in",
+        "z": "ad37a5de.0fc4d8",
+        "name": "Emision LOG",
+        "links": [
+            "d5fbe865.3d8618"
+        ],
+        "x": 135,
+        "y": 320,
+        "wires": [
+            [
+                "f4ba0a0f.f391f8",
+                "25b224d.d8edcdc"
+            ]
+        ]
+    },
+    {
+        "id": "25b224d.d8edcdc",
+        "type": "debug",
+        "z": "ad37a5de.0fc4d8",
+        "name": "EMISION LOG-IN",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 270,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d5fbe865.3d8618",
+        "type": "link out",
+        "z": "7ee549ef.0fbb28",
+        "name": "QUOTE LOG",
+        "links": [
+            "591f5df.d4530a4"
+        ],
+        "x": 1115,
+        "y": 1780,
+        "wires": []
+    },
+    {
+        "id": "58b2c225.9bbffc",
+        "type": "inject",
+        "z": "60e059d3.b0f6b8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 260,
+        "wires": [
+            [
+                "b89a813b.aac48"
+            ]
+        ]
+    },
+    {
+        "id": "3e0ecdd5.492302",
+        "type": "debug",
+        "z": "60e059d3.b0f6b8",
+        "name": "Online agents",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1140,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "730cf686.748d78",
+        "type": "function",
+        "z": "60e059d3.b0f6b8",
+        "name": "Get queue",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/visitor#payload\n\n//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n//TODO: Donde guardo el userId original\n\ntry {\n    \n    let ssl = global.get(\"rocketChat_SSL\") == \"true\" ? \"https://\" : \"http://\";\n    msg.url = ssl + global.get(\"rocketChat_Url\") + \"/api/v1/livechat/queue?includeOfflineAgents=true\";\n    \n    msg.headers = {};\n    \n    msg.headers['X-User-Id'] = msg.payload.data.userId;\n    msg.headers['X-Auth-Token'] = msg.payload.data.authToken;\n    //msg.headers['X-User-Id'] = \"FE33GnkPP3aQrqvSE\";\n    //msg.headers['X-Auth-Token'] = \"FKWSX-PZCggns0srIJYMJDsRI4iac5Yytasel76UD1-\";\n    \n    //Save data to Auth\n    msg.auth = {};\n    msg.auth['X-User-Id'] = msg.payload.data.userId;\n    msg.auth['X-Auth-Token'] = msg.payload.data.authToken;\n    \n    \n    \n} catch (error) {\n    node.error([\"on get queue:\",error]);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 710,
+        "y": 260,
+        "wires": [
+            [
+                "a6da0945.375568"
+            ]
+        ]
+    },
+    {
+        "id": "a6da0945.375568",
+        "type": "http request",
+        "z": "60e059d3.b0f6b8",
+        "name": "Get ONLINE agents",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 920,
+        "y": 260,
+        "wires": [
+            [
+                "3e0ecdd5.492302",
+                "c45a27d7.d7ea58"
+            ]
+        ]
+    },
+    {
+        "id": "b89a813b.aac48",
+        "type": "function",
+        "z": "60e059d3.b0f6b8",
+        "name": "Login",
+        "func": "//Usar id de Admin (Ver si hacemos uno o usamos el Bot)\n\n\n//msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/login\"\nmsg.url = \"https://\" + global.get(\"rocketChat_Url\") + \"/api/v1/login\";\n\nlet originalPayload = msg.payload;\nmsg.originalPayload = originalPayload;\n\nmsg.payload = {};\n//msg.payload.user = \"andrespetrillo@mindbot.com.ar\";\n//msg.payload.password = \"123456\";\n\nmsg.payload.user = global.get(\"rocketChat_Email\");\nmsg.payload.password = global.get(\"rocketChat_Pass\");\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 370,
+        "y": 260,
+        "wires": [
+            [
+                "bc6fb845.86d018"
+            ]
+        ]
+    },
+    {
+        "id": "bc6fb845.86d018",
+        "type": "http request",
+        "z": "60e059d3.b0f6b8",
+        "name": "http request",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 530,
+        "y": 260,
+        "wires": [
+            [
+                "730cf686.748d78",
+                "9001c1d8.d153a"
+            ]
+        ]
+    },
+    {
+        "id": "9001c1d8.d153a",
+        "type": "debug",
+        "z": "60e059d3.b0f6b8",
+        "name": "Login",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c45a27d7.d7ea58",
+        "type": "function",
+        "z": "60e059d3.b0f6b8",
+        "name": "Is bot ONLINE?",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/visitor#payload\n\n//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n//TODO: Donde guardo el userId original\n\ntry {\n    \n    let queue = msg.payload.queue;\n    let botOnline = false;\n    \n    queue.forEach(obj => {\n        \n            if (obj.user.username == \"AsistenteVirtualPSeguros\" && obj.user.status == \"online\" ) {\n                botOnline = true;\n            }\n        } );\n    \n    if (botOnline)\n        return [msg, null];\n    else\n         return [null, msg];\n    \n} catch (error) {\n    node.error([\"on BOT ONLINE:\",error]);\n}\n\nreturn msg;\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1160,
+        "y": 340,
+        "wires": [
+            [
+                "3061db7b.2fc2e4"
+            ],
+            [
+                "61a18fbd.90dc1"
+            ]
+        ]
+    },
+    {
+        "id": "3061db7b.2fc2e4",
+        "type": "debug",
+        "z": "60e059d3.b0f6b8",
+        "name": "Bot Online",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "61a18fbd.90dc1",
+        "type": "debug",
+        "z": "60e059d3.b0f6b8",
+        "name": "Bot Offline",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 360,
         "wires": []
     }
 ]
