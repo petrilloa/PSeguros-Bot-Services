@@ -711,7 +711,7 @@
         "name": "",
         "statusCode": "200",
         "headers": {},
-        "x": 1400,
+        "x": 1500,
         "y": 1420,
         "wires": []
     },
@@ -1089,7 +1089,7 @@
         "type": "function",
         "z": "7ee81df4.bfea84",
         "name": "Send Message",
-        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n\n//msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/message\"\n\nlet ssl = global.get(\"rocketChat_SSL\") == \"true\" ? \"https://\" : \"http://\";\nmsg.url = ssl + global.get(\"rocketChat_Url\") + \"/api/v1/livechat/message\";\n\n\nlet originalPayload = msg.payload;\n\nmsg.payload = {};\nmsg.payload.token = originalPayload.config.guest.token;\nmsg.payload.rid = originalPayload.config.room._id;\nmsg.payload.msg = msg.originalMessage.results[0].message.text;\n\n\n//log\nmsg.log.integrationUrl = msg.url;\nmsg.log.integrationStatusCode = msg.statusCode; \nmsg.log.integrationPayload = JSON.stringify(msg.payload);\n\n\nreturn msg;\n",
+        "func": "//https://docs.rocket.chat/api/rest-api/methods/livechat/room\n\n//Usar id de Usuario de Telegram como TOKEN\n\n//msg.url = \"https://rocket.it.mindbot.com.ar/api/v1/livechat/message\"\n\nlet ssl = global.get(\"rocketChat_SSL\") == \"true\" ? \"https://\" : \"http://\";\nmsg.url = ssl + global.get(\"rocketChat_Url\") + \"/api/v1/livechat/message\";\n\n\nlet originalPayload = msg.payload;\n\nmsg.payload = {};\nmsg.payload.token = originalPayload.config.guest.token;\nmsg.payload.rid = originalPayload.config.room._id;\n/* Intentando setiar respuesta para mensaje multimedia */\nif (!msg.originalMessage.results[0].message.text){\n    node.warn(\"mensaje de \" + Object.values(msg.originalMessage.results[0].message) )\n}\nmsg.payload.msg = msg.originalMessage.results[0].message.text;\n\n\n//log\nmsg.log.integrationUrl = msg.url;\nmsg.log.integrationStatusCode = msg.statusCode; \nmsg.log.integrationPayload = JSON.stringify(msg.payload);\n\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1331,7 +1331,7 @@
         "type": "function",
         "z": "7ee81df4.bfea84",
         "name": "Set message",
-        "func": "//Respuesta a Whatsapp\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\nmsg.headers = {};\n\nmsg.headers['Authorization'] = \"App \" + global.get(\"infobip_token\");\nmsg.headers['Content-Type'] = \"application/json\";\nmsg.headers['Accept'] = \"application/json\";\n \nmsg.payload.scenarioKey = global.get(\"infobip_scenario\");\nmsg.payload.destinations = [];\nmsg.payload.whatsApp = {};\n\nlet destination = {};\nlet to= {};\n\n//Nro de telefono del cliente\nto.phoneNumber = msg.payload.visitor.token;\ndestination.to = to;\n\nmsg.payload.destinations.push(destination);\n\nlet text = msg.payload.messages[0].msg || \"Ver archivo adjunto\";\n\nmsg.payload.whatsApp.text =text ;\n\n//Si tiene attachment\nif(msg.payload.messages[0].fileUpload) {\n    //TODO: Revisar tipo de mensaje\n    \n    if (msg.payload.messages[0].fileUpload.type.toLowerCase().includes(\"image\")) {\n        msg.payload.whatsApp.imageUrl = msg.payload.messages[0].fileUpload.publicFilePath;\n    }\n    \n    if (msg.payload.messages[0].fileUpload.type.toLowerCase().includes(\"application\")) {\n        msg.payload.whatsApp.fileUrl = msg.payload.messages[0].fileUpload.publicFilePath;\n    }\n}\n\n\n\nreturn msg;",
+        "func": "//Respuesta a Whatsapp\n//chatId: 869282068\n//messageId: 1938\n//type: \"message\"\n//content: \"hola\"\nmsg.headers = {};\n\nmsg.headers['Authorization'] = \"App \" + global.get(\"infobip_token\");\nmsg.headers['Content-Type'] = \"application/json\";\nmsg.headers['Accept'] = \"application/json\";\n \nmsg.url = global.get(\"infobip_url\");\n \nmsg.payload.scenarioKey = global.get(\"infobip_scenario\");\nmsg.payload.destinations = [];\nmsg.payload.whatsApp = {};\n\nlet destination = {};\nlet to= {};\n\n//Nro de telefono del cliente\nto.phoneNumber = msg.payload.visitor.token;\ndestination.to = to;\n\nmsg.payload.destinations.push(destination);\n\nlet text = msg.payload.messages[0].msg || \"Ver archivo adjunto\";\n\nmsg.payload.whatsApp.text =text ;\n\n//Si tiene attachment\nif(msg.payload.messages[0].fileUpload) {\n    //TODO: Revisar tipo de mensaje\n    \n    if (msg.payload.messages[0].fileUpload.type.toLowerCase().includes(\"image\")) {\n        msg.payload.whatsApp.imageUrl = msg.payload.messages[0].fileUpload.publicFilePath;\n    }\n    \n    if (msg.payload.messages[0].fileUpload.type.toLowerCase().includes(\"application\")) {\n        msg.payload.whatsApp.fileUrl = msg.payload.messages[0].fileUpload.publicFilePath;\n    }\n}\n\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1399,7 +1399,7 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://mp9856.api.infobip.com/omni/1/advanced",
+        "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -1408,7 +1408,7 @@
         "y": 1480,
         "wires": [
             [
-                "9e9b55d3.fcdd78"
+                "bb9f7218.056df"
             ]
         ]
     },
@@ -1425,7 +1425,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1670,
+        "x": 1970,
         "y": 1480,
         "wires": []
     },
@@ -2630,6 +2630,13 @@
                 "p": "rocketChat_SSL",
                 "pt": "global",
                 "to": "rocketChat_SSL",
+                "tot": "env"
+            },
+            {
+                "t": "set",
+                "p": "infobip_url",
+                "pt": "global",
+                "to": "infobip_url",
                 "tot": "env"
             }
         ],
@@ -6554,10 +6561,9 @@
         "z": "7ee81df4.bfea84",
         "name": "LOG",
         "links": [
-            "f79443e7.a7451",
-            "2d7c0d9a.cc2342"
+            "f79443e7.a7451"
         ],
-        "x": 1615,
+        "x": 1855,
         "y": 1640,
         "wires": []
     },
@@ -8126,6 +8132,25 @@
             ],
             [
                 "5ddad847.4f8f48"
+            ]
+        ]
+    },
+    {
+        "id": "bb9f7218.056df",
+        "type": "function",
+        "z": "7ee81df4.bfea84",
+        "name": "create log",
+        "func": "//msg.log = {};\n//msg.log.origin =  msg.payload.messages[0].username;\n//msg.log.destination = msg.payload.visitor.token;\n//Actualizar con Infobip\n\nmsg.log.action = \"infobipOmniAdvanced\";\nmsg.log.url = msg.responseUrl;\n\nif (msg.statusCode == 200) {\n    msg.log.statusCode = 200;\n    msg.log.payload = msg.payload.messages[0].status.description; \n    \n} else if (msg.statusCode == 401) {\n    msg.log.statusCode = 401;\n    msg.log.payload = payload.requestError.serviceException.text; \n} else {\n    msg.log.statusCode = msg.statusCode;\n}\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1680,
+        "y": 1480,
+        "wires": [
+            [
+                "9e9b55d3.fcdd78",
+                "1c0df8fe.451227"
             ]
         ]
     }
