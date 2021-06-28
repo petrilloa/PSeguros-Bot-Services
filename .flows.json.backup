@@ -8140,7 +8140,7 @@
         "type": "function",
         "z": "7ee81df4.bfea84",
         "name": "create log",
-        "func": "//msg.log = {};\n//msg.log.origin =  msg.payload.messages[0].username;\n//msg.log.destination = msg.payload.visitor.token;\n//Actualizar con Infobip\n\nmsg.log.action = \"infobipOmniAdvanced\";\nmsg.log.url = msg.responseUrl;\n\nif (msg.statusCode == 200) {\n    msg.log.statusCode = 200;\n    msg.log.payload = msg.payload.messages[0].status.description; \n    \n} else if (msg.statusCode == 401) {\n    msg.log.statusCode = 401;\n    msg.log.payload = payload.requestError.serviceException.text; \n} else {\n    msg.log.statusCode = msg.statusCode;\n}\n\n\nreturn msg;\n",
+        "func": "//msg.log = {};\n//msg.log.origin =  msg.payload.messages[0].username;\n//msg.log.destination = msg.payload.visitor.token;\n//Actualizar con Infobip\n\nmsg.log.action = \"infobipOmniAdvanced\";\nmsg.log.url = msg.responseUrl;\n\nif (msg.statusCode == 200) {\n    msg.log.statusCode = 200;\n    msg.log.payload = msg.payload.messages[0].status.description; \n    \n} else if (msg.statusCode == 401) {\n    msg.log.statusCode = 401;\n    msg.log.payload = msg.payload.requestError.serviceException.text; \n} else {\n    msg.log.statusCode = msg.statusCode;\n}\n\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
